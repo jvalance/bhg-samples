@@ -7,6 +7,8 @@ The SQL-PL presentation focuses on creating and using IBM DB2 for i stored proce
 
 I will go over these briefly on Friday. If you have time before then, please do check out the PDFs and some of the source code. 
 
+Please bear in mind, I am not a designer, so the UI may seem rough on some of the screen shots. The only one in this collection that was public-facing is PolarLink, for which I had designers involved. The others are internal use only, for companies that primarily use legacy, green-screen ERP systems. These were all very successful projects that my clients love (just sayin'). 
+
 Let me know if you have any questions. 
 
 John
