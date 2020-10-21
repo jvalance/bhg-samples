@@ -1,0 +1,605 @@
+<?php // condition to check whether this is normal user or csr
+$hideStatusAndType = false;
+if($identity['PLU_POLAR_CSR'] == 'N' && $identity['PLU_PLINK_ADMIN'] == 'N'){
+	$hideStatusAndType = true;
+}
+$adminUser = false;
+if($identity['PLU_POLAR_CSR'] == 'N' && $identity['PLU_PLINK_ADMIN'] == 'Y'){
+	$adminUser = true;
+}
+?>
+
+<?php if(!empty($flashMessages)){ ?>
+<div class="alert alert-success fade in modal-content custom-success-content">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	<?php foreach($flashMessages as $flashMessage){ ?>
+			    <?php echo $flashMessage; } ?>
+		</div>	
+		
+<?php } ?>     
+        
+                        <?php if($tabSelected == '#user-details'){ ?>
+                        <?php $form->setAttribute('action', $this->url('user/csrUserEdit', array('controller' => 'user', 'action' => 'csr-user-edit', 'id' => $userId)));
+$form->setAttribute('id', 'user-edit-form');
+$form->setAttribute('class', 'announcement-search-form margin-top10 margin-bottom8');
+
+ $form->setAttribute('onsubmit', 'return LoadAjaxDataTabs("", "1")');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+ ?>
+							<div class="ordering-option padding8 margin-top30">
+<!-- 								<h2 class="heading">Polar Link Customer:</h2> -->
+								<?php if(!empty($errorMessage)){ ?>
+<div class="alert alert-danger fade in margin-top20 margin-bottom0">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				    <?php echo $errorMessage; ?>
+		</div>	
+		
+<?php } ?>
+								<div class="col-md-12 form-signin login-form information-form text-center-responsive">
+									<div class="col-md-6 col-sm-12 col-xs-12 left-top-block-feild">
+										<fieldset class="col-md-12">
+										<label for="inputEmail">Customer Group :</label> 
+										<span class="user_edit_text"><?php 
+													$valGroup = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_CUST_GROUP'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_CUST_GROUP'] ) : '');
+													echo $this->formRow( $form->get('PLU_CUST_GROUP')->setValue($valGroup));				
+													
+													echo $valGroup;
+												?>
+										</span>
+										</fieldset>
+										<fieldset class="col-md-12">
+										<label for="inputEmail">User ID :</label> 
+										<span class="user_edit_text"><?php 
+													$valUserId = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_USER_ID'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_USER_ID'] ) : '');
+													echo $this->formRow( $form->get('PLU_USER_ID')->setValue($valUserId));				
+													
+													echo $valUserId;
+												?>
+										</span>
+										</fieldset>
+										
+										<?php if (!empty ( $formData ) && ($formData ['csr_change_pwd'] == '1') ) {
+											$changePwdValue = '1';
+											$displayBlock = 'block';
+										} else {
+											$changePwdValue = '0';
+											$displayBlock = 'none';
+										}
+											?>
+										
+										
+										<fieldset class="col-md-12">
+											<label for="inputEmail">First Name<sup class="colorred sup-top-bottom">*</sup> :</label> 
+											<?php  
+												$valFirstName = $form->getInputFilter ()->getValue ( 'PLU_FIRST_NAME' ); // die;
+												if (empty ( $formData ) && !empty($plinkCsrUserDetail ['output'])) {
+												// if (empty ( $valFirstName ) && !empty($plinkCsrUserDetail ['output']) && !$request->isPost ()) {
+													$valFirstName = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_FIRST_NAME'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_FIRST_NAME'] ) : '');
+												}
+												$ele = $form->get ( 'PLU_FIRST_NAME' );
+												$ele->setValue($valFirstName);
+												echo $this->formRow ( $ele );
+											 ?>
+											
+										</fieldset>
+										
+										<fieldset class="col-md-12">
+											<label for="inputEmail">Last Name<sup class="colorred sup-top-bottom">*</sup> :</label> 
+											<?php  
+												$valLastName = $form->getInputFilter ()->getValue ( 'PLU_LAST_NAME' ); // die;
+												if (empty ( $formData ) && !empty($plinkCsrUserDetail ['output'])) {
+												//if (empty ( $valLastName ) && !empty($plinkCsrUserDetail ['output']) && !$request->isPost ()) {
+													$valLastName = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_LAST_NAME'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_LAST_NAME'] ) : '');
+												}
+												$ele = $form->get ( 'PLU_LAST_NAME' );
+												$ele->setValue($valLastName);
+												echo $this->formRow ( $ele );
+											 ?>
+											
+										</fieldset>
+										
+									</div>
+									<div class="col-md-6">
+<?php 
+// $PLC_CRT_DATE = $PLC_CHG_DATE = $PLC_1ST_USE_DATE = $PLC_LAST_USE_DATE = '0001-01-01';
+
+ 	$PLU_CRT_DATE =  (!empty($plinkCsrUserDetail['output']['PLU_CRT_TIME'])?$this->date_helper($plinkCsrUserDetail['output']['PLU_CRT_TIME'], 'Y-m-d'):'0001-01-01');
+
+ 	$PLU_CHG_DATE = (!empty($plinkCsrUserDetail['output']['PLU_CHG_TIME'])?$this->date_helper($plinkCsrUserDetail['output']['PLU_CHG_TIME'], 'Y-m-d'):'0001-01-01');
+ 	$PLU_1ST_USE_DATE = (!empty($plinkCsrUserDetail['output']['PLU_1ST_USE'])?$this->date_helper($plinkCsrUserDetail['output']['PLU_1ST_USE'], 'Y-m-d'):'0001-01-01');
+	$PLU_LAST_USE_DATE = (!empty($plinkCsrUserDetail['output']['PLU_LAST_USE'])?$this->date_helper($plinkCsrUserDetail['output']['PLU_LAST_USE'], 'Y-m-d'):'0001-01-01');
+
+if($PLU_CRT_DATE == '0001-01-01') {
+	$plinkCsrUserDetail['output']['PLU_CRT_TIME'] = '';
+}
+if($PLU_CHG_DATE == '0001-01-01') {
+	$plinkCsrUserDetail['output']['PLU_CHG_TIME'] = '';
+}
+if($PLU_1ST_USE_DATE == '0001-01-01') {
+	$plinkCsrUserDetail['output']['PLU_1ST_USE'] = '';
+}
+if($PLU_LAST_USE_DATE == '0001-01-01') {
+	$plinkCsrUserDetail['output']['PLU_LAST_USE'] = '';
+}
+
+
+
+if(!empty($plinkCsrUserDetail['output']['PLU_CRT_TIME']) || !empty($plinkCsrUserDetail['output']['PLU_CHG_TIME']) || !empty($plinkCsrUserDetail['output']['PLU_1ST_USE']) || !empty($plinkCsrUserDetail['output']['PLU_LAST_USE'])){ ?>
+									<div class="type-message right-top-block">
+										
+											<div class="UsersDefaults col-md-12 form-signin login-form information-form text-center-responsive">
+												<div class="heading-activity">User Activity</div>
+												<div class="clearfix"></div>
+												<fieldset class="col-md-12">
+													<label for="inputEmail">Added:</label> 
+													<span class="normal-text"><?php if($plinkCsrUserDetail['output']['PLU_CRT_TIME']){ ?><?php  echo $this->date_helper($plinkCsrUserDetail['output']['PLU_CRT_TIME'], "M j, Y @ g:i a"); ?> <?php if(!empty(trim($plinkCsrUserDetail['output']['PLU_CRT_USER']))){ ?> by <?php echo $plinkCsrUserDetail['output']['PLU_CRT_USER']; } ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+												<fieldset class="col-md-12">
+													<label for="inputEmail">Changed:</label> 
+													<span class="normal-text"><?php if($plinkCsrUserDetail['output']['PLU_CHG_TIME']){ ?><?php  echo $this->date_helper($plinkCsrUserDetail['output']['PLU_CHG_TIME'], "M j, Y @ g:i a"); ?> <?php if(!empty(trim($plinkCsrUserDetail['output']['PLU_CHG_USER']))){ ?> by <?php echo $plinkCsrUserDetail['output']['PLU_CHG_USER']; } ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+												<fieldset class="col-md-12">
+													<label for="inputEmail">First Login:</label> 
+													<span class="normal-text"><?php if($plinkCsrUserDetail['output']['PLU_1ST_USE']){ ?><?php  echo $this->date_helper($plinkCsrUserDetail['output']['PLU_1ST_USE'],"M j, Y @ g:i a"); ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+												<fieldset class="col-md-12">
+													<label for="inputEmail">Last Login:</label> 
+													<span class="normal-text"><?php if($plinkCsrUserDetail['output']['PLU_LAST_USE']){ ?><?php  echo $this->date_helper($plinkCsrUserDetail['output']['PLU_LAST_USE'],"M j, Y @ g:i a"); ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+											</div>
+											
+										</div>
+										<?php } ?>
+									</div>									
+									
+									<div class="clearfix"> </div>
+									<div class="col-md-6 left-top-block-feild">
+									<fieldset class="col-md-12">
+										<label for="inputEmail">Password :</label>
+										<span class="user_edit_text change-password-link"> 
+											<a href="javascript:void(0)" id="change-text-icon" onclick="changePasswordOpen()">Change Password</a>
+											<?php
+											echo $this->formRow($form->get ( 'csr_change_pwd' )->setValue($changePwdValue));
+							//				echo $this->formRow($form->get ( 'PLU_PASSWORD' )->setValue(trim ( $plinkCsrUserDetail ['output'] ['PLU_PASSWORD'] )));
+											
+											?>
+											
+										</span>
+										</fieldset>
+										</div>
+										<div class="clearfix"> </div>
+										<div class="col-md-7 col-md-offset-2 col-xs-12 col-xs-offset-0">
+										<span class="change-password-block" style="display:<?php echo $displayBlock; ?>;">
+										<div class="change_password_toggle">
+										<div class="close_icon"><a onclick="changePasswordOpen()" href="javascript:void(0)"><i class="fa fa-times"></i></a></div>
+<!-- 										<fieldset class="col-md-12"> -->
+<!-- 										<label for="plu_old_password">Old Password<sup class="colorred sup-top-bottom">*</sup> :</label> -->
+										
+											<?php // echo $this->formRow($form->get ( 'PLU_OLD_PASSWORD' ));?>
+<!-- 										</fieldset> -->
+										
+										<fieldset class="col-md-12">
+										<label for="plu_new_password">New Password<sup class="colorred sup-top-bottom">*</sup> :</label>
+										
+											<?php echo $this->formRow($form->get ( 'PLU_NEW_PASSWORD' ));?>
+										</fieldset>
+										
+										<fieldset class="col-md-12">
+										<label for="plu_confirm_password">Confirm New Password<sup class="colorred sup-top-bottom">*</sup> :</label>
+										
+											<?php echo $this->formRow($form->get ( 'PLU_CONFIRM_PASSWORD' ));?>
+										</fieldset>
+										</div>
+										</span>
+										</div>
+										<div class="clearfix"> </div>
+										<div class="col-md-6 left-top-block-feild">
+										<fieldset class="col-md-12">
+											<label>Status<sup class="colorred sup-top-bottom">*</sup> :</label>
+											<?php 
+											$valStatus = $form->getInputFilter ()->getValue ( 'PLU_STATUS' ); // die;
+											if (empty ( $formData ) && !empty($plinkCsrUserDetail ['output'])) {
+											// if (empty ( $valStatus ) && !empty($plinkCsrUserDetail ['output'])  && !$request->isPost ()) {
+												$valStatus = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_STATUS'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_STATUS'] ) : '');
+											}
+											$ele = $form->get ( 'PLU_STATUS' );
+											// condition to check whether this is for the normal user
+											if($hideStatusAndType){ $ele->setAttribute('class', 'hidden');
+											if($valStatus == 'E'){
+												echo '<span class="user_edit_text">Enabled</span>';
+											} else {
+												echo '<span class="user_edit_text">Disabled</span>';
+											}
+											
+											}
+											$ele->setValue($valStatus);
+											echo $this->formRow ( $ele );
+							
+							
+							 ?>
+										</fieldset>
+										
+										<fieldset class="col-md-12">
+											<label for="plu_email_address">Email Address<sup class="colorred sup-top-bottom">*</sup> : </label>
+										<?php  
+												$valEmail = $form->getInputFilter ()->getValue ( 'PLU_EMAIL_ADDRESS' ); // die;
+												
+												if (empty ( $formData ) && !empty($plinkCsrUserDetail ['output'])) 
+												// if(empty($valEmail)  && !$request->isPost ())
+												{
+													$valEmail = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_EMAIL_ADDRESS'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_EMAIL_ADDRESS'] ) : '');
+													
+												}
+												$ele = $form->get ( 'PLU_EMAIL_ADDRESS' );
+												$ele->setValue($valEmail);
+												echo $this->formRow ( $ele ); 
+												
+												?>
+									</fieldset>
+									</div>
+									<div class="col-md-6 left-top-block-feild">&nbsp;</div>
+									<div class="clearfix"> </div>
+									<div class="col-md-10 <?php if($hideStatusAndType){ echo 'hidden'; }?>">	 
+									<fieldset class="col-md-12 csr-user-type-radio csr-user-edit">
+								<label for="plu_user_type">User Type<sup class="colorred sup-top-bottom">*</sup> :</label>
+								<?php
+								
+								
+								$valUserType = $form->getInputFilter ()->getValue ( 'PLU_USER_TYPE' ); // die;
+								$valUserType = trim($valUserType);
+								if (empty ( $formData ) && !empty($plinkCsrUserDetail ['output'])) 
+								{
+									
+									if($plinkCsrUserDetail ['output'] ['PLU_POLAR_CSR'] == 'Y'){
+										$valUserType = 'csr';
+									} else if($plinkCsrUserDetail ['output'] ['PLU_PLINK_ADMIN'] == 'Y'){
+										$valUserType = 'admin';
+									} else{
+										$valUserType = 'normal';
+									} 
+									// $valUserType = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_EMAIL_ADDRESS'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_EMAIL_ADDRESS'] ) : '');
+										
+								}
+							
+								
+								$ele = $form->get ( 'PLU_USER_TYPE' );
+								if($adminUser){
+									$userTypes = array(
+											'admin' => 'PolarLink Admin',
+											'normal' => 'Normal User'
+									);
+								} else {
+									$userTypes = array(
+											'csr' => 'Polar Beverage CSR',
+											'admin' => 'PolarLink Admin',
+											'normal' => 'Normal User'
+									);
+								}
+								$ele->setValueOptions($userTypes);
+								$ele->setValue($valUserType);
+								$ele->setAttribute('onchange', 'return addActiveClass(1);');
+								echo $this->formRow ( $ele );
+								
+								
+								?>
+							</fieldset>
+							</div>
+								<?php /* ?>	<fieldset class="col-md-12 bottom-block-with-email margin-top20">
+								<label>&nbsp;</label>
+								<div class="width72per pull-left"> 
+									<div class="user-details-checkbox"> 
+										<div class="pull-left width32per"> 
+										<?php 
+										$valCsrChecked = $form->getInputFilter ()->getValue ( 'PLU_POLAR_CSR' ); // die;
+										if (empty ( $formData ) && !empty($plinkCsrUserDetail ['output']))
+										// if(empty($valCsrChecked)  && !$request->isPost ())
+										{
+											$valCsrChecked = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_POLAR_CSR'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_POLAR_CSR'] ) : '');
+												
+										}
+										$ele = $form->get('PLU_POLAR_CSR');
+										if($valCsrChecked == 'Y' || $valCsrChecked == '1'){
+											$ele->setAttribute('checked', 'checked');
+										} 
+										echo $this->formrow($ele); ?>
+<!-- 											<input type="checkbox" class="view-as-user-margin9" /> -->
+											<label for="plu_polar_csr" class="single-line">Polar Beverage CSR?</label>
+										</div>
+										<div class="pull-left width60per margin-left10"> 
+										<?php $valAdminChecked = $form->getInputFilter ()->getValue ( 'PLU_PLINK_ADMIN' ); // die;
+										if (empty ( $formData ) && !empty($plinkCsrUserDetail ['output'])) 
+										// if(empty($valAdminChecked)  && !$request->isPost ())
+										{
+											$valAdminChecked = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_PLINK_ADMIN'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_PLINK_ADMIN'] ) : '');
+												
+										}
+										$ele = $form->get('PLU_PLINK_ADMIN');
+										if($valAdminChecked == 'Y' || $valAdminChecked == '1'){
+											$ele->setAttribute('checked', 'checked');
+										} 
+										echo $this->formrow($ele);
+										// echo $this->formrow($form->get('PLU_PLINK_ADMIN')); ?>
+<!-- 											<input type="checkbox" class="view-as-user-margin9" /> -->
+											<label for="plu_plink_admin" class="single-line">PolarLink Admin?</label>
+										</div>
+									</div>
+								</div>
+							</fieldset> <?php */ ?>
+								</div>
+								<div class="buttons">
+				                <?php
+				                echo $this->formRow ($form->get ( 'csr_user_field'));
+				              
+				                echo $this->formButton($form->get('save')->setLabel('Save User Details'));
+				                echo $this->formButton($form->get('Cancel'));
+				                ?>
+				
+				                </div>
+			 					<?php
+									echo $this->form()->closeTag();
+								?>
+								<div class="clearfix"></div>
+							</div>
+							<?php } else if($tabSelected == '#user-defaults') {?>
+                        <div class="clearfix"></div>
+                       <div class="margin-top10 margin-bottom20"><em>The information below will be the default selection for placing orders as this user.<br />These settings will override any defaults defined for the Customer Group.</em></div>
+                        <div class="clearfix"></div>
+							<div class="ordering-option padding8 margin-top30 customer-defaults">
+<!-- 								<h2 class="heading">Select Customer Defaults</h2> -->
+							
+								<div class="margin-top30">
+								<?php $form->setAttribute('action', $this->url('user/csrUserEdit', array('controller' => 'user', 'action' => 'csr-user-edit', 'id' => $userId)));
+$form->setAttribute('id', 'user-defaults-form');
+$form->setAttribute('class', 'margin-top10 margin-bottom8 login-form information-form');
+
+ $form->setAttribute('onsubmit', 'return LoadAjaxDataTabs("", "1")');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+ ?>
+								<?php /*	<fieldset class="col-md-12">
+								<?php $valPluDefaultUom = $form->getInputFilter ()->getValue ( 'PLU_DFT_UOM' ); // die;
+												
+												if(empty($formData))
+												{
+													$valPluDefaultUom = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_DFT_UOM'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_DFT_UOM'] ) : '');
+													
+												} else {
+														$valPluDefaultUom = $formData['PLU_DFT_UOM'];
+												}
+												
+												?>
+												<label for="PLC_DFT_UOM">Default Unit of Measure:</label>
+												<?php 
+													echo $this->formRow($form->get('PLU_DFT_UOM')->setAttribute('value', $valPluDefaultUom)); 
+												?>
+											
+		                        </fieldset> */?>
+		                        
+		                        <fieldset class="col-md-12">
+		                        <?php $valPluDefaultShipMethod = $form->getInputFilter ()->getValue ( 'PLU_DFT_SHIP_METHOD' ); // die;
+												
+												if(empty($formData))
+												{
+													$valPluDefaultShipMethod = (! empty ( trim ( $plinkCsrUserDetail ['output'] ['PLU_DFT_SHIP_METHOD'] ) ) ? trim ( $plinkCsrUserDetail ['output'] ['PLU_DFT_SHIP_METHOD'] ) : '');
+													
+												} else {
+														$valPluDefaultShipMethod = $formData['PLU_DFT_SHIP_METHOD'];
+												}
+												
+												?>
+												<label for="PLC_DFT_UOM">Default Shipping Method:</label>
+												<?php 
+													echo $this->formRow($form->get('PLU_DFT_SHIP_METHOD')->setAttribute('value', $valPluDefaultShipMethod));
+												?>
+		                        </fieldset>	
+		                        <fieldset class="col-md-12">
+										<label for="inputEmail">Default Ship-To:</label>
+										<span class="normal-text width45per padding-none">
+										<?php 
+										$trimmedDefaultCustNo = trim($plinkCsrUserDetail['output']['PLU_CUSTNO']);
+										$trimmedDefaultShipTo = trim($plinkCsrUserDetail['output']['PLU_DFT_SHIPTO']);
+										
+										$showDefaultAddress = false;
+										if(!empty($trimmedDefaultShipTo) && !empty($trimmedDefaultCustNo)) { 
+											$showDefaultAddress = true; 
+											?>
+											<div class="customer-defaults-normal-text" id="defaultShipToCustNoShipNo" style="margin-left: 30px;">
+												<?php echo $trimmedDefaultCustNo.' / '.$trimmedDefaultShipTo . '<br/>'; ?>
+											</div>
+										
+											<div id="CustomerDefaultAddressFull">
+												<a href="javascript:void(0)" title="Clear selected Ship-To" alt="Clear selected Ship-To" class="customer_default_close" onclick="removeDefaultUserShipTo()"><i class="fa fa-times-circle">&nbsp;</i></a>
+												<div id="customer-address-preference" class="customer_default_text height_inherit padt5">
+												<?php 	
+												    
+												    if(!empty($customerShipTos['output'])){ 
+														foreach($customerShipTos['output'] as $shipTo1){
+														  if(($trimmedDefaultShipTo == trim($shipTo1['ST_NUM'])) && ($trimmedDefaultCustNo == trim($shipTo1['ST_CUST']))){
+											// 
+                                                                echo trim($shipTo1['ST_NAME']).'<br />';
+                                                                echo (!empty(trim($shipTo1['ST_ADR1']))?trim($shipTo1['ST_ADR1']).'<br />':'');
+															    echo (!empty(trim($shipTo1['ST_ADR2']))?trim($shipTo1['ST_ADR2']).'<br />':'');
+                                                                echo trim($shipTo1['ST_ADR3']).', '.trim($shipTo1['ST_STATE']).' - '.trim($shipTo1['ST_ZIP']);
+															}
+														}
+													}
+													?>
+												</div>
+											</div>
+										<?php } else { ?>
+										
+											<div class="customer-defaults-normal-text" id="defaultShipToCustNoShipNo" style="margin-left: 0px">No Default Ship-To Selected</div>
+											<div id="CustomerDefaultAddressFull"></div>
+											
+										<?php } ?>
+										</span>
+										<div id="select-customer-shipping-address-preference">
+											<a href="javascript:void(0)" id="change-text-icon" class="change-text" data-toggle="modal" data-target="#myModalShipTo">Select Ship-To</a>
+										</div>
+										
+										<div class="clearfix"></div>
+									</fieldset>	
+									<div class="clearfix"></div>
+									<div class="buttons margin-top20 margin-bottom20">
+		                        <?php
+				                echo $this->formRow ($form->get ( 'csr_user_defaults'));
+				                echo $this->formRow($form->get('PLU_DFT_SHIPTO')->setAttribute('value', $plinkCsrUserDetail['output']['PLU_DFT_SHIPTO']));
+				                echo $this->formRow($form->get('PLU_CUSTNO')->setAttribute('value', $plinkCsrUserDetail['output']['PLU_CUSTNO']));
+				                echo $this->formButton($form->get('save')->setLabel('Save User Defaults'));
+				                echo $this->formButton($form->get('Cancel'));
+				                ?>
+		                        <?php
+									echo $this->form()->closeTag();
+								?>
+								</div>
+								</div>
+								
+								<div class="clearfix"></div>
+							</div>
+							<div class="clearfix"></div>
+							<div class="modal modal-shipTo" id="myModalShipTo" role="dialog">
+							<div class="modal-dialog">
+							<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Select Default Ship-To</h4>
+      </div>
+      <div class="modal-body">
+								
+									<div class="padding8">
+										<div class="search-box searchBoxForShipTo margin-top10">
+											
+												<?php $shippingSearchForm->setAttribute('action', $this->url('user/csrCustomerDetail', array('controller' => 'user', 'action' => 'csr-customer-detail', 'id' => $userId)));
+								$shippingSearchForm->setAttribute('id', 'customer-search-shipping-form');
+								// $shippingSearchForm->setAttribute('class', 'col-md-12 form-signin login-form information-form margin-top0');
+								
+								$shippingSearchForm->setAttribute('onsubmit', 'return AjaxSearchShipTos()');								
+								$shippingSearchForm->prepare();
+								echo $this->form()->openTag($shippingSearchForm);
+							
+                     
+                     			echo $this->formRow($shippingSearchForm->get('SEARCHPARAMETER')); 
+                     			echo $this->formRow($shippingSearchForm->get('SUBMIT'));                     
+                     			echo $this->formRow($shippingSearchForm->get('searchshipping'));
+                     			echo $this->formRow($shippingSearchForm->get('CUST_GROUP')->setValue(trim ( $plinkCsrUserDetail ['output']['PLU_CUST_GROUP'] )));
+                     			echo $this->form()->closeTag();
+                     			?>
+<!-- 												<input type="text" class="form-control pull-left" placeholder="search..." value="" />           -->
+<!-- 												<button id="searchShipTo" class="customer-search"><i class="fa fa-search"></i></button> -->
+<!-- 												<input type="hidden" name="searchshipping" value="search" /> -->
+											                  
+										</div>
+<!-- 										<a class="clear-customer margin-top10" href="javascript:void(0)">Clear Filter</a> -->
+										<div class="clearfix"></div>
+										<div class="table-responsive selected-table dataForShipTos margin-bottom0">
+											<section class="table-section">
+												<div class="table-scroll">
+													<table class="table-striped ship-order">
+														<thead>
+															<tr>
+																<th>Cust.#CuCuCu<div>Cust.#</div></th>
+																<th>Shp# ShShS<div>Shp#</div></th>
+																<th>Ship To Name <div>Ship To Name</div></th>
+																<th>Address <div>Address</div></th>
+																<th>City <div>City</div></th>
+																<th>State Sta<div>State</div></th>
+																<th>Zip <div>Zip</div></th>
+															</tr>
+														</thead>
+														<tbody  id="popUpDataShippingForm">
+															<?php  if(!empty($customerShipTos['output'])){ 
+																$showButtonsDefaultShipTo = true;
+	                            	foreach($customerShipTos['output'] as $shipTo){
+										$class = '';
+										if(!empty($trimmedDefaultShipTo) && !empty($trimmedDefaultCustNo)) { 
+													if(($trimmedDefaultShipTo == trim($shipTo['ST_NUM'])) && ($trimmedDefaultCustNo == trim($shipTo['ST_CUST']))){
+																	$class = ' active';
+													}
+										}
+										
+										$combinedId = trim($shipTo['ST_NUM']).'_'.trim($shipTo['ST_CUST']);
+	                            	?>
+	                            	<tr class="shipToDefaultSelectable<?php echo $class; ?>" id="<?php echo 'stnum_'.$combinedId; ?>">
+	                                    <td id="<?php echo 'customerName_'.$combinedId; ?>"><?php echo $shipTo['ST_CUST']; ?></td>
+	                                    <td><?php echo $shipTo['ST_NUM']; ?></td>
+	                                    <td id="<?php echo 'name_'.$combinedId; ?>"><?php echo $shipTo['ST_NAME']; ?></td>
+	                                    <td id="<?php echo 'address_'.$combinedId; ?>"><?php
+										$trimmedShipTo = trim($shipTo['ST_ADR2']);
+	                                    echo $shipTo['ST_ADR1'].(!empty($trimmedShipTo)? ' - '.$trimmedShipTo:''); ?></td>
+	                                    <td id="<?php echo 'city_'.$combinedId; ?>"><?php echo $shipTo['ST_ADR3']; ?></td>
+	                                    <td id="<?php echo 'state_'.$combinedId; ?>"><?php echo $shipTo['ST_STATE']; ?></td>
+	                                    <td id="<?php echo 'zip_'.$combinedId; ?>"><?php echo $shipTo['ST_ZIP']; ?><span id="<?php echo 'defaultShippingMethod_'.$combinedId; ?>" style="display: none;"><?php echo trim($shipTo['SHIP_METHOD']); ?></span></td>
+	                                </tr>
+	                            <?php 
+	                            }
+                            } else { 
+									$showButtonsDefaultShipTo = false;
+							?>
+		                            <tr>
+		                            	<td colspan="7">No Ship-To exists</td>
+		                            </tr>
+                            <?php } ?>
+														</tbody>
+													</table>
+												</div>
+											</section>
+										</div>
+										<?php if($showButtonsDefaultShipTo){ ?>
+										<div class="margin-top20">
+	                    <button onclick="return changeDefaultShipTo()" type="button" class="btn">Select Ship-To</button>
+	                    <button onclick="$('#myModalShipTo').modal('toggle');" type="button" class="btn">Cancel Ship-To Selection</button>
+	                    </div>
+	                    <?php } ?>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								</div>
+							</div>
+							 </div>
+							 <?php } ?>
+                        
+             <?php if($setDirtyFlag){ ?>
+             <script type="text/javascript">
+             changeDirtyFlag(true);
+             </script>
+             	
+             <?php } ?>
+             <script type="text/javascript">
+             $(document).ready(function(){
+            	 $('.shipToDefaultSelectable').click(
+                    	  function() {
+            					
+            					$('.shipToDefaultSelectable').removeClass('active');
+            					$(this).addClass('active');
+            					
+            				});
+            		
+            		// alert(activeTab);
+                 });
+
+            
+
+             </script>
+             
+             <style>
+
+.customer_default_close {
+	margin-top: -25px !important;
+}
+
+#user-defaults #customer-address-preference{
+	width: initial !important;
+	margin-top: -10px;
+}
+             </style>

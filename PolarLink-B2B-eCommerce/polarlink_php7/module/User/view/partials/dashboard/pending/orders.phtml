@@ -1,0 +1,365 @@
+<?php
+    
+    /**
+     * Parse pending orders
+     * Split into two arrays
+     * One for own orders
+     * One for others orders
+     */
+    
+    $myPendingOrders     = [];
+    $othersPendingOrders = [];
+   
+    foreach($pendingOrders as $order) {
+        
+        if(strcmp(trim($order['OH_ENTRY_USER']),trim($identity['PLU_USER_ID'])) === 0){
+            
+            $myPendingOrders [] = $order;
+            
+            continue;
+           
+        }
+        
+        $othersPendingOrders[] = $order;
+        
+    }
+  // echo '<pre>';
+    // var_dump($identity);
+    // print_r($pendingOrders);
+    // var_dump($othersPendingOrders);
+  // echo '</pre>';
+    
+    $isCSRAdmin = $identity['PLU_POLAR_CSR'] === 'Y';
+    $isPLinkAdmin =  $identity['PLU_PLINK_ADMIN'] === 'Y';
+?>
+<div style="padding: 20px">
+    <fieldset id="fieldset-pending-orders">
+    
+    	<legend>Pending Orders</legend>
+    	<section>
+        	<div class="desc-pending-orders">
+        		<span>Below are orders that were started, but not yet submitted for fullfilment.</span>
+        	</div>
+        </section>
+    	
+    	<section>
+    	
+    <!-- TABLE 1 -->
+    <?php 
+    
+        // My Pending Orders Header 
+        $shouldCollapseIn = (count($myPendingOrders) > 0 ) ? 'in' : '';
+        $shouldExpanded   = (count($myPendingOrders) > 0 ) ? 'true' : 'false';
+        
+        
+        $headerPendingTitle = '<a class="order-pending-title" data-toggle="collapse"'; 
+        $headerPendingTitle .= 'href="#collapseMyPending" aria-expanded="%s"'; 
+        $headerPendingTitle .= 'aria-controls="collapseExample">';
+                    
+        printf($headerPendingTitle, $shouldExpanded);
+        
+    ?>
+    	<span class="unprocessed-order">MY PENDING ORDERS
+    		<?php printf('(%d)', count($myPendingOrders))?>
+    	 </span>
+    </a>
+    <?php 
+    
+        // My Pending Orders Header 
+        printf('<div class="collapse %s" id="collapseMyPending">', $shouldCollapseIn);
+    ?>
+        <div id="container-my-orders" class="table-responsive selected-pending-orders-table dataForShipTos">
+            <section class="minimalist-table-section">
+                <div class="minimalist-table-scroll">
+                    <?php
+                    	if (count($myPendingOrders) === 0 ):
+                    	    echo '<div class="no-orders-to-show">NO ORDERS TO SHOW</div>';
+                        else: ?>
+                            <table style="width: 868px" id="list-my-orders"class="table-striped">
+                            <tr>
+                                <th><div>Order #</div></th>
+                                <th ><div>ShipTo</div></th>
+                                <th class="orders-ship-to"><div>Name</div></th>
+                                <th ><div>User</div></th>
+                                <th class="date" ><div>Entry Date</div></th>
+                                <th class="items" ><div># Items</div></th>
+                                <th class="order-total"><div>$ Amount</div></th>
+                                <th class="actions"><div>&nbsp;</div></th>
+                            </tr> 
+                            <tbody>
+                            <?php 
+                            for($i = 0; $i < count($myPendingOrders); $i++){
+                                
+                                $order = $myPendingOrders[$i];
+                                
+                                $formattedShipTo = sprintf('%s/%s',
+                                
+                                $order['OH_CUSTNO'], $order['OH_SHP2_NUM']);
+                                
+                                $formattedOrderDate = sprintf('%s-%s-%s',
+                                
+                                    substr($order['OH_DATE_SUBMITTED'], 4, 2),
+                                    
+                                    substr($order['OH_DATE_SUBMITTED'], 6, 2),
+                                    
+                                    substr($order['OH_DATE_SUBMITTED'], 0, 4)
+                                    
+                                );
+                                
+                                echo '<tr rel="'. $order['OH_PLINK_ORDERNO'] .'">';
+                                echo '<td plc_group="plc_group" class="plink-open-orders">' . $order['OH_PLINK_ORDERNO'] . '</td>';
+                                echo '<td  plc_group="plc_group">' . $formattedShipTo . '</td>';
+                                echo '<td class="orders-ship-to" plc_group="plc_group">' . $order['OH_SHP2_NAME']. '</td>';
+                                echo '<td class="client" plc_group="plc_group">' . $order['OH_ENTRY_USER']. '</td>';
+                                echo '<td class="date" plc_group="plc_group">' . $formattedOrderDate . '</td>';
+                                echo '<td class="items" plc_group="plc_group">' . $order['totalItems'] . '</td>';
+                                echo '<td class="order-total" plc_group="plc_group">$ ' . $order['totalValue'] . '</td>';
+                                echo '<td class="actions" cust_name="cust_name">';
+                                echo '<a class="doEditOrder" title="Edit Order" href="#" rel="'.$order['OH_PLINK_ORDERNO'].'"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                                echo '<a class="doCancelOrder" title="Cancel Order" href="#" rel="'.$order['OH_PLINK_ORDERNO'].'"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                echo '</td>';
+                                echo '</tr>';  
+                            }
+                            
+                            ?>
+                            </tbody>
+                            </table>
+                       <?php endif; ?>
+                </div>
+            </section>
+        </div>
+    </div>
+    </section>
+                   
+    <!-- END TABLE 1 -->
+    <section>
+    <!-- TABLE 2 -->
+    
+    <a class="order-pending-title" data-toggle="collapse" href="#collapseOtherPending" aria-expanded="false" aria-controls="collapseExample">
+    	<span class="unprocessed-order">OTHER PENDING ORDERS
+    		<?php printf('(%d)', count($othersPendingOrders))?>
+    	 </span>
+    </a>
+       <div class="collapse" id="collapseOtherPending">
+            <div id="container-others-orders" class="table-responsive selected-pending-orders-table dataForShipTos">
+                <section class="minimalist-table-section">
+                    <div class="minimalist-table-scroll">
+                    	<?php if (count($othersPendingOrders) === 0 ):
+                    	    echo '<div class="no-orders-to-show">NO ORDERS TO SHOW</div>';
+                        else: ?>
+                        <table  id="list-others-orders" class="table-striped">
+                            <thead>
+                            <tr>
+                                <th><div>Order #</div></th>
+                                <th> <div>ShipTo</div></th>
+                                <th class="orders-ship-to"><div>Name</div></th>
+                                <th class="client"><div>User</div></th>
+                                <th class="date"><div>Entry Date</div></th>
+                                <th class="items"><div># Items</div></th>
+                                <th class="order-total"><div>$ Amount</div></th>
+                                <th class="actions"><div>&nbsp;</div></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                for($i = 0; $i < count($othersPendingOrders); $i++){
+                                
+                                    $order = $othersPendingOrders[$i];
+                                    
+                                    $formattedShipTo = sprintf('%s/%s', 
+                                        
+                                        $order['OH_CUSTNO'], $order['OH_SHP2_NUM']);
+                                    
+                                    $formattedOrderDate = sprintf('%s-%s-%s',
+                                    
+                                        substr($order['OH_DATE_SUBMITTED'], 4, 2),
+                                    
+                                        substr($order['OH_DATE_SUBMITTED'], 6, 2),
+                                    
+                                        substr($order['OH_DATE_SUBMITTED'], 0, 4)
+                                    
+                                        );
+                                    
+                                    echo '<tr rel="'. $order['OH_PLINK_ORDERNO'] .'">';
+                                    echo '<td class="plink-open-orders">'. $order['OH_PLINK_ORDERNO'] . '</td>';
+                                    echo '<td plc_group="plc_group">' .$formattedShipTo . '</td>';
+                                    echo '<td class="orders-ship-to" plc_group="plc_group">' . $order['OH_SHP2_NAME']. '</td>';
+                                    echo '<td class="client" plc_group="plc_group">' . $order['OH_ENTRY_USER']. '</td>';
+                                    echo '<td class="date" plc_group="plc_group">' . $formattedOrderDate . '</td>';
+                                    echo '<td class="items" plc_group="plc_group">' . $order['totalItems'] . '</td>';
+                                    echo '<td class="order-total" plc_group="plc_group">$ ' . $order['totalValue'] . '</td>';
+                                    
+                                    /**
+                                     * jlopez
+                                     * 
+                                     * Allow administrator act over orders
+                                     * Delete / Edit Order links should be enabled
+                                     * 
+                                     * @link https://app.asana.com/0/322475715676002/322466378561884
+                                     * 
+                                     * Allow CSR to act over other CSR orders only
+                                     * CSR should not be able to act over admin/normal user orders
+                                     * 
+                                     * @link https://app.asana.com/0/322466378561882/333825692419040
+                                     */
+                                    if($isPLinkAdmin || $isCSRAdmin && $order['OH_ENTRY_USER_IS_CSR'] === 'Y'):
+                                        echo '<td class="actions" cust_name="cust_name">';
+                                        echo '<a class="doEditOrder" title="Edit Order" href="#" rel="'.$order['OH_PLINK_ORDERNO'].'"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                                        echo '<a class="doCancelOrder" title="Cancel Order" href="#" rel="'.$order['OH_PLINK_ORDERNO'].'"><i class="fa fa-trash" aria-hidden="true"></i></a></td>';
+                                    else:
+                                        echo '<td class="actions" cust_name="cust_name">&nbsp;</td>';
+                                    endif;
+                                        
+                                    echo '</tr>';
+                                }
+                                ?>
+                        </tbody>
+                    </table>
+                    <?php endif; ?>
+                </div>
+            </section>
+        </div>
+    </div>
+    </section>
+    </fieldset>
+</div>
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		/**
+		* Edit/Cancel tooltip
+		*
+		*/
+		$(document).tooltip({
+		    selector: 'a.doEditOrder, a.doCancelOrder',
+	    });
+
+		/**
+		*  Resume Order Button
+		*
+		*  Parse OH_PLINK_ORDERNO cookie and if exists and match any user's order
+		*  Display a button to resume the order
+		**/
+		var activeOpenOrder = $('.plink-open-orders').filter(function(i, linkOrder) {
+
+			return parseInt(Cookies.get('OH_PLINK_ORDERNO')) === parseInt($(linkOrder).text());
+		});
+
+		enableResumeOrder = activeOpenOrder.length > 0;
+
+		if(enableResumeOrder) {
+
+			var resumeOrderOption = '<li>' + 
+				'<a href="/user/current-order/'+Cookies.get('OH_PLINK_ORDERNO')  + '"> '+ 
+	        	'<div class="fonts-icons"> \ '+
+				'<span class="fa-stack fa-lg fonts-awesome"> ' +
+				'<i class="fa fa-shopping-cart place-holder"></i> ' +
+				'</span>  ' +
+				'</div> '+
+				'</a> <span>Edit Current<br/>Order ('+ Cookies.get('OH_PLINK_ORDERNO') + ')</span></li>';
+			
+         	$('ul.top-order-list li.opt-place-order').before(resumeOrderOption);
+
+ 			$('.top-order-list li').css({width: String(Math.floor(100 / $('.top-order-list li').length) + '%')});
+
+			/**
+			* Highlight current order (active)
+			*
+			**/
+			$('table tr[rel="' + Cookies.get('OH_PLINK_ORDERNO') + '"]').addClass('curr_order');
+		} else {
+
+			Cookies.remove('OH_PLINK_ORDERNO');
+		}
+		// End of Resume Order Button
+
+		
+		
+		
+		$('.doEditOrder').click(function(e){
+
+			e.preventDefault();
+
+			var url, 
+			
+				orderToEdit;
+
+			url = 'current-order';
+			
+			orderToEdit = $(this).attr('rel');
+
+			/**
+			*  Persistent Order Id (Cookie, expires in 30 days)
+			**/
+			Cookies.set('OH_PLINK_ORDERNO', orderToEdit, { expires: 30 });
+
+			window.location.href = '/user/current-order/:id'.replace(':id', orderToEdit); 
+		});
+
+		$('.doCancelOrder').click(function(e){
+
+			e.preventDefault();
+			
+			var orderToCancel = $(this).attr('rel');
+
+			var cancelOrder = function cancelOrder(orderToCancel){
+
+    			try{
+    				
+    				if(!orderToCancel) {
+    
+    					throw new Error('Unable to cancel an order. Expected order id.');
+    				}
+    				
+    
+        			$.ajax({
+            			
+        				url: 'order-cancel',
+        				
+        				type: 'POST',
+    
+        				dataType: 'json',
+        				
+        				data: {
+            				
+        					OH_PLINK_ORDERNO: orderToCancel,
+    
+        					action: 'CNCL',
+        					
+        					type: 'JSON' 
+        				},
+        				success: function(payload) {
+
+            				Cookies.remove('OH_PLINK_ORDERNO', '/');
+    
+            				window.location.reload();
+        				}
+    				});
+    				
+    			}catch(e){
+    
+    				console.error(e);
+    
+    			}
+			}
+
+			var cancelConfirm = 
+
+				bootbox.confirm('Are you sure you want to cancel order #:id'
+
+						.replace(':id', $(this).attr('rel')), function( result){
+
+							if(result){
+
+								cancelOrder(orderToCancel);
+							}
+							
+				}); // end of cancelConfirm
+			
+		}); // end of click cancel order
+			
+	}); // end of document.ready
+</script>
+
+<!-- END TABLE 2 -->

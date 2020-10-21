@@ -1,0 +1,352 @@
+<div class="modal modal-shipTo" id="myModalShipTo" role="dialog">
+							<div class="modal-dialog">
+							<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Select Ship-To</h4>
+      </div>
+      <div class="modal-body">
+								
+									<div class="padding8">
+										<div class="search-box searchBoxForShipTo margin-top10">
+											
+												<?php 
+												
+												
+// 												$shippingSearchForm->setAttribute('action', $this->url('user/csrCustomerDetail', array('controller' => 'user', 'action' => 'csr-customer-detail', 'id' => $customerId)));
+// 								$shippingSearchForm->setAttribute('id', 'customer-search-shipping-form');
+// 								// $shippingSearchForm->setAttribute('class', 'col-md-12 form-signin login-form information-form margin-top0');
+								
+// 								$shippingSearchForm->setAttribute('onsubmit', 'return AjaxSearchShipTos()');								
+// 								$shippingSearchForm->prepare();
+// 								echo $this->form()->openTag($shippingSearchForm);
+							
+                     
+//                      			echo $this->formRow($shippingSearchForm->get('SEARCHPARAMETER')); 
+//                      			echo $this->formRow($shippingSearchForm->get('SUBMIT'));                     
+//                      			echo $this->formRow($shippingSearchForm->get('searchshipping'));
+//                      			echo $this->form()->closeTag();
+                     		
+                     			?>
+<input id="searchTextShipTo" type="text" class="form-control pull-left" placeholder="search..." value="" />
+<button id="searchShipTo" class="customer-search"><i class="fa fa-search"></i></button>
+<input type="hidden" name="searchshipping" value="search" /> 											                  
+										</div>
+ 										<a id="clear-ship-to-filter" class="clear-customer margin-top10" href="javascript:void(0)">Clear Filter</a>
+										<div class="clearfix"></div>
+										<div class="table-responsive selected-table dataForShipTos margin-bottom0">
+											<section class="table-section">
+												<div class="table-scroll">
+													<table class="table-striped ship-order">
+														<thead>
+															<tr>
+																<th>Cust.#CuCuCu<div>Cust.#</div></th>
+																<th>Shp# ShShS<div>Shp#</div></th>
+																<th>Ship To Name <div>Ship To Name</div></th>
+																<th>Address <div>Address</div></th>
+																<th>City <div>City</div></th>
+																<th>State Sta<div>State</div></th>
+																<th>Zip <div>Zip</div></th>
+															</tr>
+														</thead>
+														<tbody  id="popUpDataShippingForm">
+															<?php
+															
+															$showButtonsDefaultShipTo = !empty($customerShipTos['output']);
+															
+															if($showButtonsDefaultShipTo): 
+																															 
+	                            	                          foreach($customerShipTos['output'] as $shipTo):
+
+															      $isActive = $sessInquiry::get('customerNumber') === $shipTo['ST_CUST'] &&
+															      
+															                     $sessInquiry::get('shipNumber') === $shipTo['ST_NUM'];
+															
+															      $class = $isActive ? 'active' : '';
+															      
+										                          $combinedId = trim($shipTo['ST_NUM']).'_'.trim($shipTo['ST_CUST']);
+	                            
+	                            	
+	                            	    printf('<tr class="shipToDefaultSelectable %s" id="stnum_%s" rel="%s" data="%s">', 
+	                            	        
+	                            	        $class, 
+	                            	        
+	                            	        $combinedId,
+	                            	        
+	                            	        $shipTo['ST_CUST'],
+	                            	        
+	                            	        $shipTo['ST_NUM']);
+	                                    printf('<td id="customerName_%s">%s</td>', $combinedId, $shipTo['ST_CUST']);
+	                                    printf('<td>%s</td>', $shipTo['ST_NUM']);
+	                                    printf('<td id="name_%s">%s</td>', $combinedId, $shipTo['ST_NAME']);
+	                                    
+	                                    $trimmedShipTo = trim($shipTo['ST_ADR2']);
+	                                    printf('<td id="address_%s">%s</td>', $combinedId,$shipTo['ST_ADR1'].(!empty($trimmedShipTo)? ' - '.$trimmedShipTo:''));
+	                                    printf('<td id="city_%s">%s</td>', $combinedId, $shipTo['ST_ADR3']);
+	                                    printf('<td id="state_%s">%s</td>', $combinedId, $shipTo['ST_STATE']);
+	                                    printf('<td id="zip_%s">%s</td>', $combinedId, $shipTo['ST_ZIP']); 
+	                                    printf('<span id="%s" style="display: none;">%s</span></td>', 'defaultShippingMethod_'.$combinedId, trim($shipTo['SHIP_METHOD']));
+	                                   printf('</tr>');
+	                               endforeach;
+	                               
+	                            else:
+	                               
+	                               printf('<tr><td colspan="7">No Ship-To exists</td></tr>');
+	                            
+	                           endif;?>
+
+														</tbody>
+													</table>
+												</div>
+											</section>
+										</div>
+										<?php if($showButtonsDefaultShipTo): ?>
+										<div class="margin-top20">
+	                    	<button id="doSelectShipTo" onclick="return changeDefaultShipTo()" type="button" class="btn" disabled>Select Ship-To</button>
+	                    	<button onclick="$('#myModalShipTo').modal('toggle');" type="button" class="btn">Cancel Ship-To Selection</button>
+	                    	</div>
+	                    	</div>
+	                    	</div>
+	                    	</div>
+	                    	</div>
+	                    	
+	                    <?php
+	                    endif;
+	                    ?>
+	                    
+	                    <script type="text/javascript" src="/js/item-search.js"></script>
+	                    <script type="text/javascript">
+
+	                    /**
+	                    * jlopez
+	                    *
+						* Available ship to
+						*
+						**/
+	                    var customerShipTos = <?php echo json_encode($customerShipTos['output']) ?>;
+
+	                    // alert(customerShipTos[0]);
+	                    var resultsTarget, selectedCustomer, selectedShipNumber;
+
+	                    /**
+	                    * jlopez
+	                    *
+	                    * Submit new ship to information for Item Inquiry
+	                    *
+	                    */
+	                    var changeDefaultShipTo = function changeDefaultShipTo(){
+
+		                    var formChangeShipTo = document.createElement('form');
+							var elCustomerNumber = document.createElement('input');
+							var elShipNumber = document.createElement('input');
+
+							formChangeShipTo.method = 'POST';
+							formChangeShipTo.action = 'ship-to';
+
+							elCustomerNumber.name = 'customerNumber';
+							elCustomerNumber.type = 'hidden';
+							elCustomerNumber.value = selectedCustomer;
+
+							elShipNumber.name = 'shipNumber';
+							elShipNumber.type = 'hidden';
+							elShipNumber.value = selectedShipNumber;
+
+							formChangeShipTo.appendChild(elCustomerNumber);
+							formChangeShipTo.appendChild(elShipNumber);
+
+							document.body.appendChild(formChangeShipTo);
+							formChangeShipTo.submit();
+	                    };
+
+	                    /**
+	                    * Search ship to in modal
+	                    **/
+	                    var matchShipTo = function matchShipTo(subject, customerShipTo) {
+
+	                    	if(customerShipTo.ST_CUST.toLowerCase().indexOf(subject) > -1) {
+
+			                    	return true;
+	                    	}
+    	                    	
+                        	if(customerShipTo.ST_NUM.toLowerCase().indexOf(subject) > -1) {
+
+                            	return true;
+                        	}
+                        		
+                        	if(customerShipTo.ST_NAME.toLowerCase().indexOf(subject) > -1) {
+
+                            	return true;
+                        	}
+                        		
+                        	if(customerShipTo.ST_ADR1.toLowerCase().indexOf(subject) > -1) {
+
+                            	return true;
+                        	}
+                        		
+                        	if(customerShipTo.ST_ADR2.toLowerCase().indexOf(subject) > -1) {
+
+                            	return true;
+                        	}
+                        		
+
+                        	if(customerShipTo.ST_ADR3.toLowerCase().indexOf(subject) > -1) {
+
+                            	return true;
+                        	}
+                        		
+                        	if(customerShipTo.ST_STATE.toLowerCase().indexOf(subject) > -1) {
+
+                            	return true;
+                        	}
+
+                        	if(customerShipTo.ST_ZIP.toLowerCase().indexOf(subject) > -1) {
+
+                            	return true;
+                        	}
+
+                        	return false;
+	                    }
+
+	                    var processForm = function processForm(form) {
+
+	                    	var filters = $('#' + form).serialize();
+	                    	
+		                    $.post('search', filters, function(raw){
+
+		                    	$('div.tab-pane.active').find('div.panel').hide();
+			                    $('div.tab-pane.active').find('div.results').html(raw);
+
+
+			                }, 'html');
+
+	                    	// alert($('#' + form).serialize());
+		                    // alert('pform');
+	                    };
+
+	                    var filterSearchResults = function filterSearchResults(){
+							
+	                    	$.post('search/filter', {filter: $('#filter').val()}, function(raw){
+
+		                    	$('div.tab-pane.active').find('div.panel').hide();
+			                    $('div.tab-pane.active').find('div.results').html(raw);
+
+			                    // focus 
+			                    $('#filter').focus();
+
+
+			                }, 'html');
+
+	                    };
+
+	                    var resetInquiryForm = function resetInquiryForm(){
+
+		                    $.post('search/filter/reset',{}, function(raw){
+
+		                    	$('div.tab-pane.active').find('div.panel').hide();
+			                    $('div.tab-pane.active').find('div.results').html(raw);
+
+			                    // focus 
+			                    $('#filter').focus();
+			                    
+		                    },'html');
+	                    };
+
+	                    var resetShipToModal = function resetShipToModal() {
+
+		                    $('#searchTextShipTo').val(null).focus();
+
+	                    	$('#no-results').remove();
+
+	                    	$('.shipToDefaultSelectable').show();
+	                    };
+
+		                    
+	                    (function(){
+
+		                    $('#searchShipTo').click(function(e){
+
+			                    var found, subject, subjectId, subjectCount;
+
+			                    subject = $.trim($('#searchTextShipTo').val());
+			                    
+			                    if(subject.length > 0){
+
+				                    found = false;
+
+    			                    $('.shipToDefaultSelectable').hide(); 
+    
+    			                    for(subjectCount = 0; subjectCount < customerShipTos.length; subjectCount++){
+    
+    			                    	subjectId = 'stnum_' + 
+
+    			                    		customerShipTos[subjectCount].ST_NUM + 
+
+    			                    		'_' + 
+
+    			                    		customerShipTos[subjectCount].ST_CUST;
+    				                    
+    				                    console.info(subjectId); 
+    
+    				                    if(matchShipTo(subject.toLowerCase(), 
+
+    	    				                    customerShipTos[subjectCount])){
+	    				                     
+    										$('#' + subjectId).show();
+
+    										found = true;
+    				                    }
+    			                    }
+
+    			                    if(!found){
+
+    			                    	$('.ship-order > tbody').append(
+
+    	    			                    	'<tr id="no-results"><td colspan="7">' +
+
+    	    			                    	'No Ship-To exists</td></tr>');
+    			                    }
+		                    	}
+		                    });
+
+		                    $('#clear-ship-to-filter').click(function(e){
+
+			                    e.preventDefault();
+
+			                    resetShipToModal();
+		                    });
+
+	                    	/**
+	                    	*  Filter search results
+	                    	**/
+	                    	$(document).on('submit', '#inquiry-filter-form', function(e) {
+
+								e.preventDefault();
+	                    		
+		                    	filterSearchResults();
+	                    	});
+		                    
+		                    $('ul.nav-tabs > li').click(
+				                    
+				                function(){
+					                
+				                	$('div.tab-pane').find('div.panel').show();
+				                }
+				            );
+
+
+
+	                    	$('.shipToDefaultSelectable').click(function() {
+			              					
+								$('.shipToDefaultSelectable').removeClass('active');
+
+								$(this).addClass('active');
+			              		selectedCustomer = $(this).attr('rel');
+			              		selectedShipNumber = $(this).attr('data');
+
+			              		$('#doSelectShipTo').removeAttr('disabled');
+			              	});
+
+		                })();
+
+	                    
+	                    </script>

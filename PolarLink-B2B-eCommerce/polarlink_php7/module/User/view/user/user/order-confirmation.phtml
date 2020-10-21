@@ -1,0 +1,120 @@
+ <?php if(!empty($flashMessages)){ ?>
+<div class="alert alert-success fade in modal-content custom-success-content">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	<?php foreach($flashMessages as $flashMessage){ ?>
+			    <?php echo $flashMessage; } ?>
+		</div>
+
+<?php } ?>
+
+<?php // echo'<pre>'; print_r($getOrderHeader); die;?>
+ <div class="col-md-12 col-sm-12 col-xs-12">
+             	<h1 class="margin-bottom25">Order Confirmation</h1>
+             	<h3 class="order-thanks">Thank you for your order! Your Order has been submitted for processing</h3>
+					<div class="total-amount tab-order-total margin-top35">
+					   <div class="order-confirmation">
+    					   <h4>Your Order Number is  <span><?php echo $currentOrdNum;?></span></h4>
+    					   <div class="row order-address order-confirmation-space">
+        					   <div class="col-sm-12">  Purchase Order #:
+        					         <span> <?php echo (!empty(trim($getOrderHeader['output']['OH_PO1']))?trim($getOrderHeader['output']['OH_PO1']):''); ?></span>
+                               </div>
+    					   </div>
+
+    					   <div class="row order-address order-confirmation-space">
+    							<div class="col-sm-12">
+    								<div class="order-shippingto">
+    								    <table>
+    								    <tr>
+    								    <td valign="top" style="padding-right: 12px;" >
+    								    Ship To:
+    								    </td>
+    								    <td valign="top">
+    								    	<div class="col-sm-12">
+            								    <span>
+            								    <?php echo (!empty(trim($getOrderHeader['output']['OH_CUSTNO']))
+            								                    ? trim($getOrderHeader['output']['OH_CUSTNO'])
+            								                    : '')
+            								                .' / '
+                                                            .(!empty(trim($getOrderHeader['output']['OH_SHP2_NUM']))
+                                                                ? trim($getOrderHeader['output']['OH_SHP2_NUM'])
+                                                                : '');
+            								    ?>
+            								    </span>
+            								    <div>
+                								    <div><?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_NAME']))?trim($getOrderHeader['output']['OH_SHP2_NAME']).'<br />':''); ?></div>
+                                                    <div>
+                                                    	<?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ATTN']))?'Attn: '.trim($getOrderHeader['output']['OH_SHP2_ATTN']):''); ?>
+                                                    	<?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ADDR1']))?trim($getOrderHeader['output']['OH_SHP2_ADDR1']):''); ?>
+                                                    	<?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ADDR2']))?trim($getOrderHeader['output']['OH_SHP2_ADDR2']):''); ?>
+                                                    </div>
+                                                    <div>
+                                                    	<?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ADDR3']))?trim($getOrderHeader['output']['OH_SHP2_ADDR3']).', ':'') ?>
+                                                    	<?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_STATE']))?trim($getOrderHeader['output']['OH_SHP2_STATE']).' ':'') ?>
+                                                    	<?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ZIP']))?trim($getOrderHeader['output']['OH_SHP2_ZIP']).' ':''); ?>
+                                                    </div> 
+                                                </span>
+                                            </div>
+    								    </td>
+    								    </tr>
+    								    </table>
+    							    </div>
+       					     </div>
+					  </div>
+
+								<h1 class="margin-top25">Order Totals</h1>
+								<div class="total-amount tab-order-total">
+								<ul class="border-color item-search-table">
+									<div class="total-heading">Product Amount<div class="clearfix"></div><span class="total-desc">(excluding deposits)</span></div>
+									<li class="flright">$<?php echo number_format(trim($getOrderTotals['amount']), '2', '.', ','); ?></li>
+								</ul>
+								<ul class="border-color item-search-table">
+								<div class="total-heading align-center">Quantities<!-- <div class="clearfix"></div><span class="total-desc">&nbsp;</span> --></div>
+								<li><span>Cases:</span> <?php echo number_format(trim($getOrderTotals['caseQty']), '0', '.', ','); ?></li>
+								<li><span>Pallets:</span> <?php echo number_format(trim($getOrderTotals['palletQty']), '2', '.', ','); ?></li>
+								</ul>
+								<ul class="border-color item-search">
+								<div class="total-heading align-center">Weights<div class="clearfix"></div><span class="total-desc">&nbsp;</span></div>
+									<li><span>Products:</span> <?php echo  number_format(trim( $getOrderTotals['prodWeight']), '0', '.', ','); ?> lbs</li>
+								<li><span>Pallets:</span> <?php echo number_format(trim($getOrderTotals['palletWeight']), '0', '.', ','); ?> lbs</li>
+								<li><span>Total:</span> <?php echo number_format(trim($getOrderTotals['totalWeight']), '0', '.', ','); ?> lbs</li>
+								</ul>
+								</div>
+
+						<div class="clearfix"></div>
+						<p class="table-notes fontOrange margin-top20">Total Order Amount is subject to price verification</p>
+					</div>
+		 		</div>
+
+							<div class="clearfix"></div>
+				<div class="order-meeage">
+					<p>You will receive an email confirming your order.</p>
+					<p>You can review your order by going to <a href="<?php echo $this->url('user/orderHistoryView',array('orderNum' => trim($currentOrdNum), 'orderNumToDisplay' => trim($currentOrdNum))); ?>"> Order History</a> from the home page</p>
+					<p>You can obtain a PDF of your order to save or print, by clicking the print order button, below</p>
+				</div>
+
+
+                <div class="buttons review-buttons">
+	                <button class="btn" type="button" onclick="location.href = '<?php echo $this->url ( 'user/printPdf', array (
+																			'controller' => 'user',
+																			'action' => 'print-pdf',
+	                			'id' => $currentOrdNum
+																	) ); ?>';">Print Order</button>
+	                    <button class="btn" type="button" onclick="location.href = '<?php if($identity['PLU_POLAR_CSR'] == 'Y'){ echo $this->url('user/csrIndex'); } else { echo $this->url('user/index'); } ?>';">Home Page</button>
+	                    <button class="btn" type="button" onclick="location.href = '<?php echo $this->url('user/orderHistoryView',array('orderNum' => trim($currentOrdNum), 'orderNumToDisplay' => trim($currentOrdNum))); ?>';">Order History</button>
+				</div>
+                <div class="clearfix"></div>
+
+                <?php echo $this->form ()->closeTag(); ?>
+				<div class="buttons-text">
+<!--					<div class="row">
+						<div class="col-md-7 col-sm-7 col-xs-12 responsive-buttons-text">
+ 							<p class="btn-active-text"><em>Please correct errors before you can submit your order.</em></p>
+						</div>
+ 						<div class="col-md-5 col-sm-5 col-xs-12 text-right responsive-buttons-text">
+				<span><input type="checkbox" checked="checked" />&nbsp; &nbsp;<em>Save this order for late?</em></span>
+ 						</div>
+					</div> -->
+				</div>
+             </div>
+
+

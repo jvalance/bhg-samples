@@ -1,0 +1,332 @@
+@CHARSET "ISO-8859-1";
+
+body,html {
+	margin: 0 5px;
+	font-family: verdana, arial, sans-serif;
+}
+body { font-family: arial; color: navy; background-color: white; }
+
+h1 {
+	font-size: 1.4em;
+	color: #008000;
+}
+
+ul {
+	margin-left: 0; 
+	margin-top: 4px; 
+	text-align: left;
+	align: left;
+}
+
+#pageheader h1.selectRecordTitle { color: navy; background-color: lightblue}
+#pageheader h1.deleteTitle { color: red; background-color: #F5E796}
+.hidden { display: none }
+.visible { display: '' }
+	
+/* ---------------------------------------------------------------
+	Listing Tables   
+ ---------------------------------------------------------------*/
+table.lists caption { background-color: beige; border: 1px solid navy; }
+table.lists { background-color: white; border: 1px solid navy; width: 100%; 
+				padding: 5px; padding-bottom: 25px  }
+table.lists th { background-color: navy; color: white; padding: .3em }
+table.lists td { border-top: 1px solid silver; vertical-align: top; 
+				font-family: verdana; font-size: .85em; padding: 2px }
+table.lists tr.hover td { background-color: #e2f1fa }
+
+table.lists tr.wo-pending td, 
+table.lists tr.wo-pending td a {  
+	font-weight: bold; 
+	color: darkred
+} 
+table.lists tr.wo-closed td, 
+table.lists tr.wo-closed td a { 
+	color: black
+} 
+table.lists tr.wo-completed td, 
+table.lists tr.wo-completed td a { 
+	color: blue
+}
+table.lists tr.wo-cancelled td, 
+table.lists tr.wo-cancelled td a { 
+	color: gray;
+	text-decoration: line-through;
+}
+
+table.lists tr.wo-closed td a:hover, 
+table.lists tr.wo-pending td a:hover,
+table.lists tr.wo-cancelled td a:hover,
+table.lists tr.wo-completed td a:hover { 
+	color: white; 
+	background-color: gray; 
+	text-decoration: none
+}
+
+table.lists tr.premise-inactive td, 
+table.lists tr.premise-inactive td a { 
+	color: gray;
+	/*text-decoration: line-through;*/
+}
+table.lists tr.premise-inactive td a:hover { 
+	color: white; 
+	background-color: gray; 
+	text-decoration: none
+}
+
+td.prem-selected {
+	font-weight: bold;
+	background-color: #FFFFAA;
+	border: 1px solid gray;
+}
+td.prem-not-selected {
+	font-weight: normal;
+	background-color: white;
+}
+
+
+table.query { clear: both ; width: 80% }
+table.query caption { padding: 0; margin: 0 }
+
+table.lists tbody.scrollable { /* overflow: auto; height: 300px */ }
+table.lists tbody.scrollable tr { /*height: 1em */ } /* work around IE bug */
+
+
+table.lists tr.droprow td {
+	border: 0;
+}
+table.lists tr.droprow td.details {
+	border-style: solid ;
+	border-color: silver;
+	border-width: 0px 1px 1px 1px;
+	color: #7C7B7B;
+	background-color: #FFFFCC;
+	text-align: left;
+	align: left;
+}
+table.lists tr.droprow td.details ul {
+	margin-left: 0; 
+	margin-top: 4px; 
+	text-align: left;
+	align: left;
+}
+
+table.authorityDetails th {
+	background-color: #918F8F;
+	color: white;
+	font-weight: bold;
+	margin: 3px;
+}
+
+.hoverText:hover {
+	background-color: lightblue;
+	color: black;
+	font-weight: normal;
+}
+/* ---------------------------------------------------------------
+	Paginator Controls  
+ ---------------------------------------------------------------*/
+div.pagecontrol { margin: 0 auto }
+#paging_rowcount, #page_XofY { margin: 5px 10px  }
+button, input[type=button] { margin: 5px 10px }
+
+/* ---------------------------------------------------------------
+	Page layout 
+ ---------------------------------------------------------------*/
+#header { margin: 0 auto; width: 90%;  }
+#content {
+	align: center;
+	/*	border: 1px solid #2175A2; 
+	background-color:white; */ 
+	width: 100%;
+	margin: 2px auto;
+}
+#pagefooter {
+	padding-top: 10px;
+	align: center;
+}
+
+#layout #leftnav {
+	vertical-align: top;
+	width: 10%;	
+	padding: 5px;
+	margin-right: 15px ;
+	border:1px solid black;
+	background-color: #F4F5F7;
+	min-height:350px
+}
+
+#layout #output {
+	vertical-align: top;
+	padding-left: 15px ;
+}
+#navbar {
+	width: 100%;
+	border: 1px solid black;
+	background-color: #C9F2FF;
+	text-align: left;
+}
+#leftnav ul, #leftnav li {
+	list-style-image: url(bullet_blue_arrow.png); 
+}
+td#leftnav { 
+  height:auto !important;
+}
+
+#search_filters {
+    background-color: lightgray;
+    padding: 5px;
+}
+
+#search_filters input, #search_filters select {
+	color: red;  
+}
+
+/* ---------------------------------------------------------------
+	Detail displays - Inquiry and Update Screens 
+ ---------------------------------------------------------------*/
+.inquiry_output { 
+	background-color: #E2F1FA; /*ffffcc;*/
+	padding: 8px;
+	vertical-align: top;
+	border: 1px solid gray;
+}
+
+table.field_group { 
+	background-color: white; border: 1px solid navy; padding: 2px;
+	margin-bottom: 15px;
+	width: 100%;
+}
+table.field_group caption { 
+	background-color: darkgray;
+	text-align: left;
+	color: white;
+	border: 1px solid gray;
+	border-bottom: 0;
+	padding: 2px;
+	font-weight:bold;
+	font-family: arial;
+	font-size: 1.1 em;
+}
+table.field_group caption a.toggleFieldGroup,
+table.field_group caption a.toggleFieldGroup:active,
+table.field_group caption a.toggleFieldGroup:visited 
+{ 
+	background-color: darkgray;
+	color: white;
+	font-weight:bold;
+	font-family: arial;
+	font-size: 1.1 em;
+}
+table.field_group caption a.toggleFieldGroup:hover
+{ 
+	background-color: white;
+	color: navy;
+	text-decoration: none;
+	font-weight:bold;
+	font-family: arial;
+	font-size: 1.1 em;
+}
+
+table.field_group td.field_label:after { 
+	content:': ';
+}
+table.field_group td.field_label.required:before {
+	content:'* ';
+	color:red;
+}
+table.field_group .field_description {
+	color: blue;
+	font-size: 1em; 
+	font-family: verdana;
+}
+
+#form_err_msgs h3 {
+	color: red; 
+	font-size: 1.1em; 
+	text-align: left; 
+	margin: 0; 
+	padding: 0;
+}
+
+#form_err_msgs ul, #form_err_msgs li {
+	color: red; 
+	text-align: left; 
+	margin-left: 0; 
+	margin-top: 4px; 
+}
+
+#form_msgs h3 {
+	font-size: 1.1em; 
+	text-align: left; 
+	margin: 0; 
+	padding: 0;
+}
+
+#form_err_msgs h4 {
+	color: navy; 
+	font-size: 1em; 
+	text-align: left; 
+	margin: 2px;
+}
+
+td.fg_column { 
+	padding-right: 3px;
+	padding-left: 3px;
+}
+
+table.field_group td.field_label {
+font-family: verdana; font-size: .85em; 
+   padding: 3px;
+	vertical-align: top;
+	padding-right: 5px;
+   color: #19589c;
+   background-color: white;
+   font-weight: normal;
+	text-align: right;
+	border-bottom: 1px solid silver;
+	width: 40%;
+}
+table.field_group td.field_value  {
+   padding: 3px;
+	padding-left: 5px;
+	font-size: .85em; 
+   color: navy;
+   background-color: white;
+   font-weight: bold;
+	text-align: left;
+	border-bottom: 1px solid silver;
+	width: 60%;
+}
+
+/* ---------------------------------------------------------------
+	Detail displays - Custom styling 
+ ---------------------------------------------------------------*/
+
+/* Services Form: Premise address show/hide table */ 
+.premAddrs {
+	display: none; 
+	position: absolute; 
+	border-style: groove; 
+	background-color:#e2f1fa
+}
+
+.premAddrs th, #premAddrs td {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.premAddrs td {
+	text-align: left;
+	border-bottom: 1px solid silver;
+	border-top: 0;
+}
+
+.premAddrs th {
+	text-align: left;
+	background-color: #19589c;
+	color: white;
+}
+
+#label_SPX_PREMISE_NUMS:after {
+	content: "";
+}

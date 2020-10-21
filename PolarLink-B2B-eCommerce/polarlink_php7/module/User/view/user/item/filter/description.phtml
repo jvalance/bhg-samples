@@ -1,0 +1,28 @@
+<div class="filterby-product-description main-data-item-description">
+<?php
+
+    $form->setAttribute('action', $this->url('user/itemSearchAjax',
+        
+        array(
+            'controller' => 'user',
+            'action' => 'item-search-ajax' // TODO: update url
+        )
+        
+    ));
+                        
+    $form->setAttribute('id', 'item-search-form');
+    $form->prepare();
+    echo $this->form()->openTag($form);
+    echo '<label for="filterItemSearch">Filter Products by:</label>';
+    echo $this->formRow($form->get('filter'));
+    echo $this->formRow($form->get('brand'));
+    echo $this->formRow($form->get('size'));
+    echo $this->formRow($form->get('brandName'));
+    echo $this->formRow($form->get('sizeName'));
+    
+    $element = $form->get('save');
+    $element->setAttribute('onclick', 'return checkBlank();');
+    echo $this->formButton($element);
+    echo $this->form()->closeTag();
+    ?>
+</div>

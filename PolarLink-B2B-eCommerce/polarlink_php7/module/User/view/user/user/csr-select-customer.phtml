@@ -1,0 +1,147 @@
+             <div class="select-customer col-md-12 col-sm-12 col-xs-12">
+                <div class="current-0rder-background ordering-option padding8">
+                	<h2 class="heading">Select PolarLink Customer to Work With</h2>
+                    <div class="search-box searchBoxForShipTo">
+                    <?php $form->setAttribute('action', $this->url('user/csrSelectCustomer', array('controller' => 'user', 'action' => 'csr-select-customer')));
+$form->setAttribute('id', 'search-csr-customer-form');
+$form->prepare();
+echo $this->form()->openTag($form);
+ ?>
+                     <?php
+                     echo $this->formRow($form->get('SEARCHPARAMETER')); ?>
+                     <button id="searchShipTo" class="customer-search"><i class="fa fa-search"></i></button>
+                     <?php // echo $this->formRow($form->get('SUBMIT'));
+
+                     echo $this->formRow($form->get('searchshipping'));
+                     ?>
+                <!--     <input type="text" name="searchShipToText" placeholder="search..." /> <button id="searchShipTo"><img src="<?php echo $this->basePath('img/search_btn.jpg'); ?>" alt="" /></button>  -->
+                           <?php
+
+echo $this->form()->closeTag();
+
+
+?>
+                    </div>
+					<a href="javascript:void(0)" class="clear-customer" onclick="clearFilterCSRSearch();">Clear Filter</a>
+                    <div class="clearfix"></div>
+
+                    <div class="table-responsive selected-table dataForShipTos">
+                    	<section class="table-section">
+  							<div class="table-scroll">
+                        <table class="table-striped ship-order">
+                            <thead>
+                                <tr>
+                                    <th>Cust. GroupCust.<div>Cust. Group</div></th>
+									<th>Customer Name <div>Customer Name</div></th>
+									<th>Status <div>Status</div></th>
+									<th>Users User <div>Users</div></th>
+									<th>Created <div>Created</div></th>
+									<th>Last Login <div>Last Login</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+
+                            if(!empty($plinkCustomers['output'])){
+
+                            foreach($plinkCustomers['output'] as $plinkCustomer){
+								$statusText = $plinkCustomer['PLC_STATUS_TEXT'];
+								$trimmedPlcGroup = trim($plinkCustomer['PLC_CUST_GRP']);
+								$trimmedidentityGroup = trim($identity['PLU_CUST_GROUP']);
+								$selectedCustGroup = '';
+								$selectedUserName =  '';
+								$class = '';
+								$i = 1;
+								$showSelectButton = false;
+								if($trimmedidentityGroup == $trimmedPlcGroup){
+$showSelectButton = true;
+$selectedCustGroup = $trimmedPlcGroup;
+$selectedUserName =  trim($identity['PLC_CUST_NAME']);
+$class = ' active';
+								}
+                            	?>
+                            <tr  class="CsrSelectable<?php echo $class; ?>" id="<?php echo 'csrSelectable_'.$i; ?>">
+									<td plc_group="plc_group"><?php echo $trimmedPlcGroup; ?></td>
+									<td cust_name="cust_name"><?php echo trim($plinkCustomer['PLC_CUST_NAME']); ?></td>
+									<?php if($statusText == 'disabled'){ ?>
+									<td class="colorred"><?php echo  $statusText; ?></td>
+									<?php  } else { ?>
+									<td><?php echo  'Active'; ?></td>
+									<?php } ?>
+									<td style="text-align:right"><?= ltrim($plinkCustomer['PLC_USER_COUNT'], '0'); ?></td>
+									<td><?php
+									if($plinkCustomer['PLC_DATE_CREATED'] != '0001-01-01'){
+
+									echo date('M j, Y', strtotime($plinkCustomer['PLC_DATE_CREATED']));
+									} else {
+										echo '-';
+									}
+									?></td>
+									<td><?php
+                            	if($plinkCustomer['PLC_LAST_LOGIN'] != '0001-01-01'){
+                            	 echo date('M j, Y', strtotime($plinkCustomer['PLC_LAST_LOGIN']));
+                            	 } else {
+									echo '-';
+								}
+                            	 ?></td>
+								</tr>
+
+<?php
+$i++;
+}
+ } else { ?>
+								<tr>
+									<td colspan="6">No record found.</td>
+								</tr>
+        <?php } ?>
+
+
+                            </tbody>
+                        </table>
+                    	</div>
+                    	</section>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div>
+                    <?php $formCsrCustomerForm->setAttribute('action', $this->url('user/csrSelectCustomer', array('controller' => 'user', 'action' => 'csr-select-customer')));
+$formCsrCustomerForm->prepare();
+echo $this->form()->openTag($formCsrCustomerForm);
+ ?>
+                     <?php
+                  		 if(isset($selectedCustGroup)){ echo $this->formRow($formCsrCustomerForm->get('csr_cust_group')->setValue($selectedCustGroup));}
+                  		  if(isset($selectedUserName)){  echo $this->formRow($formCsrCustomerForm->get('csr_user_name')->setValue($selectedUserName)); }
+                     ?>
+	                   <span class="selectedShipToButtons" <?php  if(isset($showSelectButton)) { echo 'style="display:none"'; } ?> >
+	                   <?php echo $this->formRow($formCsrCustomerForm->get('save')); ?>
+	                    </span>
+	                    <span class="selectedShipToButtons">
+	                    <?php $pathToCsrIndex = $this->url('user/csrIndex');
+	                     echo $this->formRow($formCsrCustomerForm->get('Cancel')->setAttribute('onclick', 'location.href = "'.$pathToCsrIndex .'"')); ?>
+	                    <!--  <button class="btn" type="button" onclick="location.href = '<?php echo $this->url('user/csrIndex'); ?>';">Cancel</button> -->
+	                    </span>
+	                    <?php
+
+echo $this->form()->closeTag();
+
+?>
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+
+             </div>
+             <script type="text/javascript">
+             $(function(){
+             $('.CsrSelectable').click(
+            			function() {
+            				_isDirty = true;
+            				$('.CsrSelectable').removeClass('active');
+            				$(this).addClass('active');
+             				$('.selectedShipToButtons').show();
+            				$('#csr_cust_group').val($(this).find('td[plc_group="plc_group"]').html());
+            				$('#csr_user_name').val($(this).find('td[cust_name="cust_name"]').html());
+            			});
+             });
+             </script>

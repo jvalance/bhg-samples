@@ -1,0 +1,163 @@
+/**
+ * Scope: Customer administration pages
+ */
+
+.table-fixed-headers {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.table-fixed-headers thead tr {
+  display: block;
+  position: relative;
+}
+
+.table-fixed-headers tbody {
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: initial !important;
+  max-height: 600px;
+}
+
+#configure-emails {
+	font-size:14px;
+}
+
+.small-ajax-loader {
+	width: 30px;
+	height: 30px;
+}
+
+.please-wait {
+	position: relative;
+    top: 5px;
+    text-transform: lowercase;
+    font-style: italic;
+}
+
+.hidden-by-text, .hidden-by-type {
+	display:none !important;
+}
+
+#reset-search-ship-to{
+    color: #d96242;
+    float: initial;
+    line-height: initial;
+    display: inline;
+    position: relative;
+    top: 35px;
+    left: 15px;
+}
+#container-filter-search-ship-to  {
+	padding-right: 16px;
+    padding-left: 16px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#container-filter-search-ship-to #searchShipTo{
+	position: absolute;
+	height: 35px;
+	font-size: medium;
+	right: 2%;
+}
+
+#appendedInputButton{
+	position:relative;
+	margin-top:0;
+	border-radius: 0;
+	width: 90%;
+	height: 35px;
+}
+
+.customer_default_text {
+    width: auto !important;
+}
+
+#container-customer-shipping-preference {
+    
+    min-width: 250px;
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+}
+#select-customer-shipping-address-preference {
+    margin: auto 0;
+    width: auto;
+    text-align: center;
+    padding: 0px;
+}
+#select-customer-shipping-address-preference a {
+    position: absolute;
+    top: -10px;
+    left: 175px;
+    font-size: 16px;
+    text-decoration: underline;
+    width: 100%;
+    font-style: italic;
+    font-weight: normal !important;
+    margin: 5px 0px 0px 0px;
+}
+
+#customer-shipping-address-preference {
+    float: left;
+    width: initial !important;
+}
+
+#customer-ship-to-emails,
+#customer-ship-to-emails td.no-data
+{
+	width: 895px;
+}
+
+#customer-ship-to-emails tr.headers{
+	
+	background: linear-gradient(to bottom, #ffffff 10%, #cdcdcd);
+}
+#customer-ship-to-emails th, #customer-ship-to-emails td {
+	line-height: 1.5;
+    padding: 4px 10px;
+	/* width: 90px;
+	max-width: 90px; */
+	overflow: hidden;
+	text-overflow: hidden;
+	word-break: break-word;
+}
+
+
+
+#customer-ship-to-emails td {
+	font-size: small;
+    vertical-align: top;
+}
+
+#customer-ship-to-emails td.active{
+    background: #e4917a;
+}
+
+#customer-ship-to-emails th.right, #customer-ship-to-emails td.right {
+	text-align: right;
+}
+
+#customer-ship-to-emails th.center, #customer-ship-to-emails td.center {
+	
+	text-align: center;
+}
+
+#customer-ship-to-emails .ship-email-address {
+	width: 210px;
+	max-width: 210px;
+}
+
+#customer-ship-to-emails .ship-email-list{
+	width: 240px;
+    max-width: 240px;
+	
+}
+
+#customer-ship-to-mailing-list textarea#csr_email_address{
+	margin: 0px;
+    height: 123px;
+    width: 454px;
+}

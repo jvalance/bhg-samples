@@ -1,0 +1,39 @@
+SET PATH *LIBL ;
+
+CREATE OR REPLACE PROCEDURE SP_DELETE_PL_SHIPTO_REC ( 
+	IN IN_CUST_GRP CHAR(10) , 
+	IN IN_CUSTNO DECIMAL(8, 0) , 
+	IN IN_SHIPTO DECIMAL(4, 0) , 
+	OUT OUT_MESSAGE VARCHAR(100) ) 
+	LANGUAGE SQL 
+	SPECIFIC SP_DELETE_PL_SHIPTO_REC 
+	NOT DETERMINISTIC 
+	MODIFIES SQL DATA 
+	CALLED ON NULL INPUT 
+	SET OPTION  ALWBLK = *ALLREAD , 
+	ALWCPYDTA = *OPTIMIZE , 
+	COMMIT = *NONE , 
+	DECRESULT = (31, 31, 00) , 
+	DFTRDBCOL = *NONE , 
+	DYNDFTCOL = *NO , 
+	DYNUSRPRF = *USER , 
+	SRTSEQ = *HEX   
+	BEGIN 
+/*================================================================================  
+Created June 2017 by John Valance  
+=================================================================================*/ 
+  
+	DELETE FROM PL_SHIPTO 
+	WHERE 
+		PLST_CUST_GRP = IN_CUST_GRP AND 
+		PLST_CUSTNO = IN_CUSTNO AND 
+		PLST_SHIPTO = IN_SHIPTO 
+	; 
+  
+END  ; 
+  
+GRANT ALTER , EXECUTE   
+ON SPECIFIC PROCEDURE SP_DELETE_PL_SHIPTO_REC 
+TO JVALANCE ; 
+  
+;

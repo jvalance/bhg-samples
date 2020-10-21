@@ -1,0 +1,8 @@
+drop procedure VGCUSTOM/spSubmit_CNVSRVYSQR;
+--@#
+create procedure VGCUSTOM/spSubmit_CNVSRVYSQR( @JOBD char(10) )
+ RESULT SETS 0
+ EXTERNAL NAME  CnvSrvySqC
+ LANGUAGE  CL
+ PARAMETER STYLE GENERAL
+;

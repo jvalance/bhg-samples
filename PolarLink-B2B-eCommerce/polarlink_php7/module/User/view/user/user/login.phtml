@@ -1,0 +1,120 @@
+<div class="login-section-bg2">
+            	<div class="col-md-5 col-sm-6 col-xs-12 login-section-left margin-auto">
+                	<h2 class="heading left-center">Sign In to PolarLink</h2>
+                   <?php
+$form->setAttribute('action', $this->url('user', array('controller' => 'user', 'action' => 'login')));
+$form->setAttribute('id', 'sign-in-form');
+$form->setAttribute('class', 'col-md-12 form-signin login-form');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<!--
+			<div class="alert alert-success fade in">
+			    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			    <strong>Success!</strong> This alert box could indicate a successful or positive action.
+			</div>
+		    <div class="alert alert-danger fade in">
+			    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			    <strong>Danger!</strong> This alert box could indicate a dangerous or potentially negative action.
+			</div>
+			 -->
+			<?php
+
+if (!empty($loginResult) && ($loginResult['result'] == '0')) { ?>
+
+    <div class="alert  alert-danger fade in">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<?php
+
+        echo $loginResult['message'];
+     ?>
+
+    </div>
+<?php }
+
+?>
+
+
+	                    	<fieldset class="col-md-12">
+	                        	<label>&nbsp;</label>
+								<!--<h2 class="login-heading">Sign In to PolarLink</h2> -->
+	                        </fieldset>
+	                    	<fieldset class="col-md-12">
+	                            <label for="sign-in-user-id">User ID:</label>
+	                            <?php echo $this->formRow($form->get('PLU_USER_ID')); ?>
+	                            <span><img src="<?php echo $this->basePath('img/user_icon.png'); ?>" alt="" /></span>
+	                        </fieldset>
+	                        <fieldset class="col-md-12">
+	                            <label for="sign-in-password">Password:</label>
+	                            <?php echo $this->formRow($form->get('PLU_PASSWORD')); ?>
+	                            <span><img src="<?php echo $this->basePath('img/password_icon.png'); ?>" alt="" /></span>
+	                        </fieldset>
+	                        <fieldset class="col-md-12 sign-btn-col">
+	                            <label>&nbsp;</label>
+	                            <?php echo $this->formButton($form->get('SUBMIT')); ?>
+	                        </fieldset>
+	                        <fieldset class="col-md-12">
+	                            <label>&nbsp;</label>
+	                            <a href="javascript:void(0)" data-toggle="modal" data-target="#forgotModal">Forgot user or password? Click here.</a>
+	                        </fieldset>
+                    <?php
+
+echo $this->form()->closeTag();
+?>
+		<div class="clearfix"></div>
+                </div>
+		<div class="login-form-bg">&nbsp;</div>
+
+<div class="clearfix"></div>
+    <div class="col-md-12 col-sm-12 col-xs-12 footer-outer">
+        <div class="copy-right text-center">
+            &copy; Copyright Polar Beverages 2016 - <?php echo date('Y'); ?>. All rights reserved.
+            <br />
+            
+            Website Powered By <a target="_blank" href="http://www.div1sys.com" title="Divison 1 Systems">Divison 1 Systems</a>   
+            
+        </div>
+    </div>
+                <div class="clearfix"></div>
+            </div>
+           <!--  modal box -->
+            <div class="modal fade" id="forgotModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Forgot Password</h4>
+        </div>
+        <div class="modal-body">
+          <p>If you have forgotten your user ID or password, please call Polar customer service at +1&nbsp;(508) 749-2247 or (508) 749-2241 to request assistance.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+</div>
+</div>
+            <!--  modal box ends here-->
+<script type="text/javascript">
+
+(function(){
+
+	/**
+	 * Clean up
+	 * New logins
+	 * */
+
+	if(parseInt(Cookies.get('OH_PLINK_ORDERNO')) > 0 ) {
+		
+		Cookies.remove('OH_PLINK_ORDERNO');
+	}
+	
+})();
+
+</script>
+
+
+

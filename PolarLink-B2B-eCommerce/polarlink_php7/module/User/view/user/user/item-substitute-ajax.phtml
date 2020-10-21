@@ -1,0 +1,157 @@
+  <?php
+		$form->setAttribute ( 'action', $this->url ( 'user/itemSubstituteAjax', array (
+				'controller' => 'user',
+				'action' => 'item-substitute-ajax' 
+		) ) );
+		$form->setAttribute ( 'id', 'item-substitute-form-ajax' );
+		// $form->setAttribute('class', 'col-md-12');
+		
+		$form->prepare ();
+		echo $this->form ()->openTag ( $form );
+		?>  	
+
+<?php if(!empty(trim($searchFilters['brand'])) || !empty(trim($searchFilters['size']))){ ?>
+<ul class="total-amount">
+	<li>
+                                <?php if(!empty(trim($searchFilters['brand']))){ ?>
+                                    <div class="selected-ship">
+			Brand: <span><?php echo trim($searchFilters['brandName']); ?></span>
+		</div>
+                                    <?php echo $this->formRow($form->get('brand')); ?>
+                        <?php echo $this->formRow($form->get('brandName')); ?>
+                                    <?php } ?>
+                                    <?php if(!empty(trim($searchFilters['size']))){ ?>
+                                    <div class="selected-ship">
+			Size: <span><?php echo trim($searchFilters['sizeName']); ?></span>
+		</div>
+                                <?php echo $this->formRow($form->get('size')); ?>
+                                <?php echo $this->formRow($form->get('sizeName')); ?>
+                                   
+                                    <?php } ?>
+                                </li>
+</ul>
+<?php } ?>
+                            <?php // if(!empty(trim($searchFilters['filter']))){ ?>
+<div class="filterby-product-description">
+	<label>Filter by product/description:</label>
+                            	 <?php echo $this->formRow($form->get('filter')->setAttribute('id', "itemSubstituteFilterAjax")); ?>
+                                  <?php
+																																		$element = $form->get ( 'save' );
+																																		$element->setAttribute ( 'onclick', 'return checkBlankSubstituteAjax();' );
+																																		echo $this->formButton ( $element );
+																																		
+																																		?>
+                                
+                                <a href="javascript:void(0)"
+		onclick="clearFilterItemSubstituteAjax();">Clear Recent Filter</a>
+</div>
+
+<?php echo $this->form()->closeTag(); ?>
+<div class="clearfix"></div>
+<div class="order-heading margin-none">Items matching selection</div>
+<?php
+$form->setAttribute ( 'action', $this->url ( 'user/updateSubstitutes', array (
+		'controller' => 'user',
+		'action' => 'update-substitutes' 
+) ) );
+$form->setAttribute ( 'id', 'item-update-substitute-form-ajax' );
+// $form->setAttribute('class', 'col-md-12');
+
+$form->prepare ();
+echo $this->form ()->openTag ( $form );
+?>
+
+<div class="table-responsive">
+	<section class="table-section">
+		<div class="table-scroll">
+			<table
+				class="table table-striped ship-order border-none margin-bottom8">
+				<thead class="scrollable-header-dynamic">
+					<tr class="th-background-none">
+						<th>Product
+							<div>Product</div>
+						</th>
+						<th>Description
+							<div>Description</div>
+						</th>
+						<th>Selected?
+							<div style="padding-left: 5%;">Selected?</div>
+						</th>
+						<th>Qty Currently on Order
+							<div>Qty Currently on Order</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+                                    
+                                    <?php
+																																				if (! empty ( $getItemsFiltered ['output'] )) {
+																																				//	echo '<pre>'; print_r($getItemsFiltered ['output']); die;
+																																					foreach ( $getItemsFiltered ['output'] as $itemFilter ) {
+																																						$quantityOrdered = trim ( $itemFilter ['ITM_QTY_ORD'] ) ? trim ( $itemFilter ['ITM_QTY_ORD'] ) : '';
+																																						$itemNumber = trim ( $itemFilter ['ITM_NUMBER'] ) ? trim ( $itemFilter ['ITM_NUMBER'] ) : '';
+																																						$selected = false;
+																																						if (isset($itemFilter ['PLS_ITEM_NO']) && !empty(trim ( $itemFilter ['PLS_ITEM_NO'] ))) {
+																																							$selected = true;
+																																						}
+																																						?>
+<tr id="<?php echo $itemNumber; ?>"
+						<?php if($selected === true ){ echo 'class="bolderTr"';} ?>>
+						<td><?php echo $itemNumber; ?></td>
+						<td desc="desc"><?php echo $itemFilter['ITM_DESC']; ?></td>
+						<td align="center">
+							<div class="checkbox checkbox-primary checkbox-single"> 
+<?php
+																																						
+																																						echo $this->formRow ( $form->get ( 'multi-checkbox' )->setOptions ( array (
+																																								'value_options' => array (
+																																										array (
+																																												'value' => $itemNumber,
+																																												'label' => false,
+																																												'selected' => $selected,
+																																												'attributes' => array (
+																																														'onchange' => 'return changeSubstituteStatus(this)',
+																																														'class' => 'inputSetClass' 
+																																												) 
+																																										) 
+																																								) 
+																																						) ) );
+																																						?>
+   </div>
+						</td>
+						<td><?php
+																																						
+																																						if ($quantityOrdered > 0) {
+																																							echo number_format ( $quantityOrdered, '0' ) . '-';
+																																							
+																																							$trimmedUomValue = trim ( $itemFilter ['ITM_UOM'] );
+																																							if ($trimmedUomValue == 'CS') {
+																																							//	echo $trimmedUomValue;
+																																								echo 'Cases';
+																																							} else if ($trimmedUomValue == '12') {
+																																								// echo $trimmedUomValue;
+																																								echo '12pack';
+																																							}
+																																						} else {
+																																							echo '-';
+																																						}
+																																						?></td>
+					</tr>
+										<?php
+																																					}
+																																				} else {
+																																					?>
+<tr>
+						<td colspan="4">No Products found. Please search again.</td>
+					</tr>
+<?php
+																																				}
+																																				?>    
+                                    </tbody>
+			</table>
+		</div>
+	</section>
+</div>
+
+<?php echo $this->form()->closeTag(); ?>
+<div class="clearfix"></div>

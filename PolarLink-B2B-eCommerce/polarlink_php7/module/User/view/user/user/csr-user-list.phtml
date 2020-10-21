@@ -1,0 +1,241 @@
+<?php if(!empty($flashMessages)){ ?>
+<div class="alert alert-success fade in modal-content custom-success-content">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	<?php foreach($flashMessages as $flashMessage){ ?>
+			    <?php echo $flashMessage; } ?>
+		</div>	
+		
+<?php } ?>
+<div class="csr col-md-12 col-sm-12 col-xs-12">
+				<div class="csr-heading text-center">Work with PolarLink Users</div>
+				<div class="clearfix"></div>
+                <div class="current-0rder-background ordering-option padding8 margin-top40">
+                	<h2 class="heading">Search for PolarLink Users</h2>
+                    <div class="customer_list_search_box searchBoxForShipTo">
+
+                    <?php $form->setAttribute('action', $this->url('user/csrUserList', array('controller' => 'user', 'action' => 'csr-user-list')));
+$form->setAttribute('id', 'csr-user-search-form');
+// $form->setAttribute('class', 'announcement-search-form margin-top10 margin-bottom8');
+
+ // $form->setAttribute('onsubmit', 'return validateCsrAnnouncementSearchForm()');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+ ?>
+  <label><span>Customer Group: </span><?php 
+  if($identity['PLU_PLINK_ADMIN'] == 'Y' && $identity['PLU_POLAR_CSR'] == 'N'){
+  echo $this->formRow($form->get('CustGroup')->setAttribute('readonly', 'readonly')->setAttribute('value', trim($identity['PLU_CUST_GROUP'])));
+} else {
+echo $this->formRow($form->get('CustGroup'));
+}
+  
+  ?></label>
+ <label><span>Filter: </span><?php echo $this->formRow($form->get('SearchFilters'));  ?></label>
+ <?php echo $this->formRow($form->get('Status'));  ?>
+  <label>
+                     <a onclick="clearForm(document.getElementById('csr-user-search-form'));" class="clear-customer" href="javascript:void(0)">Clear Filter</a>
+                     
+ <?php echo $this->formButton($form->get('Submit')); ?>
+		 </label>					<?php
+
+echo $this->form()->closeTag();
+
+
+?>
+					</div>
+					
+					<div class="clearfix"></div>
+					<p class="full filter-text">Select a User below, then click button to view, change or de-activate their PolarLink record.</p>
+					<?php 
+					$showButtons = false;
+					 if(!empty($plinkUsers['output'])){ 
+						$showButtons = true;
+					}
+					if($showButtons){
+					?>
+					
+					<div class="full margin-top15">
+						<?php // condition to hide the add button if the customer is not selected 
+// 							if(!empty($identity['PLU_CUST_GROUP']) && !empty($identity['PLU_CUSTNO'])){
+ // if(!empty($identity['PLU_CUST_GROUP'])){
+
+						?>
+						<span class="selectedShipToButtons selectedShipToButtonsActions">
+							<button id='add' type="button" class="btn margin-right"><i class="fa fa-plus-circle"></i>&nbsp;Add</button>
+						</span>
+						<?php // } ?>
+						<span class="selectedShipToButtons selectedShipToButtonsActions">
+							<button id='view' type="button" class="btn margin-right"><i class="fa fa-eye"></i>&nbsp;View</button>
+						</span>
+						<span class="selectedShipToButtons selectedShipToButtonsActions">
+							<button id='edit' type="button" class="btn margin-right"><i class="fa fa-pencil"></i>&nbsp;Edit</button>
+						</span>
+						<span class="selectedShipToButtons selectedShipToButtonsActions">
+							<button id='remove' type="button" class="btn"><i class="fa fa-times-circle"></i>&nbsp;Remove</button>
+						</span>
+					</div>
+					<?php } ?>
+                    <div class="clearfix"></div>
+                    <div class="table-responsive selected-table dataForShipTos">
+                    	<section class="table-section">
+  							<div class="table-scroll">
+                        <table class="table-striped ship-order">
+                            <thead>
+                                <tr>
+                                    <th width="12%">User User ID<div>User ID</div></th>
+									<th> Name <div>Name</div></th>
+									<th width="8%">Status <div>Status</div></th>
+									<th width="10%">Customer Grp <div>Cust Grp</div></th>
+									<th width="12%">User Type <div>User Type</div></th>
+									<th width="22%">Last Login <div>Last Login</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php 
+                            if(!empty($plinkUsers['output'])){ 
+                            	foreach($plinkUsers['output'] as $user){ 
+// condition to not show the csr users to the admin user
+if($user['PLU_POLAR_CSR'] == 'Y' && $identity['PLU_POLAR_CSR'] == 'N' && $identity['PLU_PLINK_ADMIN'] == 'Y'){
+ continue;
+}
+									$trimmedUserId = trim($user['PLU_USER_ID']);
+									$trimmedStatus = trim($user['PLU_STATUS']);
+									$username = trim($user['PLU_FIRST_NAME']);
+									$adminStatus = $user['PLU_PLINK_ADMIN'];
+									$CSRStatus = $user['PLU_POLAR_CSR'];
+									if(!empty(trim($user['PLU_LAST_NAME']))){
+										$username .= ' '.trim($user['PLU_LAST_NAME']);
+									}
+									$PLU_LAST_USE_DATE = $this->date_helper($user['PLU_LAST_USE'], 'Y-m-d');
+									if($PLU_LAST_USE_DATE == '0001-01-01') {
+										$user['PLU_LAST_USE'] = '';
+									}
+                            	?>
+								<tr class="UserSelectable" id="<?php echo $trimmedUserId; ?>">
+									<td plc_group="plc_group"><?php echo $trimmedUserId; ?></td>
+									<td cust_name="cust_name"><?php echo $username; ?></td>
+									<td><?php if($trimmedStatus == 'E'){ echo 'Enabled'; } else { echo 'Disabled'; }  ?></td>
+									<td><?php echo trim($user['PLU_CUST_GROUP']); ?></td>
+									<td><?php if($CSRStatus == 'Y'){ echo 'CSR'; } else if($adminStatus == 'Y'){ echo 'Admin'; } else { echo 'Normal'; }  ?></td>
+									<td>
+									<?php
+									if($user['PLU_LAST_USE']){
+									echo $this->date_helper($user['PLU_LAST_USE'], "M j, Y @ g:i a");
+									} ?>
+									</td>
+								</tr>
+								<?php 		}  
+										} else { ?>
+								<tr><td colspan="6" align="center">No Users Found</td></tr>
+								<?php } ?>
+
+								
+                            </tbody>
+                        </table>
+                    	</div>
+                    	</section>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+             </div>
+             
+             <script type="text/javascript">
+             $(function(){
+             $('.UserSelectable').click(
+            			function() {
+            			//	_isDirty = true;
+            				$('.UserSelectable').removeClass('active');
+            				$(this).addClass('active');
+//              				$('.selectedShipToButtons').show();
+            			});
+ 			$('.selectedShipToButtonsActions button').click(
+					function() {
+						var attId = $(this).attr('id');
+						switch(attId) {
+				        // if the current selected tab is brand/size
+				        case 'add':
+				        	window.location = "/user/csr-user-add";
+				        	return false;
+				            break;
+				        // if the current selected tab is brand
+				        case 'remove':
+				        	if($('.UserSelectable').hasClass('active')){
+							var PLUId = $('.UserSelectable.active').attr('id');
+								bootbox.confirm("Are you sure you want to delete this user?", function( result){
+									if(result == true){
+									$('#loading-image').show();
+									// sending the ajax request
+								    $.ajax({
+								        url: "/user/csr-user-delete/"+PLUId,
+								        type: "POST",
+								        data:  {},
+								        dataType: "json",
+								        async: false,
+								        success: function(result) {
+								        	if(result == 'success'){
+									        	$('#'+PLUId).remove();
+									        	bootbox.alert('User Removed Successfully');
+								        	} else {
+												alert(result);
+								        	}
+								        	 return false;
+								            // do nothing here
+								     
+								        },
+								        failure: function(errMsg) {
+								            alert(errMsg);
+								            return false;
+								        },
+								        complete: function (){
+								        	$('#loading-image').hide();
+								        }
+								    });
+
+									} else {
+
+										//return false;					
+										}
+
+									 });
+				        	}else {
+				        		bootbox.alert('Please select a user to delete');
+								
+							}
+							
+							 return false;
+							break;
+						// if the current selected tab is size
+				        case 'edit':
+				        	if($('.UserSelectable').hasClass('active')){
+				        	var PLUId = $('.UserSelectable.active').attr('id');
+							
+							 window.location = "/user/csr-user-edit/"+PLUId;
+						}else {
+							bootbox.alert('Please select a user to edit details');
+							
+						}
+							 return false;
+				            break;
+				        // if the current selected tab is item description
+				        case 'view':
+				        	if($('.UserSelectable').hasClass('active')){
+				        	var PLUId = $('.UserSelectable.active').attr('id');
+							
+							 window.location = "/user/csr-user-view/"+PLUId;
+				        	}else {
+								bootbox.alert('Please select a user to view details');
+								
+							}
+							 return false;
+							 
+							 break;
+				        default:
+					        alert('There is some error. Please try after sometime');
+				            
+				            // do nothing here
+				    }  
+												
+						
+					});
+             });
+             </script>

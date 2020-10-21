@@ -1,0 +1,134 @@
+<?php 
+
+use User\Helper\Address;
+use Zend\Form\Form;
+use Zend\Form\Element\Hidden;
+use Zend\Form\Element\Textarea;
+/**
+ *
+ * @var \Zend\Form\Form $formOrderSubmit
+ * @var array $postShipToEmail
+ */
+$formOrderSubmit = new Form();
+$formElementCustomerShipTo = new Hidden('customerShipTo');
+$formElementCustomerShipTo->setAttributes([
+    'id' => 'PLC_SHIPTO',
+    'name' => 'PLC_SHIPTO'
+])->setValue(null);
+$formElementCustomerGroup = new Hidden('customerGroup');
+$formElementCustomerGroup->setAttributes([
+    'id' => 'PLC_CUST_GRP',
+    'name' => 'PLC_CUST_GRP'
+])->setValue($postShipToEmail['customerGroup']);
+$formElementCustomerNumber = new Hidden('customerNumber');
+$formElementCustomerNumber->setAttributes([
+    'id' => 'PLC_CUSTNO',
+    'name' => 'PLC_CUSTNO'
+])->setValue($postShipToEmail['customerNumber']);
+$formElementCustomerEmailAddress = new Textarea('customerEmailAddress');
+$formElementCustomerEmailAddress->setAttributes([
+    'class' => 'form-control pull-left',
+    'name' => 'csr_email_address',
+    'id' => 'csr_email_address'])->setValue(null);
+
+
+?>
+<div class="modal modal-shipTo" id="configure-email-modal" role="dialog">
+
+	<div class="modal-dialog">
+	
+		<div class="modal-content">
+
+			<div class="modal-header" style="border-bottom: inherit">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Ship-To Email Notifications</h4>
+			</div>
+			
+			<div class="modal-body processing hidden">
+			
+    			<span class="padding8">
+    				<img class="small-ajax-loader" src="/img/ajax-loader.gif"/ alt="loading...">
+    			</span>
+    			<span class="padding8 please-wait">
+    				... please wait: retrieving customer ship-to emails...
+    			</span>
+    			
+    			<div class="modal-footer">
+					<button id="cancel-submit-ship-to-email-address" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+
+			<div class="modal-body done hidden">
+
+				<div class="alert alert-success margin-top10" id="success_div"
+					style="display: none;"></div>
+
+				<div class="alert alert-danger margin-top10" id="error_div"
+					style="display: none;"></div>
+
+				<div class="row"
+					style="font-size: small; margin-left: 5px; margin-right: 5px;">
+
+					<div class="col-md-2 col-sm-2">
+						<label>SHIP-TO:</label>
+					</div>
+
+					<div class="col-md-10 col-sm-10" style="padding: initial">
+
+						<div id="formattedAddress" style="line-height: 1.5"></div>
+					</div>
+				</div>
+
+				<div class="row">
+					<?php
+                        $formOrderSubmit->setAttribute('action', $this->url('customer/shipToEmails'));
+                        $formOrderSubmit->setAttribute('id', 'submitEmails');
+                        $formOrderSubmit->prepare();
+                        
+                        echo $this->form()->openTag($formOrderSubmit);
+                        
+                        echo $this->formElement($formElementCustomerGroup);
+                        echo $this->formElement($formElementCustomerNumber);
+                        echo $this->formElement($formElementCustomerShipTo);
+    
+                    ?>
+				
+					<div class="col-md-12 text-center" style="line-height: 1.5">
+
+						<div class="margin-top10">
+							<em> You can enter one or more email addresses to receive a copy
+								of the order details:</em>
+						</div>
+
+						<fieldset class="row col-xs-10 col-xs-offset-1">
+
+							<span class="" style="height: inherit;">
+							
+							<?php echo $this->formRow($formElementCustomerEmailAddress)?>
+							
+							</span>
+
+						</fieldset>
+
+						<div class="clearfix"></div>
+						<ul>
+							<li>You can enter multiple email addresses (max 2500 characters).</li>
+							<li>Separate each email address by comma.</li>
+
+						</ul>
+						<div class="modal-footer">
+							<button id="cancel-submit-ship-to-email-address" type="button"
+								class="btn btn-default" data-dismiss="modal">Close</button>
+							<button id="do-submit-ship-to-email-address" type="button"
+								class="btn btn-default pull-left"
+								onclick="validateNotificationEmailGroup();">Save Email Address</button>
+						</div>
+
+					</div>
+				</div>
+				
+				<?php echo $this->form()->closeTag();?>
+			</div>
+		</div>
+	</div>
+</div>

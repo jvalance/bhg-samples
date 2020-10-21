@@ -1,0 +1,67 @@
+<?php 
+
+$PO = !empty(trim($getOrderHeader['output']['OH_PO1']))?$getOrderHeader['output']['OH_PO1'] : '';
+$delivery = !empty(trim($getOrderHeader['output']['OH_SHIP_METHOD_TEXT']))? trim($getOrderHeader['output']['OH_SHIP_METHOD_TEXT']):'';
+
+$formatAddress = [
+    'name' => preg_replace('/\s{2,}/', ' ', $getOrderHeader['output']['OH_SHP2_NAME']),
+    'atn' => trim($getOrderHeader['output']['OH_SHP2_ATTN']),
+    'address1' => trim($getOrderHeader['output']['OH_SHP2_ADDR1']),
+    'address2' => trim($getOrderHeader['output']['OH_SHP2_ADDR2']),
+    'address3' => trim($getOrderHeader['output']['OH_SHP2_ADDR3']),
+    'zip' => trim($getOrderHeader['output']['OH_SHP2_ZIP']),
+    'state' => trim($getOrderHeader['output']['OH_SHP2_STATE']) 
+    ];
+/*
+print_r('<pre>');
+print_r($formatAddress);
+print_r('</pre>');
+*/
+?>
+
+<div class="current-Order-top">
+	<div class="col-sm-2 col-sm-tow margin-20 ">Current Order#: <span class="order-number"><?php echo (!empty($getOrderHeader['output']['OH_ORDERNO'])?$getOrderHeader['output']['OH_ORDERNO']:'-'); ?></span></div>
+		<div class="col-sm-10 col-sm-three margin-20">
+			<div class="row">
+				<div class="col-sm-8 coll-left-fix">
+					<div class="row">
+						<div class="col-xs-12 col-sm-3 shipping-add-right coll-left-fix">
+							<div class="order-shippingto shiping">Ship To: <br><span ><?php echo (!empty($getOrderHeader['output']['OH_CUSTNO'])?$getOrderHeader['output']['OH_CUSTNO']:'-').' / '.(!empty(trim($getOrderHeader['output']['OH_SHP2_NUM']))?trim($getOrderHeader['output']['OH_SHP2_NUM']):'-').' </span></div></div>'; ?> 
+                            <div class="col-xs-12 col-sm-9 shipping-add"><div class="order-shipping-address">
+                                <span>
+                                <?php
+                                     echo join(',', [$formatAddress['name']]) . '<br/>';
+                                     
+                                     if(!empty($formatAddress['atn'])) {
+                                         
+                                         echo 'Attn: ' . join(',', [$formatAddress['atn']]) .'<br/>';
+                                     }
+                                     
+                                     echo join(', ', [$formatAddress['address1'], $formatAddress['address2']] ) .'<br/>';
+                                     
+                                     echo join(', ', [$formatAddress['address3'], $formatAddress['state'], $formatAddress['zip']]);
+                                ?>
+                                </span>
+                            </div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4 coll-left-fix">
+    			 	<div>Shipping Method: </div>
+                    <div>
+                    	<span id="shipping-methodright"><?php echo $delivery ?></span>
+                    </div>
+    			</div>
+			</div>
+		</div>
+		<div class="col-sm-12" style="margin: 10px 0px; line-height: 0; padding:0">
+    		<div class="col-sm-12">
+    			 <div>
+    			 	<div style="position: relative;">PO#: </div>
+                    <div style="position: absolute; top:0; left: 55px;">
+                    	<span id="po_text"><?php echo $PO ?></span>
+                    </div>
+    			</div>
+    		</div>
+    	</div>
+</div>

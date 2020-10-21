@@ -1,0 +1,3 @@
+<?php 
+//$_GLOBALS['WO_STATUS_CODES'] = array('C'=>'Closed', 'X'=>'Completed', 'P'=> 'Pending');
+ 

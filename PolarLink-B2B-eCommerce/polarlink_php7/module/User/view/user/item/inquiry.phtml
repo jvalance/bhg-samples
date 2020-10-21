@@ -1,0 +1,237 @@
+<?php
+use User\Controller\ItemController;
+
+/**
+ * jlopez
+ * 
+ * Variable binding
+ * 
+ * @see User\Controller\ItemController
+ * 
+ * @var Zend\Form $form
+ * 
+ * @var array $itemsByBrand
+ * 
+ * @var array $itemsByBrandSize
+ * 
+ * @var array $itemsBySize
+ * 
+ * @var Zend\Session\Container $sessInquiry
+ * 
+ * @var array $customerShipTos
+ * 
+ */
+/*
+print_r('<pre>');
+print_r($customerShipTos);
+print_r('</pre>');
+*/
+?>
+<style>
+
+div.shiping {
+	margin-right: 6px;
+}
+
+div.CustomTextOnTabs{
+	padding-top: 15px;
+	padding-left: initial;
+	padding-right: initial;
+	padding-bottom: 20px;
+}
+
+#inquiry-header, #inquiry-address{
+    display: block; width: 100%;
+}
+
+div.inquiry-header, div.inquiry-address{
+	float:left; 
+}
+
+div.inquiry-header {
+	padding-left: 6px;
+}
+
+
+div#inquiry-address {
+	padding-left: 5px;
+	padding-top: 6px;
+}
+
+div.inquiry-address{
+	padding-left: 8px;
+}
+
+div.inquiry-header-right, div.inquiry-address-right {
+	margin-right: 1%;
+}
+
+#inquiry-header div:nth(2), #inquiry-address div:nth(1) {
+	float:left;
+}
+
+.item-search-auto {
+	max-height: initial !important;
+	overflow: none !important;
+}
+
+.right-align {
+	text-align:right;
+}
+
+#item-inquiry-search-results {
+	
+}
+
+#item-inquiry-search-results td{
+	word-wrap: break-word;
+}
+
+#item-inquiry-search-results th {
+	/* padding: initial !important; */
+}
+
+#item-inquiry-search-results td,
+#item-inquiry-search-results th {
+	width: 200px;
+}
+
+
+#item-inquiry-search-results td:nth-child(2),
+#item-inquiry-search-results th:nth-child(2) {
+  width: 400px;
+}
+
+/*
+#item-inquiry-search-results td.description{
+
+	width: 40%;
+}*/
+
+
+.table-fixed-headers {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.table-fixed-headers thead tr {
+  display: block;
+  position: relative;
+}
+
+.table-fixed-headers tbody {
+  display: block;
+  overflow: auto;
+  width: 100%;
+  height: initial !important;
+  max-height: 600px;
+}
+
+</style>
+<div>
+	<div>
+		<h1>Item Inquiry</h1>
+	</div>
+	<div id="inquiry-header">
+		<div class="inquiry-header inquiry-header-right">
+			<button class="btn" type="button" onclick="resetShipToModal(); $('#myModalShipTo').modal('toggle');">Select
+				Ship-To</button>
+		</div>
+		<div class="inquiry-header">
+			<div class="current-Order-top">
+				<em>You can set a default ship-to via the settings icon, in top right</em>
+				<div id="inquiry-address">
+					<div class="inquiry-address-right">
+						<div class="order-shippingto shiping">
+							Ship To:<br>
+						</div>
+					</div>
+					<div class="inquiry-address shipping-add">
+						<div class="order-shipping-address">
+							<span><?php echo $formattedAddress ?></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12">                            
+	<div class="informationTabsSearch CustomTextOnTabs">Select one of the
+		tabs below to search by various criteria:</div>
+	<div class="item-search-tabs click-btn-position">
+		<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+			<li><a href="#brand-size" data-toggle="tab">by Brand/Size</a></li>
+			<li><a href="#brand" data-toggle="tab">by Brand</a></li>
+ 			<li><a href="#size" data-toggle="tab">by Size</a></li>
+			<li><a href="#item-description" data-toggle="tab">by Description</a></li>
+		</ul>
+		<button class="click-btn" id="showItemsButtonSubmit"
+			onclick="processForm('item-search-form');" style="display: none;">Show
+			Items</button>
+
+		<div id="my-tab-content" class="tab-content item-search-auto">
+			<div class="tab-pane active">
+				<div id="CustomTextOnTabs" class="CustomTextOnTabs BackgroundBlueCustomText">Select one of the tabs above to begin your item search</div>
+			</div>
+                    <?php
+                                        
+                    /**
+                     * By brand-size
+                     */
+                    echo '<div id="brand-size" class="tab-pane">';
+                    echo $this->partial('filter/brand-size', 
+                        ['itemsByBrandSize' => $itemsByBrandSize]);
+                    echo '<div class="results" id="ajax-data-brand-size"></div>';
+                    echo '</div>';
+                   
+                    
+                    /**
+                     * By brand
+                     */
+                    echo '<div id="brand" class="tab-pane">';
+                    echo $this->partial('filter/brand', ['itemsByBrand' => $itemsByBrand]);
+                    echo '<div class="results" id="ajax-data-brand"></div>';
+                    echo '</div>';
+                    
+                    /**
+                     * By Size
+                     */
+                    echo '<div id="size" class="tab-pane">';
+                    echo $this->partial('filter/size',['itemsBySize' => $itemsBySize]);
+                    echo '<div class="results" id="ajax-data-size"></div>';
+                    echo '</div>';
+                    
+                    /**
+                     * By description
+                     */
+                    
+                    echo '<div id="item-description" class="tab-pane">';
+                    echo $this->partial('filter/description', ['form' => $form]);
+                    echo '<div class="results" id="ajax-data-item-description"></div>';
+                    echo '</div>';
+			    ?>
+		</div>
+	</div>
+<?php 
+
+    /**
+     * Modal
+     * Select Ship-To
+     */
+
+    echo $this->partial('inquiry-ship-to',
+        
+        [
+            'form' => $form,
+            
+            'sessInquiry' => $sessInquiry,
+            
+            'customerShipTos' => $customerShipTos
+            
+        ]
+    );
+?>
+</div>

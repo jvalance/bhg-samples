@@ -1,0 +1,132 @@
+<?php 
+$adminUser = false;
+if($identity['PLU_POLAR_CSR'] == 'N' && $identity['PLU_PLINK_ADMIN'] == 'Y'){
+	$adminUser = true;
+}
+
+?>
+<div class="csr col-md-12 col-sm-12 col-xs-12">
+             	<div class="csr-heading text-center">User Details</div>
+				<div class="clearfix"></div>
+				<h1 class="csr-top-link">Add a PolarLink User <a href="javascript:void(0)" onclick="return listingPages('csr-user-list')"><i class="fa fa-angle-left"></i>&nbsp;Back to List of Users</a></h1>
+				<div class="clearfix"></div>
+				<p class="block-bottom-text  margin-top0">Fields marked with <sup class="colorred sup-top-bottom">*</sup> are required.</p>
+				<div class="clearfix"></div>
+	            <div class="item-search-tabs">
+					<div class="ordering-option tab-content margin-top30 padding-none">
+					<h2 class="heading">User Details</h2>
+						<?php if(!empty($errorMessage)){ ?>
+<div class="alert alert-danger fade in margin-top20 margin-bottom0 font18">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				    <?php echo $errorMessage; ?>
+		</div>	
+		
+<?php } ?>
+					<?php $form->setAttribute('action', $this->url('user/csrUserAdd', array('controller' => 'user', 'action' => 'csr-user-add')));
+$form->setAttribute('id', 'user-add-form');
+$form->setAttribute('class', 'col-md-12 pdding-responsive user-form login-form information-form text-center-responsive');
+
+  $form->setAttribute('onsubmit', 'return validateCsrUserAddForm()');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+ ?>
+						
+					<div class="col-md-10">	   
+<!-- 	<form class="col-md-10 pdding-responsive form-signin login-form information-form text-center-responsive"> -->
+					
+					
+					<fieldset class="col-md-12 csr-user-type-radio">
+								<label for="plu_user_type" style="padding-right:15px" >User Type<sup class="colorred sup-top-bottom">*</sup> :</label>
+								<?php 
+								if($adminUser){
+									$userTypes = array(
+											'admin' => 'PolarLink Admin',
+											'normal' => 'Normal User'
+									);
+								} else {
+									$userTypes = array(
+											'csr' => 'Polar Beverage CSR',
+											'admin' => 'PolarLink Admin',
+											'normal' => 'Normal User'
+									);
+								}
+								
+								echo $this->formrow($form->get('PLU_USER_TYPE')->setValueOptions($userTypes)->setAttribute('onchange', 'return addActiveClass(1);')); ?>
+							</fieldset>
+					
+					
+							<fieldset class="col-md-12">
+								<label for="plu_cust_group">Customer Group<sup class="colorred sup-top-bottom astrik">*</sup> :</label> 
+								<?php 
+								$custGroupElement = $form->get('PLU_CUST_GROUP');
+							if($adminUser){
+								$custGroupElement->setAttribute('readonly', 'readonly');
+								$custGroupElement->setValue(trim($identity['PLU_CUST_GROUP']));
+							}
+								echo $this->formrow($custGroupElement); ?>
+							</fieldset>
+							<fieldset class="col-md-12">
+								<label for=plu_user_id>User ID<sup class="colorred sup-top-bottom">*</sup> :</label> 
+								<?php echo $this->formrow($form->get('PLU_USER_ID')); ?>
+							</fieldset>
+							<fieldset class="col-md-12">
+								<label for="plu_first_name">First Name<sup class="colorred sup-top-bottom">*</sup> :</label> 
+								<?php echo $this->formrow($form->get('PLU_FIRST_NAME')); ?>
+							</fieldset>
+							<fieldset class="col-md-12">
+								<label for="plu_last_name">Last Name<sup class="colorred sup-top-bottom">*</sup> :</label> 
+								<?php echo $this->formrow($form->get('PLU_LAST_NAME')); ?>
+							</fieldset>
+							<fieldset class="col-md-12">
+								<label for="plu_password">Password<sup class="colorred sup-top-bottom">*</sup> :</label> 
+								<?php echo $this->formrow($form->get('PLU_PASSWORD')); ?>
+							</fieldset>
+							<fieldset class="col-md-12">
+								<label for="plu_confirm_password">Confirm Password<sup class="colorred sup-top-bottom">*</sup> :</label> 
+								<?php echo $this->formrow($form->get('PLU_CONFIRM_PASSWORD')); ?>
+							</fieldset>
+							
+							<fieldset class="col-md-12">
+								<label>PolarLink Status<sup class="colorred sup-top-bottom">*</sup>:</label>
+								<?php echo $this->formrow($form->get('PLU_STATUS')); ?>
+							</fieldset>
+							<fieldset class="col-md-12">
+								<label for="plu_email_address">Email Address<sup class="colorred sup-top-bottom">*</sup> :</label>
+								<?php echo $this->formrow($form->get('PLU_EMAIL_ADDRESS')); ?>
+							</fieldset>
+						<div class="clearfix"></div>
+						<div class="clearfix"></div>
+						<div class="buttons col-md-12">
+						<?php
+						echo $this->formRow($form->get('save'));
+						echo $this->formRow($form->get('Cancel')); ?>
+						</div>
+						</div>
+						<?php echo $this->form()->closeTag(); ?>
+						<div class="clearfix"></div>
+					</div>
+										</div>
+					
+				</div>
+<script type="text/javascript">
+	function checkKeyUp(){
+		$('.formShowHide input[name="quantity"]').keyup(function(e) {                                   
+		if (e.keyCode == 13){ $(this).closest('form').find('button.submitInlineButtonAjax').trigger('click'); }     // enter
+		if (e.keyCode == 27){ $(this).closest('form').find('button.cancelInlineButtonAjax').trigger('click'); } // esc
+		});
+	}
+	checkKeyUp();
+</script>
+<script type="text/javascript">
+	$('#change-password').hide();
+	addActiveClass();
+	
+	$("a.change-password").click(function(){
+    $('#change-password').show()
+});
+
+$(".close-popup").click(function(){
+    $('#change-password').hide()
+});
+</script>  

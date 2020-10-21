@@ -1,0 +1,251 @@
+ <div class="row inner-page-top-address margin-top-order">
+	 <?php  echo $this->partial('/partials/order-header-info.phtml', array('getOrderHeader' => $getOrderHeader)); ?>
+</div>
+			<div class="row">
+        	<div class="col-md-12 col-sm-12 col-xs-12 steps-complete">
+            	<em>Steps to complete your order:</em>
+            </div> </div>
+            <?php if(!empty($_GET)){ $redirect_param = $_GET['redirect']; }?>
+            <div class="row">
+            	<ul class="order-tabs">
+                    <?php
+	
+	                   $breadcrumbParams = array();
+	
+	                   $breadcrumbParams['resource'] = basename(__FILE__);
+	
+                       $breadcrumbParams['orderingStep'] =
+	 	                     (int)$getOrderHeader['output']['PLINK_ENTRY_STEP'];
+                        
+	 	               $breadcrumbParams['excludeSubstitutes'] =
+	 	                     !(trim($getOrderHeader['output']['SUBS_REQUIRED']) === 'Y');
+	
+	                   echo $this->partial('partials/breadcrumbs/breadcrumbs.phtml',$breadcrumbParams);
+                    ?>
+                </ul>
+            </div>
+            
+            <div class="col-md-12 col-sm-12 col-xs-12">
+             	<h1>Item Search</h1>
+             	<div class="informationTabsSearch CustomTextOnTabs">Select one of the tabs below to search by various criteria:</div>
+                <div class="item-search-tabs click-btn-position">
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li><a href="#brand-size" data-toggle="tab">by Brand/Size</a></li>
+                        <li><a href="#brand" data-toggle="tab">by Brand</a></li>
+                        <li><a href="#size" data-toggle="tab">by Size</a></li>
+                        <li><a href="#item-description" data-toggle="tab">by Description</a></li>
+                    </ul>
+                    <button class="click-btn" id="showItemsButtonSubmit" onclick="processForm('item-search-form');" style="display: none;">Show Items</button>
+                    <div id="my-tab-content" class="tab-content item-search-auto">
+                             
+                    <?php $getItemsByBrandSizeLoop = array();
+if(!empty($getItemsByBrandSize['output'])){
+                                        	foreach($getItemsByBrandSize['output'] as $itemBrandSize){
+													$getItemsByBrandSizeLoop[$itemBrandSize['ITM_BRAND_CODE']]['BRAND_DESC'] =  $itemBrandSize['BRAND_DESC'];
+													$getItemsByBrandSizeLoop[$itemBrandSize['ITM_BRAND_CODE']]['ITEMS'][] = $itemBrandSize;
+											}
+											}
+                                        	 ?>
+                                        	 
+                        <div id="brand-size" class="tab-pane">
+                        
+                            <div id="accordion" class="panel-group main-data-brand-size" role="tablist" aria-multiselectable="true">
+                                
+                                <?php if(!empty($getItemsByBrandSizeLoop)){
+                                	$i = 0;
+		                                	foreach ($getItemsByBrandSizeLoop as $itemBrandSizekey => $itemBrandSizeToShow){
+											$brandDesc = $itemBrandSizeToShow['BRAND_DESC'];
+											$i++;
+
+								 ?>
+												<div class="panel panel-default">
+												<a <?php if($i== 1){echo 'class="active"';} ?> href="#collapse<?php echo $i; ?>" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse<?php echo $i; ?>"><?php echo $itemBrandSizeToShow['BRAND_DESC']; ?></a>
+                                    <div id="collapse<?php echo $i; ?>" role="tabpanel" aria-labelledby="heading<?php echo $i; ?>" <?php if($i== 1){ echo 'aria-expanded = "true" class="panel-collapse collapse in"'; } else { echo 'class="panel-collapse collapse"'; } ?>>
+                                        <div class="panel-body">
+                                        	<div class="table-responsive">
+                                        	
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    <?php if(!empty($itemBrandSizeToShow['ITEMS'])){ 
+                                                    foreach($itemBrandSizeToShow['ITEMS'] as $itemBrandSizeShow){
+                                                    	?>
+                                                    	<tr id="<?php echo $itemBrandSizeShow['ITM_BRAND_CODE'];  ?>" rel="<?php echo trim($itemBrandSizeShow['BRAND_DESC']) ; ?>">
+                                                            <td class="brandSizeSelectableRow" id="<?php echo $itemBrandSizeShow['ITM_SIZE_CODE'];  ?>" rel="<?php echo trim($itemBrandSizeShow['SIZE_DESC']) ; ?>"><a href="javascript:void(0)" onclick="return brandSizeSelectableRow(this);"><?php echo $itemBrandSizeShow['SIZE_DESC'];  ?></a></td>
+                                                        </tr>
+                                                    <?php
+                                                    			} 
+														}
+                                                    	?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+															
+											<?php }
+                                	
+                                } else { ?>
+                                <div class="informationTabsSearch CustomTextOnTabs padb5">No Items to display</div>
+                                <?php } ?>
+                                
+							</div>
+						<div id="ajax-data-brand-size"></div>
+                        </div>
+                        <div id="brand" class="tab-pane">
+                        
+                        	 <?php if(!empty($getItemsByBrand['output'])){ 
+                                	$i = 0;
+								 ?>
+												<div class="panel panel-default main-data-brand">
+											
+                                        <div class="panel-body">
+                                        	<div class="table-responsive">
+                                        	
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    <?php foreach ($getItemsByBrand['output'] as $itemBrandkey => $itemBrandToShow){					?>
+                                                   		<tr>
+                                                            <td class="brandSelectableRow" id="<?php echo $itemBrandToShow['ITM_BRAND_CODE'];  ?>" rel="<?php echo trim($itemBrandToShow['BRAND_DESC']) ; ?>"><a href="javascript:void(0)" onclick="return brandSelectableRow(this);"><?php echo $itemBrandToShow['BRAND_DESC'];  ?></a></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+															
+											<?php 
+                                	
+                                }  else { ?>
+                                <div class="informationTabsSearch CustomTextOnTabs padb5">No Items to display</div>
+                                <?php } ?>
+                                <div id="ajax-data-brand"></div>
+                        </div>
+                        <div id="size" class="tab-pane">
+                        
+                        	 <?php if(!empty($getItemsBySize['output'])){ 
+                                	$i = 0;
+		                                		
+								 ?>
+												<div class="panel panel-default main-data-size">
+											
+                                        <div class="panel-body">
+                                        	<div class="table-responsive">
+                                        	
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    <?php foreach ($getItemsBySize['output'] as $itemSizekey => $itemSizeToShow){					?>
+                                                   		<tr>
+                                                            <td class="sizeSelectableRow" id="<?php echo $itemSizeToShow['ITM_SIZE_CODE'];  ?>" rel="<?php echo trim($itemSizeToShow['SIZE_DESC']) ; ?>"><a href="javascript:void(0)" onclick="return sizeSelectableRow(this);"><?php echo $itemSizeToShow['SIZE_DESC'];  ?></a></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+															
+											<?php 
+                                	
+                                }  else { ?>
+                                <div class="informationTabsSearch CustomTextOnTabs padb5">No Items to display</div>
+                                <?php } ?>
+                                <div id="ajax-data-size"></div>
+                        </div>
+                        <div id="item-description" class="tab-pane">
+                        <div class="filterby-product-description main-data-item-description">
+                          <?php
+$form->setAttribute('action', $this->url('user/itemSearchAjax', array('controller' => 'user', 'action' => 'item-search-ajax')));
+$form->setAttribute('id', 'item-search-form');
+// $form->setAttribute('class', 'col-md-12');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+?>  	
+                        
+				<label for="filterItemSearch">Filter Products by:</label>
+				 
+                            <?php echo $this->formRow($form->get('filter')); ?>
+                            <?php echo $this->formRow($form->get('brand')); ?>
+                        <?php echo $this->formRow($form->get('size')); ?>
+                        <?php echo $this->formRow($form->get('brandName')); ?>
+                        <?php echo $this->formRow($form->get('sizeName')); ?>
+                        <?php
+$element = $form->get('save');
+$element->setAttribute('onclick', 'return checkBlank();');
+                        echo $this->formButton($element); ?> 
+                            <?php
+
+echo $this->form()->closeTag();
+?>
+			
+			 </div>
+			 <div id="ajax-data-item-description"></div>
+                        	
+                        </div>
+                        <div id="CustomTextOnTabs" class="CustomTextOnTabs BackgroundBlueCustomText">Select one of the tabs above to begin your item search</div>
+                    </div>
+                </div>
+                
+                <div class="current-0rder-background ordering-option padding8 margin-top60">
+                	<h2 class="gradient-heading heading">Current Order</h2>
+                	<div id="updateOrderAjax">
+                    <?php 
+                    echo $this->partial('/partials/current-order-totals.phtml', array(
+                    		'getOrderTotals' => $getOrderTotals,
+                    		'getOrderLineItems' => $getOrderLineItems
+                    ));
+                    ?>
+                    <div class="clearfix"></div>
+                </div>
+                </div>
+                <div class="buttons">
+                <?php if(!empty($getOrderHeader['output']) && trim($getOrderHeader['output']['SUBS_REQUIRED']) == 'Y' && !empty($redirect_param)) { ?>
+
+                <button class="btn" type="submit" onclick="return checkMinimumItemsSearch('review-order/Items');">Continue</button>
+                <?php } else if(!empty($getOrderHeader['output']) && trim($getOrderHeader['output']['SUBS_REQUIRED']) == 'Y'){ ?>
+                	<button class="btn" type="submit" onclick="return checkMinimumItemsSearch('substitutes');">Continue</button>
+                	<?php } 
+                	
+                	else if(!empty($redirect_param)) { ?>
+                	<button class="btn" type="submit" onclick="return checkMinimumItemsSearch('review-order/Items');">Continue</button>
+                	<?php } else {?>
+                	<button class="btn" type="submit" onclick="return checkMinimumItemsSearch('review-order');">Continue</button>
+                	
+                	<?php } ?>
+                    <button class="btn" type="button" onclick="return checkCancel('search');">Cancel Order</button>
+                </div>
+             </div>
+             
+         	<?php   $this->inlineScript()->appendFile($this->basePath('js/item-search.js'));
+                               ?>
+                                <script type="text/javascript">
+                                function checkKeyUp(){ 
+                               $('.formShowHide input[name="quantity"]').on('keyup' , function(e) {                              
+                            	   if (e.keyCode == 13){ $(this).closest('form').find('button.submitInlineButtonAjax').trigger('click'); }     // enter
+                            	   if (e.keyCode == 27){ $(this).closest('form').find('button.cancelInlineButtonAjax').trigger('click'); } // esc
+                            	 });
+                                }
+                                checkKeyUp();                                
+                               </script>  
+                               
+ <script>
+$('document').ready(function(){
+	$( "input[type='text']" ).change(function() {
+		 // alert('Set dirty flag to true ') ;
+		 }); 
+    $.get('/user/dummy-pricing');
+});
+
+$(document).keydown(function(e) {
+    // ESCAPE key pressed
+    if (e.keyCode == 27) {
+    	$('.bootbox-close-button').trigger('click');
+    }
+});
+
+</script>
+                               
+   
+             

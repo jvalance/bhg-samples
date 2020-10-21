@@ -1,0 +1,108 @@
+<div class="order-heading">Order Totals</div>
+    <div class="total-amount">
+    	<ul class="border-color item-search-table">
+    		<div class="total-heading-background total-heading">Product Amount<div class="clearfix"></div><span class="total-desc">(excluding deposits)</span></div>
+    		<li class="flright">$<?php echo number_format(trim($getOrderTotals['amount']), '2', '.', ','); ?></li>
+    	</ul>
+    	<ul class="border-color item-search-table">
+    		<div class="total-heading-background total-heading align-center">Quantities<div class="clearfix"></div><span class="total-desc">&nbsp;</span></div>
+    		<li><span>Cases:</span> <?php echo number_format(trim($getOrderTotals['caseQty']), '0', '.', ','); ?></li>
+    		<li><span>Pallets:</span> <?php echo number_format(trim($getOrderTotals['palletQty']), '2', '.', ','); ?></li>
+    	</ul>
+    	<ul class="border-color item-search">
+    		<div class="total-heading-background total-heading align-center">Weights<div class="clearfix"></div><span class="total-desc">&nbsp;</span></div>
+    		<li><span>Products:</span> <?php echo  number_format(trim( $getOrderTotals['prodWeight']), '0', '.', ','); ?> lbs</li>
+    		<li><span>Pallets:</span> <?php echo number_format(trim($getOrderTotals['palletWeight']), '0', '.', ','); ?> lbs</li>
+    		<li><span>Total:</span> <?php echo number_format(trim($getOrderTotals['totalWeight']), '0', '.', ','); ?> lbs</li>
+    	</ul>
+    	<div class="clearfix"></div>
+    	<div class="col-sm-12 col-md-6">
+            <p class="table-notes fontOrange margin-top20 margin-bottom0">
+               Total Order Amount is subject to price verification
+            </p>
+    	</div>
+       <?php if($getOrderTotals['prodWeight'] > 46000){ ?>
+           <div class="col-sm-12 col-md-6">
+               <div class="weight-warning margin-top10 text-left">
+                   Warning! Total weight exceeds 46,000 lbs!
+               </div>
+            </div>
+    <?php } ?>
+	
+</div>
+<div class="clearfix"></div>
+<div class="order-heading margin-none">Items in this Order</div>
+<div class="table-responsive">
+    <table class="table table-striped ship-order margin-bottom8">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Rmv</th>
+                <th>UOM</th>
+                <th>Price</th>
+                <th>Ext. Price</th>
+                <th>Pallets</th>
+                <th>Cases</th>
+                <th>Units</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php if(!empty($getOrderLineItems['output'])){
+        	foreach($getOrderLineItems['output'] as $orderLine){
+				$itemNumber = trim($orderLine['OL_ITEM_NUM']);
+		?>
+				<tr class="<?php echo $itemNumber; ?>">
+                <td><?php echo $itemNumber; ?></td>
+                <td desc='desc'><?php echo $orderLine['OL_ITEM_DESC']; ?></td>
+                <td><span class="textQuantityShowHide"><i class="fa fa-pencil-square-o cursor-pointer colorblue font18" onclick="makeEditable('<?php echo $itemNumber; ?>');" ></i>&nbsp;<span class="flright"><?php echo number_format($orderLine['OL_QTY_ORD'], '0', '', ''); ?></span>
+                </span>
+                <span class="formShowHide" style="display:none;">
+                <form id="updateOrderInlineForm<?php echo $itemNumber; ?>" name="update-order-inline-form" action="<?php echo $this->url('user/updateOrderInline'); ?>" method="Post" onsubmit="return false;">
+                <input type="text" name="quantity" value="<?php echo number_format($orderLine['OL_QTY_ORD'], '0', '', ''); ?>" />
+                <input type="hidden" name="uom" value="<?php echo trim($orderLine['OL_SELL_UOM']); ?>" />
+                <input type="hidden" name="item_number" value="<?php echo $itemNumber; ?>" />
+                <div class="clearfix"></div>
+                 <button class="inlineButton pad0 margin5 colorblue bgnone submitInlineButtonAjax" type="button" onclick="return submitUpdateOrderInlineForm(this);"><i class="fa fa-floppy-o font18"></i></button>
+                 <button class="inlineButton pad0 margin5 colorblue bgnone cancelInlineButtonAjax" type="button" onclick="return cancelUpdateOrderInlineForm(this);" ><i class="fa fa-ban font18"></i></button>
+                </form>
+                </span>
+                </td>
+                <td style="text-align: center;"><a href="javascript:void(0)" onclick="removeItemFromOrder('<?php echo $itemNumber; ?>')"><i class="fa fa-times font18 colorred"></i></a></td>
+                <td uom='uom'><?php echo trim($orderLine['OL_SELL_UOM']); ?></td>
+                <td class="text-right">
+                <?php //echo number_format($orderLine['OL_NET_PRICE'],  2, '.', ','); ?>
+                <?php echo number_format($orderLine['OL_NET_PRICE'],  2, '.', ','); ?>
+                </td>
+                <td class="text-right" copy_from="ext_price">
+                	<?php   echo number_format($orderLine['OL_EXT_PRICE'],  2, '.', ',');
+							//echo number_format($orderLine['OL_QTY_ORD'] * $orderLine['OL_NET_PRICE'],  2, '.', ',');
+
+                	?>
+                </td>
+                <td class="text-right" copy_from="pallet_qty"><?php
+                $trimPalletQty = trim(number_format($orderLine['ITM_PALLET_QTY_ORD'], '2'));
+                 if($trimPalletQty < 1){
+					echo substr($trimPalletQty, '1', strlen($trimPalletQty));
+				} else {
+					echo $trimPalletQty;
+				}
+                ?></td>
+                <td class="text-right" copy_from="case_qty"><?php echo number_format($orderLine['ITM_CASE_QTY_ORD'], 0); // $orderLine['ITM_CASE_QTY_ORD']; ?></td>
+                <td class="text-right" copy_from="unit_qty"><?php echo number_format($orderLine['ITM_UNIT_QTY_ORD'], 0); ?></td>
+            </tr>
+			<?php } ?>
+			<span id="totalItemsNumber" style="display: none;"><?php echo count($getOrderLineItems['output']); ?></span>
+        <?php } else { ?>
+        <tr>
+        <td colspan="10">No Products in the current order</td>
+        </tr>
+        <span id="totalItemsNumber" style="display: none;">0</span>
+        <?php } ?>
+
+        </tbody>
+    </table>
+</div>
+
+

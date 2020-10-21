@@ -1,0 +1,120 @@
+<?php
+
+/**
+ *  @jlopez
+ * 
+ *  Ordering Workflow
+ *  Breadcrumbs
+ *  
+ *  @var \Zend\View\Variables $resource
+ *  @var \Zend\View\Variables $orderingStep
+ *  @var \Zend\View\Variables $excludeSubstitutes
+**/
+$key = substr($resource, 0, strpos($resource, '.'));
+
+// all possible ordering steps
+$steps = array(
+    '*',              // filled on purpose (ordering steps are not zero based)
+    'order-shipping',
+    'order-header',
+    'item-search',
+    'substitutes',
+    'review',
+    'submit'
+);
+
+// breadcrumb map links
+$transitions = array(
+    'Order Shipping' =>
+        array(
+            'title' => 'Order Shipping',
+            'link' => 'user/orderShipping',
+            'class' => null
+        ),
+    'Order Header' =>
+    array(
+        'title' => 'Order Header',
+        'link' => 'user/orderHeader',
+        'class' => null
+    ),
+    'Item Search' =>
+    array(
+        'title' => 'Item Search',
+        'link' => 'user/itemSearch',
+        'class' => null
+    ),
+    'Substitutes' =>
+    array(
+        'title' => 'Substitutes',
+        'link' => 'user/substitutes',
+        'class' => null
+    ),
+    'Review' =>
+    array(
+        'title' => 'Review',
+        'link' => 'user/reviewOrder',
+        'class' => null
+    ),
+    'Confirm' =>
+    array(
+        'title' => 'Submit',
+        'link' => 'user/confirm',
+        'class' => null)
+);
+
+if($excludeSubstitutes):
+    
+    unset($steps[array_search('substitutes', $steps)]);
+    
+    unset($transitions['Substitutes']);
+    
+endif;
+
+$key = ucwords(str_replace('-', ' ', $key));
+ 
+$k = 1; 
+
+foreach($transitions as $name => &$transition):
+
+    $class = null;
+
+    if($name === $key):
+
+        $class = 'active activated';
+    
+        if($k === $orderingStep):
+
+            $class = 'visited';
+        
+        endif;
+    
+    else:
+    
+        if($k <= $orderingStep):
+    
+            $class = 'visited';
+    
+        endif;
+    
+    endif;
+
+    $transition['class'] = $class;
+    
+    /**
+     * @jlopez
+     * Disable direct link to step
+     * https://app.asana.com/0/322466378561882/377164805143584/f
+     */
+    if(is_null($class)):
+        
+        $transition['link'] = '';
+    
+    endif;
+    
+    $k++;
+
+endforeach;
+
+
+// send updated transitions to be printed as links
+echo $this->partialLoop('/partials/links.phtml', $transitions);

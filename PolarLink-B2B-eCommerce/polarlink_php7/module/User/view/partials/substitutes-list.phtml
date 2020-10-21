@@ -1,0 +1,67 @@
+<div class="table-responsive">
+                        <table class="table table-striped ship-order margin-bottom8 tableDataSubstitutes">
+                            <thead>
+                                <tr>
+<!--                                     <th width="10%">Priority</th> -->
+<!--                                     <th width="8%">Move</th> -->
+                                    <th width="25%">Product</th>
+									<th>Description</th>
+									<?php if (empty($removeHide)){ ?>
+									<th width="12%">Remove</th>
+									<?php } ?>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php if(!empty($getListSubstitutes['output'])){
+                            	foreach($getListSubstitutes['output'] as $substitute){
+										$trimmedItemNumber = trim($substitute['PLS_ITEM_NO']);
+                            	?>
+                                <tr class="<?php echo $trimmedItemNumber; ?>">
+                                    <!--  <td><?php echo number_format(trim($substitute['PLS_PRIORITY'])); ?></td> -->
+                                    <!--  <td align="center"><a href="javascript:void(0)"><img src="<?php echo $this->basepath('img/move_arrow.png'); ?>" alt="Move" /></a></td> -->
+                                    <td><?php echo $trimmedItemNumber; ?></td>
+									<td desc='desc'><?php echo trim($substitute['ITEM_DESC']); ?></td>
+									<?php if(empty($removeHide)){ ?><td><a href="javascript:void(0)" onclick="return removeItemFromSubstitute('<?php echo $trimmedItemNumber; ?>');">
+									<i class="fa fa-times font18 colorred"></i>
+									<!-- <img width="16px"  src="<?php echo $this->basepath('img/close.png'); ?>" alt="RMV" /> -->
+									</a></td><?php } ?>
+                                </tr>
+                                <?php
+                                } 
+									} else { ?>
+                                <tr class="NoProducts">
+                                    <td colspan="5">No Substitutes Exist for the current order.</td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php 
+                    	$countSubstitutes = trim($getListSubstitutes['subsCount']);
+						$minSubstitutes = $configSubstitutes['substitutes']['min_value'];
+						$maxSubstitutes = $configSubstitutes['substitutes']['max_value'];
+						$class = '';
+						if($countSubstitutes < $minSubstitutes){
+							$class = 'fontRed';
+							$message = 'You must select at least 3, and no more than 6, substitute items per order.'; 
+						} else if($countSubstitutes == $minSubstitutes || $countSubstitutes < $maxSubstitutes){
+							$class = 'fontGreen';
+							$message = 'You have selected the required minimum number of substitute items. You can continue selecting up to 6 substitutes in total.';
+							
+						} else if($countSubstitutes == $maxSubstitutes){
+							$class = 'fontOrange';
+							$message = 'You have selected the maximum number of substitute items. To change a substitute, please remove one from the order.';
+						
+						}
+                    ?>
+                    <?php if (empty($removeInformationText)){ ?>
+					<p class="table-notes notificationTableNotes <?php echo $class; ?>">
+					<?php echo $message; ?>
+					
+					
+					
+					</p>
+					<?php } ?>
+					<span id="currentSubstitutes" style="display: none;"><?php echo $countSubstitutes; ?></span>
+					<span id="minimumSubstitutes" style="display: none;"><?php echo $minSubstitutes; ?></span>
+                 <span id="maximumSubstitutes" style="display: none;"><?php echo $maxSubstitutes; ?></span>

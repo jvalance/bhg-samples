@@ -1,0 +1,101 @@
+SET PATH *LIBL ;
+
+CREATE OR REPLACE PROCEDURE SP_GET_ITEMBRANDSSIZES ( 
+	IN IN_KEY CHAR(10) , 
+	IN IN_CUST_NUM DECIMAL(8, 0) , 
+	IN IN_SHIPTO_NUM DECIMAL(4, 0) , 
+	OUT OUT_RESULT CHAR(1) , 
+	OUT OUT_MESSAGE VARCHAR(100) ) 
+	DYNAMIC RESULT SETS 1 
+	LANGUAGE SQL 
+	SPECIFIC SP_GET_ITEMBRANDSSIZES 
+	NOT DETERMINISTIC 
+	MODIFIES SQL DATA 
+	CALLED ON NULL INPUT 
+	SET OPTION  ALWBLK = *ALLREAD , 
+	ALWCPYDTA = *OPTIMIZE , 
+	COMMIT = *NONE , 
+	DECRESULT = (31, 31, 00) , 
+	DFTRDBCOL = *NONE , 
+	DYNDFTCOL = *NO , 
+	DYNUSRPRF = *USER , 
+	SRTSEQ = *HEX   
+	BEGIN 
+/*================================================================================ 
+Created August 2015 by John Valance 
+  
+Returns: 
+	Result set with multiple rows 
+  
+=================================================================================*/ 
+  
+DECLARE CSRBRANDSIZE CURSOR WITH RETURN FOR 
+		SELECT DISTINCT 
+			ITM_BRAND AS ITM_BRAND_CODE , 
+			BRAND_DESC , 
+			ITM_SIZE AS ITM_SIZE_CODE , 
+			SIZE_DESC 
+  
+		FROM TABLE ( 
+			UDTF_GET_ITEMAUTH ( IN_CUST_NUM , IN_SHIPTO_NUM ) 
+		) AUTH_ITEMS 
+  
+		WHERE ITM_BRAND <> '' AND ITM_SIZE <> '' AND ITM_NUMBER <> '' 
+		ORDER BY 2 , 4 
+	; 
+  
+DECLARE CSRBRAND CURSOR WITH RETURN FOR 
+		SELECT DISTINCT 
+			ITM_BRAND AS ITM_BRAND_CODE , 
+			BRAND_DESC 
+  
+		FROM TABLE ( 
+			UDTF_GET_ITEMAUTH ( IN_CUST_NUM , IN_SHIPTO_NUM ) 
+		) AUTH_ITEMS 
+  
+		WHERE ITM_BRAND <> '' AND ITM_NUMBER <> '' 
+		ORDER BY 2 
+	; 
+  
+DECLARE CSRSIZE CURSOR WITH RETURN FOR 
+		SELECT DISTINCT 
+			ITM_SIZE AS ITM_SIZE_CODE , 
+			SIZE_DESC 
+  
+		FROM TABLE ( 
+			UDTF_GET_ITEMAUTH ( IN_CUST_NUM , IN_SHIPTO_NUM ) 
+		) AUTH_ITEMS 
+  
+		WHERE ITM_SIZE <> '' AND ITM_NUMBER <> '' 
+		ORDER BY 2 
+	; 
+  
+  
+--================================================================ 
+	 -- Initialize work variables 
+	SET OUT_MESSAGE = '' ; 
+	SET OUT_RESULT = '1' ; 
+  
+	 -- Open result set cursor being returned. 
+	IF TRIM ( IN_KEY ) = 'BRANDSIZE' THEN 
+		OPEN CSRBRANDSIZE ; 
+		RETURN ; 
+	END IF ; 
+  
+	IF TRIM ( IN_KEY ) = 'BRAND' THEN 
+		OPEN CSRBRAND ; 
+		RETURN ; 
+	END IF ; 
+  
+	IF TRIM ( IN_KEY ) = 'SIZE' THEN 
+		OPEN CSRSIZE ; 
+		RETURN ; 
+	END IF ; 
+  
+END  ; 
+  
+GRANT ALTER , EXECUTE   
+ON SPECIFIC PROCEDURE SP_GET_ITEMBRANDSSIZES 
+TO JVALANCE ; 
+  
+;

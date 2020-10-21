@@ -1,0 +1,871 @@
+@media all and (min-width:1024px) and (max-width:1100px){
+/*----------- Ording Shipping Page CSS -----------*/
+.order-tabs li a{ font-size:16px;}
+
+/*----------- Order Review Items Page CSS -----------*/
+.review-buttons{ 
+	text-align:center; 
+	margin:20px 0px 10px;
+}
+.review-buttons button.btn:first-child, 
+.review-buttons button.btn{ 
+	margin:0px 0px 15px 20px;
+}
+
+/*----------- Iteam Search Page CSS -----------*/
+.table-scroll th div, .scrollable-header-dynamic th div{
+	font-size:16px !important;
+	padding:9.5px 7px;
+}
+.table-section{
+	padding-top:32px;
+}
+.border-none{
+	border:none !important;
+}
+tr.th-background-none th{
+	background:none !important;
+}
+.table-section{
+	min-width:860px;
+}
+.order-history-search-form label{
+	width: 30%;
+}
+.order-history-search-form .calendar-icon{
+	width: 70%;
+}
+.search-order .buttons{
+	margin-left: 0%;
+}
+.buttons .btn{
+	margin:0px 0px 0px 10px;
+}
+
+}
+
+
+@media all and (min-width:768px) and (max-width:1023px){
+	
+.login-form .left-top-block-feild input.input-error[type="text"] + ul, .login-form .left-top-block-feild input.input-error[type="password"] + ul{margin:0% 0% 0% 7%; padding:0% 3% 0% 38% !important;}	
+	
+.continue_button_section{margin-left:35% !important; margin-top:10px !important; width:60% !important;}	
+.content_sectiontablet{margin-left:35% !important; margin-top:0px !important; width:65% !important;}	
+#myModalShipTo .modal-dialog  {width:75%; margin:auto !important;}
+	#myModalShipTo .modal-dialog{margin:auto !important;}
+.login-section-bg2 .heading{ 
+	font-size:20px; 
+	left:18px; 
+	top:-38px; 
+	padding:5px 10px;
+}
+
+.order-histroy-table-header{
+	
+	padding-top:18px !important;
+}
+
+.order-histroy-table-header-two{
+	
+	padding-top:1px !important;
+}
+
+
+
+.login-form{ 
+	margin-top:20px; 
+	padding-bottom:20px;
+}
+.login-heading{ font-size:16px;}
+.login-form label{ 
+	width:100%; 
+	line-height:normal;
+}
+.login-form input[type="text"], 
+.login-form input[type="password"]{ width:100%;}
+.sign-btn-col label { display:none;}
+.login-form fieldset{ 
+	padding-left:0px; 
+	/*padding-right:0px;*/
+}
+
+/*----------- Breadcrumb CSS -----------*/
+.order-tabs li a:after, 
+.order-tabs li a:before{ 
+	border-top:35px solid transparent; 
+	border-bottom:35px solid transparent; 
+	border-left:15px solid #f6dea8; 
+	margin-top:-35px;
+}
+.order-tabs li a:before{ border-left:15px solid white;}
+
+/*----------- Landing Page CSS -----------*/
+.brand-name-inner-page{ font-size:35px;}
+.brand-name span{ font-size:24px;}
+
+/*----------- Ording Shipping Page CSS -----------*/
+.order-tabs li a{ 
+	font-size:12px; 
+	padding:0px 0px 0px 25px;
+}
+.method-list li a{ font-size:14px;}
+
+/*----------- Iteam Search Page CSS -----------*/
+.total-amount li .selected-ship{ 
+	font-size:14px; 
+	margin-left:20px;
+}
+.inner-page-outer .table > thead > tr > th, 
+.inner-page-outer .table > tbody > tr > th, 
+.inner-page-outer .table > tbody > tr > td{ 
+	vertical-align:middle;
+}
+.item-search-tabs .nav-tabs{
+	margin-left:20px;
+}
+.click-btn{
+	right:0px;
+	top:-5px;
+}
+.inner-page-outer .table > thead > tr > th, .inner-page-outer .table > tbody > tr > td{
+	font-size:12px;
+}
+.inner-page-outer .table > thead > tr > th{
+	font-size:14px !important;
+}
+.table-scroll th div, .scrollable-header-dynamic th div{
+	font-size:14px !important;
+	padding:9.5px 7px;
+}
+.scrollable-header-dynamic th div{
+	margin-left:-11px;
+}
+.table-section{
+	padding-top:34px;
+}
+.border-none{
+	border:none !important;
+}
+tr.th-background-none th{
+	background:none !important;
+}
+
+/*----------- Order Header Page CSS -----------*/
+.information-form{ margin-top:60px;}
+.information-form label{ 
+	width:32%; 
+	line-height:30px;
+}
+.information-form input[type="text"], 
+.information-form input[type="password"], 
+.information-form .normal-text,
+.information-form .normal-textarea,
+.information-form textarea{ width:45%;}
+.information-form textarea{ width:51%;}
+.login-form fieldset span.normal-text, 
+.login-form fieldset span.normal-textarea{
+	width:65%;
+	padding:2px 0px;
+}
+.UsersDefaults.login-form fieldset span.normal-text, 
+.UsersDefaults.login-form fieldset span.normal-textarea{
+	padding:5px 0px;
+}
+#dp3{
+	width:65%;
+	float:left;
+}
+
+/*----------- Order Review Page CSS -----------*/
+.review-buttons{ 
+	text-align:center; 
+	margin:20px 0px 10px;
+}
+.review-buttons button.btn:first-child, 
+.review-buttons button.btn{ 
+	margin:0px 0px 15px 20px;
+}
+.total-amount ul{ font-size:14px;}
+.total-amount ul .total-heading{ padding:7px 20px;}
+.total-amount li{ padding:7px 5px;}
+
+/*----------- Order History Page CSS -----------*/
+.history-item .right-block .buttons-text{ margin:10px 0px 10px;}
+
+/*----------- Order History Search Page CSS -----------*/
+.order-history-search-form label{ width:30%;}
+.order-history-search-form input[type="text"], 
+.order-history-search-form input[type="password"], 
+.order-history-search-form select, 
+.order-history-search-form textarea{ width:62%;}
+
+/*----------- Login Page Update CSS -----------*/
+/* .login-form-bg{ margin:-198px 0px 0px -20px;} */
+.login-form-bg {
+    margin: -85px 0 0 85px;
+}
+.login-form fieldset span{ top:23px;}
+.information-form fieldset span{ top:0px !important;}
+.login-form fieldset span{
+	position: relative;
+	height: inherit;
+}
+
+.user_customer_view .left-top-block-feild + .col-md-5{ margin-top: 30px;}
+.col-md-6.col-sm-6.col-xs-12.width45per{ width:auto;line-height: 22px; padding:0px 0px;}
+
+.col-md-6.col-sm-12.col-xs-12.left-top-block-feild + .col-md-6 .type-message.right-top-block .normal-text{line-height: 30px !important; margin-bottom: 5px !important; padding: 0px 0px !important;}
+
+.normal-text.width25per.padding-none + .col-md-6.col-sm-6.col-xs-12.width45per{ width:40% !important;}
+.bottom_block_label{ width: 38% !important;}
+
+
+.col-md-6.left-top-block-feild + .col-md-6 {
+	width:100%;
+    float: left;
+    margin-top: 30px;
+}
+.textarea-with-side-text + ul.side-text, span.arae-error-message + ul.side-text {
+    padding: 0 0 0 34%;
+    width: 100%;
+}
+.brand-name{ width: 45%;}
+.main-nav > li.dropdown > ul.dropdown-menu{ left:-40px;}
+
+.icons{
+	float: inherit;
+	
+}
+
+.item-search-table{
+	width:48%;
+	
+	
+}
+.item-search{
+	width:100%;
+	margin-left:0px !important;
+	margin-top:15px !important;
+	
+}
+
+
+} 
+
+@media all and (max-width:1024px){
+	.modal-content{font-family:arial; font-size:12px;}
+
+	
+	}
+@media all and (max-width:767px){
+	.order_history_PO{ padding-left:58%;}
+	.icons{
+	float: inherit;
+	
+}
+
+.order-histroy-table-header{
+	
+	padding-top:18px !important;
+}
+
+.order-histroy-table-header-two{
+	
+	padding-top:1px !important;
+}
+
+
+.brand-name{ 
+	max-width:100%; 
+	font-size:22px; 
+	line-height:27px;
+}
+.brand-name span{
+	font-size:18px; 
+	line-height:25px; 
+	margin-top:23px;
+}
+.login-section-image{ display:none;}
+.login-section-left{ margin-bottom:50px;}
+.login-form{ 
+	margin-top:30px; 
+	padding-bottom:20px;
+}
+
+/*----------- Landing Page CSS -----------*/
+.header-right-block{ 
+	width:100%; 
+	float:left;
+}
+.mail-id{ text-align:center;}
+.main-nav{ 
+	width:100%; 
+	float:left; 
+	text-align:center;
+}
+.main-nav li{ 
+	float:none; 
+	display:inline-block;
+}
+
+/*----------- Ording Shipping Page CSS -----------*/
+.search-box{ width:82%;}
+.order-tabs li a{ 
+	font-size:16px; 
+	padding:0px 18px 0px 10px;
+}
+.method-list li a{ font-size:14px;}
+
+/*----------- Ording Shipping Page CSS -----------*/
+.order-tabs li{ width:50%;}
+.order-tabs li a{ float:none;}
+.order-tabs li a::before{ border-left:none;}
+.order-tabs li a::after, 
+.order-tabs li a::before{ 
+	border-top:none; 
+	border-left:none; 
+	border-bottom:none;
+}
+.ordering-option .heading{ 
+	font-size:22px; 
+	top:-37px; 
+	left:15px;
+}
+.search-box input[type="text"]{ width:90%;}
+.table-responsive{ border:none;}
+.method-list li{ 
+	width:100%; 
+	border-left:none;  
+	border-top:1px solid #d3e6f1;
+}
+.method-list li:first-child{  border-top:none;}
+
+/*----------- Iteam Search Page CSS -----------*/
+.total-amount li .selected-ship{ 
+	/*width:50%;*/
+	float:left; 
+	font-size:14px; 
+	margin:0px 10px;
+}
+.table-section{
+	padding-top:35px;
+}
+.login-form fieldset span.normal-text, .login-form fieldset span.normal-textarea{
+	width:50%;
+}
+#dp3{
+	width:100%;
+	float:left;
+}
+/*----------- Iteam Search-B Page CSS -----------*/
+.filterby-product-description label,
+.filterby-product-description input[type="text"]{ width:72%; margin-bottom:15px;}
+.item-search-tabs .nav-tabs{
+	margin-left:15px;
+}
+.item-search-tabs .nav-tabs > li > a{
+	font-size:14px;
+	padding:0px 15px;
+}
+.click-btn{
+	font-size:16px;
+	right:0px;
+	top:-5px;
+}
+.inner-page-outer .table > thead > tr > th, .inner-page-outer .table > tbody > tr > td{
+	font-size:12px;
+}
+.inner-page-outer .table > thead > tr > th{
+	font-size:14px !important;
+}
+.table-scroll th div, .scrollable-header-dynamic th div{
+	font-size:16px !important;
+	padding:9.5px 7px;
+}
+.scrollable-header-dynamic th div{
+	margin-left:-11px;
+}
+.table-section{
+	padding-top:34px;
+}
+.border-none{
+	border:none !important;
+}
+tr.th-background-none th{
+	background:none !important;
+}
+
+/*----------- Order Header Page CSS -----------*/
+.information-form{ margin-top:60px;}
+.information-form label{ 
+	width:100%; 
+	text-align:left; 
+	line-height:normal;
+}
+.information-form input[type="text"], 
+.information-form input[type="password"],
+.information-form textarea{ width:80%;}
+.information-form textarea{ width:100%;}
+.text-center-responsive{}
+.text-center-responsive label{ 
+	width:45%; 
+	text-align:right; 
+	line-height:30px;
+}
+.information-form .normal-text,
+.information-form .normal-textarea{ 
+	width:50%; 
+	display:inline-block; 
+	padding:10px 0px; 
+	line-height:normal;
+}
+
+/*----------- Order Review Items Page CSS -----------*/
+.review-buttons{ 
+	text-align:center; 
+	margin:20px 0px 10px;
+}
+.review-buttons button.btn:first-child, .review-buttons button.btn{ margin:0px 0px 15px 20px;}
+.responsive-buttons-text{ 
+	width:100%; 
+	text-align:center; 
+	margin-bottom:10px;
+}
+
+.total-amount ul{ 
+	width:100%; 
+	margin:25px 0px 0px 0px;
+}
+.total-amount ul:first-child{ margin:0px 0px 0px 0px;}
+.total-amount li{ 
+	font-size:16px; 
+	padding:7px 5px;
+}
+
+/*----------- Order History Page CSS -----------*/
+.history-item .right-block{ text-align:center;}
+.history-item .right-block .buttons-text{ margin:10px 0px 10px;}
+
+/*----------- Order History Search Page CSS -----------*/
+.order-history-search-form .calendar-icon{ width:100%;}
+.order-history-search-form input[type="text"], 
+.order-history-search-form input[type="password"], 
+.order-history-search-form select, 
+.order-history-search-form textarea{ width:100%;}
+.manual-pagination li{ margin-bottom:10px;}
+
+/*----------- Login Page Update CSS -----------*/
+.login-form-bg{ display:none;}
+.shipping-method{
+	padding:50px 20px;
+}
+.method-list .btn{
+	font-size:12px;
+}
+
+.login-form fieldset span{
+	position: relative;
+	height: inherit;
+}
+.search-order .buttons{
+	margin-left: 0px;
+}
+.login-form input[type="text"], .login-form input[type="password"], .login-form select, .login-form textarea{
+	margin-bottom: 5px;
+}
+
+.user_customer_view .left-top-block-feild + .col-md-5,
+.col-md-6.col-sm-12.col-xs-12.left-top-block-feild + .col-md-6{ margin-top: 30px;}
+
+
+.order-tabs li a::after, .order-tabs li a::before, .order-tabs li span.act-as-link::after, .order-tabs li span.act-as-link::before{
+	border-top:none;
+		border-left:0 !important;
+		
+	
+}
+
+.order-tabs li a, .order-tabs li span.act-as-link{
+	padding: 0 0 0 12px;
+	
+}
+.order-tabs li:last-child{
+	background:#f6dea8 ;
+	
+	
+}
+
+
+.right-top-block {
+	margin-top:30px;
+}
+
+
+}
+.shiping br{
+	display: none;
+	}
+
+@media all and (min-width:888px) and (max-width: 1024px){
+	.shiping br{
+	display: block;
+	}
+
+	
+	}
+	
+	@media all and (min-width:641px) and (max-width: 887px){
+	
+	.login-form .left-top-block-feild input.input-error[type="text"] + ul, .login-form .left-top-block-feild input.input-error[type="password"] + ul{margin:0% 0% 0% 7%; pading:0% 3% 0% 38%;}	
+	.continue_button_section{margin-left:43% !important; margin-top:10px !important; width:60% !important;}	
+   .content_sectiontablet{margin-left:35% !important; margin-top:0px !important; width:65% !important;}
+	#myModalShipTo .modal-dialog{margin:auto;}
+	.col-sm-tow{
+	width: 24%;
+	float: left;
+	}
+	
+	.col-sm-three{
+	width: 70%;
+	float: left;
+	}
+	
+	.order-shipping-address{
+	padding-left: 31px;
+	
+}
+	}
+@media all and (min-width:600px) and (max-width: 767px){
+.user_customer_text.width20per + .col-md-6.col-sm-6.col-xs-12.width40per{ padding: 0px 0px 0px 38%;}
+.user_edit_text{ width:55% !important; line-height: 30px; padding: 0px 0px !important;}
+.col-md-6.col-sm-12.col-xs-12.left-top-block-feild + .col-md-6{ width:100%; margin-top: 30px; float: left;}
+.col-md-6.col-sm-12.col-xs-12.left-top-block-feild + .col-md-6 .type-message.right-top-block .normal-text{line-height: 30px !important; margin-bottom: 5px !important;}
+.bottom_block_label{ width: 38% !important;}
+
+
+.col-md-6.col-sm-6.only_tablet{display:none !important;}
+.col-md-6.left-top-block-feild + .col-md-6 {
+	width:100%;
+    float: left;
+    margin-top: 30px;}
+.right-top-block label, .login-form .right-top-block fieldset span.normal-text{ line-height: 30px; margin-bottom:5px !important;}
+
+.textarea-with-side-text + ul.side-text, span.arae-error-message + ul.side-text {
+    padding: 0 0 0 48%;
+    width: 100%;
+}
+.shipping-add-right{
+	padding-right: 20px !important;
+	
+}
+.shipping-add{
+	padding-left: 25px !important;
+	
+	
+}
+
+
+}
+
+@media all and (max-width:640px){
+	.margin-20{
+	margin-bottom: 8px;
+	}
+
+	
+	}
+@media all and (max-width:599px){
+.user_customer_view {
+    line-height: 22px;
+    margin: 20px 0px 25px;
+}
+
+
+.user_customer_view label {
+    padding-right: 0px;
+    text-align: left;
+    width: 100%;
+}
+.user_customer_view .left-top-block-feild{ padding: 0px 0px;}
+.user_customer_view .left-top-block-feild + .col-md-5{ padding: 0px 0px;}
+.user_activity {
+    padding: 0px 8px;
+}
+.user_activity_text, .user_edit_text {
+    font-weight: 400;
+    line-height: normal;
+    width:100%;
+}
+.user_customer_text.width20per{ width:100% !important;}
+.user_customer_text.width20per + .col-md-6.col-sm-6.col-xs-12.width40per{ padding: 0px 0px;}
+
+.col-md-6.col-sm-12.col-xs-12.left-top-block-feild + .col-md-6{ margin-top: 30px; float: left;}
+.col-md-6.col-sm-12.col-xs-12.left-top-block-feild + .col-md-6 .type-message.right-top-block{ padding: 0px 8px;}
+.change_password_toggle{ padding-left:8px; padding-right:8px; margin-left: 0px;}
+
+
+.user_edit_text{ width:55% !important; line-height: 30px; padding: 0px 0px !important;}
+.text-center-responsive label{
+    line-height:30px;
+}
+
+fieldset.shipping-info{
+	margin-bottom: 8px;
+	
+}
+
+
+.shipping-info span{
+line-height: 17px !important;
+    padding-top: 3px !important;
+    width: 100% !important;
+	
+}
+.shipping-add-right{
+	padding-right: 20px !important;
+	
+}
+.shipping-add{
+	padding-left: 15px !important;
+	
+	
+}
+
+.coll-left-fix{
+	
+	padding-left: 15px !important; 
+}
+.order-shipping-address{
+	padding-left: 0px;
+	
+}
+}
+
+@media all and (min-width:320px) and (max-width: 479px){
+	.order-shipping-address{
+	padding-left: 0px;
+	
+}
+	.coll-left-fix{
+	
+	padding-left: 15px !important; 
+}
+	.buttons_attachment{
+	
+	margin-top:5px;
+}
+.logo{ 
+	width:100%; 
+	text-align:center; 
+	margin-left:0px;
+}
+.brand-name{ 
+	width:100%; 
+	font-size:18px; 
+	text-align:center; 
+	margin:10px 0px 0px 0px;
+}
+.login-section-bg2{ padding:0px 15px;}
+.login-section-bg2 .heading{ 
+	font-size:20px; 
+	left:18px; 
+	top:-38px; 
+	padding:5px 10px;
+}
+.login-form{ 
+	margin-top:20px; 
+	padding-bottom:20px;
+}
+.login-heading{ font-size:16px;}
+.login-form label{ 
+	width:100%; 
+	line-height:normal;
+}
+.login-form input[type="text"], 
+.login-form input[type="password"]{ width:100%;}
+.sign-btn-col label { display:none;}
+.login-form fieldset{ 
+	padding-left:0px; 
+	padding-right:0px;
+}
+
+/*----------- Landing Page CSS -----------*/
+.inner-page-outer h1{ 
+	font-size:22px; 
+	margin-top:0px;
+}
+.order-list li{ 
+	width:100%; 
+	float:left; 
+	margin-top:20px;
+}
+.order-list li img{ 
+	width:100%; 
+	height:auto;
+}
+.order-list{ margin-top:20px;}
+.ordering-option .heading{ 
+	font-size:20px; 
+	left:5px; 
+	padding:5px; 
+	top:-38px;
+}
+
+/*----------- Ordering Shipping Page CSS -----------*/
+.order-tabs li{ width:100%;}
+.order-tabs li a{ 
+	font-size:18px; 
+	padding:0px 18px 0px 10px;
+}
+.ordering-option .heading{ 
+	font-size:18px; 
+	top:-35px; 
+	left:15px;
+}
+.search-box{ width:100%;}
+.search-box input[type="text"]{ width:83%;}
+.table-responsive{ border:none;}
+.inner-page-outer .btn{ 
+	font-size:12px; 
+	width:100%;
+}
+.shipping-method{ padding:30px 8px 15px 8px;}
+.method-list li{ 
+	width:100%; 
+	border-left:none;  
+	border-top:1px solid #d3e6f1;
+}
+.method-list li:first-child{ border-top:none;}
+.method-list li a{ 
+	line-height:normal; 
+	padding:8px 20px;
+}
+
+/*----------- Iteam Search Page CSS -----------*/
+.item-search-tabs .nav-tabs{ margin-left:0px;}
+.item-search-tabs .nav-tabs > li{ width:50%; text-align: center;}
+.item-search-tabs .nav-tabs > li > a{ padding: 0px 0px;}
+.order-heading{ 
+	font-size:16px; 
+	margin-top:30px;
+}
+.total-amount{ 
+	padding-bottom:30px; 
+	margin-bottom:0px;
+}
+.total-amount li .selected-ship{ 
+	width:100%; 
+	font-size:16px;
+}
+
+/*----------- Iteam Search-B Page CSS -----------*/
+.order-tabs{ margin-bottom:30px;}
+.filterby-product-description label{ 
+	line-height:normal; 
+	font-size:14px; 
+	margin-bottom:10px; 
+	margin-right:0px;
+}
+.filterby-product-description label,
+.filterby-product-description input[type="text"]{ width:100%;}
+.table-above-text{ font-size:14px;}
+
+/*----------- Order Header Page CSS -----------*/
+.information-form{ margin-top:60px;}
+.information-form label{ 
+	width:100%; 
+	text-align:left; 
+	line-height:normal;
+}
+.information-form input[type="text"], 
+.information-form input[type="password"],
+.information-form textarea{ width:72%;}
+.information-form textarea{ width:100%;}
+.text-center-responsive{}
+.text-center-responsive label{ 
+	width:100%; 
+	text-align:left; 
+	line-height:normal; 
+	margin-bottom:0px;
+}
+.information-form .normal-text,
+.information-form .normal-textarea{ 
+	width:100%; 
+	display:inline-block; 
+	padding:0px 0px 10px; 
+	line-height:normal;
+}
+
+/*----------- Order Review Page CSS -----------*/
+.review-buttons{ 
+	text-align:center; 
+	margin:20px 0px 10px;
+}
+.review-buttons button.btn:first-child, 
+.review-buttons button.btn{ margin:0px 0px 15px 0px;}
+.responsive-buttons-text{ 
+	width:100%; 
+	text-align:center; 
+	margin-bottom:10px;
+}
+
+.total-amount ul{ 
+	width:100%; 
+	margin:25px 0px 0px 0px;
+}
+.total-amount ul:first-child{ margin:15px 0px 0px 0px;}
+.total-amount li{ 
+	width:100%; 
+	float:left; 
+	font-size:16px;
+}
+
+/*----------- Order History Page CSS -----------*/
+.history-item .right-block{ text-align:left;}
+.history-item .right-block .buttons-text{ margin:10px 0px 10px;}
+
+/*----------- Order History Search Page CSS -----------*/
+.order-history-search-form .calendar-icon{ width:100%;}
+.order-history-search-form .calendar-icon input[type="text"]{ width:72%;}
+.order-history-search-form input[type="text"], 
+.order-history-search-form input[type="password"], 
+.order-history-search-form select, 
+.order-history-search-form textarea{ width:100%;}
+.manual-pagination li{ margin-bottom:10px;}
+
+/*----------- Login Page Update CSS -----------*/
+.login-form-bg{ display:none;}
+.login-form fieldset span{ /*top:23px;*/}
+#OhReqDelivDate, #OhReqDelivTime{
+	width:35%;
+}
+.click-btn{
+	top:-45px;
+}
+.environment{
+	width: 100%;
+	float: left;
+	margin-bottom: 15px;
+}
+
+
+.user_edit_text{ width:100% !important;}
+
+.shipping-add-right{
+	padding-right: 20px !important;
+	
+}
+.shipping-add{
+	padding-left: 15px !important;
+	
+	
+}
+
+.required-entry{
+	
+	margin-top: 30px;
+	
+}
+
+
+}

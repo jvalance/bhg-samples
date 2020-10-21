@@ -1,0 +1,264 @@
+ <div class="row inner-page-top-address margin-top-order">
+	 <?php  echo $this->partial('/partials/order-header-info.phtml', array('getOrderHeader' => $getOrderHeader)); ?>
+</div>
+			<div class="row">
+        	<div class="col-md-12 col-sm-12 col-xs-12 steps-complete">
+            	<em>Steps to complete your order:</em>
+            </div> </div>
+            <div class="row">
+                <ul class="order-tabs">
+                <?php
+                	
+                	   $breadcrumbParams = array();
+                	
+                	   $breadcrumbParams['resource'] = basename(__FILE__);
+                	
+                       $breadcrumbParams['orderingStep'] =
+                	 	       (int)$getOrderHeader['output']['PLINK_ENTRY_STEP'];
+                       
+                	   $breadcrumbParams['excludeSubstitutes'] =
+                	       !(trim($getOrderHeader['output']['SUBS_REQUIRED']) === 'Y');
+                	
+                	   echo $this->partial('partials/breadcrumbs/breadcrumbs.phtml',$breadcrumbParams);
+                ?>
+                </ul>
+            </div>
+             <div class="col-md-12 col-sm-12 col-xs-12">
+			 	<em>You are required to select substitute items in the event some of your ordered products are not available at shipping time. 
+Please select at least <?php echo  $configSubstitutes['substitutes']['min_value']; ?> substitute items and no more than <?php echo  $configSubstitutes['substitutes']['max_value']; ?> substitute items.</em>
+             	<h1 class="margin-top35 margin-bottom25">Substitute Item Search</h1>
+				<em>Select a tab below to search by various groupings:</em>
+                <div class="item-search-tabs margin-top20">
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li><a href="#brand-size" data-toggle="tab">by Brand/Size</a></li>
+                        <li><a href="#brand" data-toggle="tab">by Brand</a></li>
+                        <li><a href="#size" data-toggle="tab">by Size</a></li>
+                        <li><a href="#item-description" data-toggle="tab">by Description</a></li>
+                    </ul>
+                    <button class="click-btn" id="showItemsButtonSubmit" onclick="processForm('item-search-form');" style="display: none;">Show Items</button>
+                    <div id="my-tab-content" class="tab-content item-search-auto">
+                             
+                    <?php $getItemsByBrandSizeLoop = array();
+						if(!empty($getItemsByBrandSize['output'])){
+                                        	foreach($getItemsByBrandSize['output'] as $itemBrandSize){
+													$getItemsByBrandSizeLoop[$itemBrandSize['ITM_BRAND_CODE']]['BRAND_DESC'] =  $itemBrandSize['BRAND_DESC'];
+													$getItemsByBrandSizeLoop[$itemBrandSize['ITM_BRAND_CODE']]['ITEMS'][] = $itemBrandSize;
+											}
+											}
+                                        	 ?>
+                                        	 
+                        <div id="brand-size" class="tab-pane">
+                        
+                            <div id="accordion" class="panel-group main-data-brand-size" role="tablist" aria-multiselectable="true">
+                                
+                                <?php if(!empty($getItemsByBrandSizeLoop)){
+                                	$i = 0;
+		                                	foreach ($getItemsByBrandSizeLoop as $itemBrandSizekey => $itemBrandSizeToShow){
+											$brandDesc = $itemBrandSizeToShow['BRAND_DESC'];
+											$i++;
+
+								 ?>
+												<div class="panel panel-default">
+												<a <?php if($i== 1){echo 'class="active"';} ?> href="#collapse<?php echo $i; ?>" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse<?php echo $i; ?>"><?php echo $itemBrandSizeToShow['BRAND_DESC']; ?></a>
+                                    <div id="collapse<?php echo $i; ?>" role="tabpanel" aria-labelledby="heading<?php echo $i; ?>" <?php if($i== 1){ echo 'aria-expanded = "true" class="panel-collapse collapse in"'; } else { echo 'class="panel-collapse collapse"'; } ?>>
+                                        <div class="panel-body">
+                                        	<div class="table-responsive">
+                                        	
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    <?php if(!empty($itemBrandSizeToShow['ITEMS'])){ 
+                                                    foreach($itemBrandSizeToShow['ITEMS'] as $itemBrandSizeShow){
+                                                    	?>
+                                                    	<tr id="<?php echo $itemBrandSizeShow['ITM_BRAND_CODE'];  ?>" rel="<?php echo trim($itemBrandSizeShow['BRAND_DESC']) ; ?>">
+                                                            <td class="brandSizeSelectableRow" id="<?php echo $itemBrandSizeShow['ITM_SIZE_CODE'];  ?>" rel="<?php echo trim($itemBrandSizeShow['SIZE_DESC']) ; ?>"><a href="javascript:void(0)" onclick="return substituteBrandSizeSelectableRow(this);"><?php echo $itemBrandSizeShow['SIZE_DESC'];  ?></a></td>
+                                                        </tr>
+                                                    <?php
+                                                    			} 
+														}
+                                                    	?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+															
+											<?php }
+                                	
+                                } else { ?>
+                                <div class="informationTabsSearch CustomTextOnTabs padb5">No Items to display</div>
+                                <?php } ?>
+                                
+							</div>
+						<div id="ajax-data-brand-size"></div>
+                        </div>
+                        <div id="brand" class="tab-pane">
+                        
+                        	 <?php if(!empty($getItemsByBrand['output'])){ 
+                                	$i = 0;
+								 ?>
+												<div class="panel panel-default main-data-brand">
+											
+                                        <div class="panel-body">
+                                        	<div class="table-responsive">
+                                        	
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    <?php foreach ($getItemsByBrand['output'] as $itemBrandkey => $itemBrandToShow){					?>
+                                                   		<tr>
+                                                            <td class="brandSelectableRow" id="<?php echo $itemBrandToShow['ITM_BRAND_CODE'];  ?>" rel="<?php echo trim($itemBrandToShow['BRAND_DESC']) ; ?>"><a href="javascript:void(0)" onclick="return substituteBrandSelectableRow(this);"><?php echo $itemBrandToShow['BRAND_DESC'];  ?></a></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+															
+											<?php 
+                                	
+                                } else { ?>
+                                <div class="informationTabsSearch CustomTextOnTabs padb5">No Items to display</div>
+                                <?php } ?>
+                                <div id="ajax-data-brand"></div>
+                        </div>
+                        <div id="size" class="tab-pane">
+                        
+                        	 <?php if(!empty($getItemsBySize['output'])){ 
+                                	$i = 0;
+		                                		
+								 ?>
+												<div class="panel panel-default main-data-size">
+											
+                                        <div class="panel-body">
+                                        	<div class="table-responsive">
+                                        	
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    <?php foreach ($getItemsBySize['output'] as $itemSizekey => $itemSizeToShow){					?>
+                                                   		<tr>
+                                                            <td class="sizeSelectableRow" id="<?php echo $itemSizeToShow['ITM_SIZE_CODE'];  ?>" rel="<?php echo trim($itemSizeToShow['SIZE_DESC']) ; ?>"><a href="javascript:void(0)" onclick="return substituteSizeSelectableRow(this);"><?php echo $itemSizeToShow['SIZE_DESC'];  ?></a></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+															
+											<?php 
+                                	
+                                } else { ?>
+                                <div class="informationTabsSearch CustomTextOnTabs padb5">No Items to display</div>
+                                <?php } ?>
+                                <div id="ajax-data-size"></div>
+                        </div>
+                        <div id="item-description" class="tab-pane">
+                        <div class="filterby-product-description main-data-item-description">
+                          <?php
+$form->setAttribute('action', $this->url('user/itemSubstituteAjax', array('controller' => 'user', 'action' => 'item-substitute-ajax')));
+$form->setAttribute('id', 'item-substitute-form');
+// $form->setAttribute('class', 'col-md-12');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+?>  	
+                        
+				<label for="filterItemSearch">Filter Products by:</label>
+				 <?php 
+// 				  echo $this->formRow($form->get('multi-checkbox')->setOptions(array('value_options' => array(
+//         						array(
+//         								'value' => '2',
+//         								'label' => 'Rohit',
+//         								'selected' => true,
+        								
+//         						),
+//         				)
+				 		
+// 						) ) ); 
+?>
+                            <?php echo $this->formRow($form->get('filter')); ?>
+                            <?php 
+//                              echo $this->formRow($form->get('multi-checkbox')->setOptions(array('value_options' => array(
+//         						array(
+//         								'value' => '0',
+//         								'label' => 'Apple',
+//         								'selected' => false,
+//         								'disabled' => false,
+//         								'attributes' => array(
+//         										'id' => 'apple_option',
+//         										'data-fruit' => 'apple',
+//         								),
+//         								'label_attributes' => array(
+//         										'id' => 'apple_label',
+//         								),
+//         						),
+//         				),)) ); 
+?>
+
+<?php echo $this->formRow($form->get('brand')); ?>
+                        <?php echo $this->formRow($form->get('size')); ?>
+                        <?php echo $this->formRow($form->get('brandName')); ?>
+                        <?php echo $this->formRow($form->get('sizeName')); ?>
+                        <?php
+$element = $form->get('save');
+$element->setAttribute('onclick', 'return checkBlankSubstitutes();');
+                        echo $this->formButton($element); ?> 
+                            <?php
+
+echo $this->form()->closeTag();
+?>
+			
+			 </div>
+			 <div id="ajax-data-item-description"></div>
+                        	
+                        </div>
+                        <div id="CustomTextOnTabs" class="CustomTextOnTabs BackgroundBlueCustomText">Select one of the tabs above to begin your item search</div>
+                    </div>
+                </div>
+                <div class="ordering-option padding8 margin-top60">
+                	<h2 class="heading">Substitute Items on this Order</h2>
+					<div class="margin-top50">
+						<em>Below are your current selections for substitute items.<br>
+<!-- 						To change priority, hold the "Move" icon and slide the items up or down.<br> -->
+						To remove a substitute, click the "Remove" icon and confirm removal</em>
+					</div>
+					<div class="clearfix"></div>
+					<div id="ajax-data-substitutes">
+                    <?php 
+                    echo $this->partial('/partials/substitutes-list.phtml', array(
+                    		'getListSubstitutes' => $getListSubstitutes,
+							'configSubstitutes' => $configSubstitutes
+                    ));
+                    ?>
+					</div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="buttons">
+                <?php if(!empty($_GET['redirect'])){ ?>
+                	
+                	<button class="btn" type="submit" onclick="return checkReviewSubstitutes('Substitutes');">Review Order</button>
+               <?php } else { ?>
+                	<button class="btn" type="submit" onclick="return checkReviewSubstitutes();">Review Order</button>
+                	
+               <?php } ?>
+                	
+                    <button class="btn" type="button" onclick="return checkCancel('substitutes');">Cancel Order</button>
+                </div>
+             </div>
+             
+                   
+         	<?php   $this->inlineScript()->appendFile($this->basePath('js/item-search.js'));
+         //	$this->inlineScript()->appendFile($this->basePath("js/jquery.screwdefaultbuttonsV2.js"));
+                               ?>
+                               
+ <script>
+
+ $(document).keydown(function(e) {
+	    // ESCAPE key pressed
+	    if (e.keyCode == 27) {
+	    	$('.bootbox-close-button').trigger('click');
+	    }
+	});
+ </script>                              
+                           

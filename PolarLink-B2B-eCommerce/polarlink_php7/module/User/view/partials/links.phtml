@@ -1,0 +1,24 @@
+<li <?php if(!empty($this->class)){ echo 'class="'.$this->class.'"'; } ?>>
+<?php if(!empty($this->link)){ ?>
+      <a href="<?php if(!empty($this->link)){ echo $this->url($this->link); } else { echo 'javascript:void(0)'; } ?>"><?php echo $this->title; ?>
+      
+    <!--   <a href="javascript:void(0)"><?php echo $this->title; ?> -->
+    <?php if(!empty($this->class) && ($this->class == 'active activated')){ ?>
+    <span class="right-sign"><img src="<?php echo $this->basePath('img/right_sign_active.png'); ?>" alt="" /></span>
+    <?php } ?>
+    <?php if(!empty($this->class) && ($this->class == 'visited')){ ?>
+    <span class="right-sign"><img src="<?php echo $this->basePath('img/right_sign.png'); ?>" alt="" /></span>
+    <?php } ?>
+    </a>
+    <?php } else { ?>
+     <span class="act-as-link">
+    <?php echo $this->title; ?>
+    <?php if(!empty($this->class) && ($this->class == 'active activated')){ ?>
+    <span class="right-sign"><img src="<?php echo $this->basePath('img/right_sign_active.png'); ?>" alt="" /></span>
+    <?php } ?>
+    <?php if(!empty($this->class) && ($this->class == 'visited')){ ?>
+    <span class="right-sign"><img src="<?php echo $this->basePath('img/right_sign.png'); ?>" alt="" /></span>
+    <?php } ?>
+    </span>
+     <?php } ?> 
+</li>

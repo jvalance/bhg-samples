@@ -1,0 +1,87 @@
+<?php 
+
+/**
+ * Jaziel Lopez, <juan.jaziel@gmail.com>
+ * 
+ * Item inquiry search result view
+ * 
+ * View's controller variables:
+ * ------------------------------
+ * ------------------------------
+ * @var string $brandName
+ * @var string $sizeName
+ * @var string $brand
+ * @var string $size
+ * @var string $filter
+ * @var array $output
+ */
+?>
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+	<ul class="total-amount">
+		<li>
+
+			<div class="selected-ship">
+				Brand: <span><?php echo $brandName; ?></span>
+			</div> <input type="hidden" name="brand"
+			value="<?php echo $brand; ?>" /> <input type="hidden"
+			name="brandName" value="<?php echo $brandName; ?>" />
+
+
+			<div class="selected-ship">
+				Size: <span><?php echo $sizeName; ?></span>
+			</div> <input type="hidden" name="size" value="<?php echo $size ?>" />
+			<input type="hidden" name="sizeName" value="<?php echo $sizeName; ?>" />
+
+		</li>
+	</ul>
+	<div class="filterby-product-description">
+		<form id="inquiry-filter-form">
+    		<label>Filter by product/description:</label> 
+    			<input name="filter" type="text" id="filter" value="<?php echo $filter; ?>" required="required"/> 
+    			<input id="inquiry-do-search-filter" name="inquiry-do-search-filter" type="submit" value="Search"  style="margin-bottom: 0px;"class='btn margin-right' /> 
+    			<a href="javascript:void(0)" onclick="resetInquiryForm()">Clear
+    			Recent Filter</a>
+    	</form>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<div class="order-heading margin-none">Items matching selection</div>
+<form id="updateOrderForm" name="update-order" action="#">
+	<div class="table-responsive">
+		<section>
+				<table id="item-inquiry-search-results"
+					class="table table-striped table-fixed-headers">
+					<thead>
+						<tr class="">
+							<th>Product</th>
+							<th>Description</th>
+							<th>UOM</th>
+							<th class="right-align">Units per Pallet</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+                            if (empty($output)) :
+                                
+                                print '<tr><td colspan="9">No product information available</td></tr>';
+                            
+                            endif;
+                            
+                            foreach ($output as $item) :
+                                printf('<tr>');
+                                printf('<td>%s</td>', $item['ITM_NUMBER']);
+                                printf('<td class="description">%s</td>', $item['ITM_DESC']);
+                                printf('<td>%s</td>', $item['ITM_UOM']);
+                                printf('<td class="right-align">%d</td>', $item['UNITS_PER_PALLET']);
+                                printf('</tr>');
+                            endforeach;
+                        ?>
+                        </tbody>
+				</table>
+		</section>
+	</div>
+</form>
+<div class="clearfix"></div>
+</div>
+

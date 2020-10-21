@@ -1,0 +1,59 @@
+SET PATH *LIBL ;
+
+CREATE OR REPLACE PROCEDURE SP_GET_ANNOUNCEMENTS_SEARCH ( 
+	IN IN_FACILITY CHAR(3) , 
+	IN IN_CUST_TYPE CHAR(4) , 
+	IN IN_START_DATE DATE , 
+	IN IN_END_DATE DATE , 
+	IN IN_USER_ID CHAR(15) , 
+	IN IN_MESSAGE VARCHAR(2500) , 
+	OUT OUT_MESSAGE VARCHAR(100) ) 
+	DYNAMIC RESULT SETS 1 
+	LANGUAGE SQL 
+	SPECIFIC SP_GET_ANNOUNCEMENTS_SEARCH 
+	NOT DETERMINISTIC 
+	MODIFIES SQL DATA 
+	CALLED ON NULL INPUT 
+	SET OPTION  ALWBLK = *ALLREAD , 
+	ALWCPYDTA = *OPTIMIZE , 
+	COMMIT = *NONE , 
+	DECRESULT = (31, 31, 00) , 
+	DFTRDBCOL = *NONE , 
+	DYNDFTCOL = *NO , 
+	DYNUSRPRF = *USER , 
+	SRTSEQ = *HEX   
+	BEGIN 
+/*================================================================================ 
+Created July 2015 by John Valance 
+Retrieve announcements for maintenance. 
+=================================================================================*/ 
+	DECLARE AT_END INT DEFAULT 0 ; 
+	DECLARE NOT_FOUND CONDITION FOR '02000' ; 
+  
+DECLARE C1 CURSOR WITH RETURN FOR 
+SELECT PLA_ID , PLA_FACILITY , PLA_CUST_TYPE , 
+		PLA_START_DATE , PLA_END_DATE , PLA_MESSAGE 
+FROM PLINK_ANNOUNCEMENTS 
+	WHERE ( ( IN_START_DATE = '0001-01-01' ) OR 
+			( IN_START_DATE <> '0001-01-01' AND PLA_START_DATE <= IN_START_DATE ) ) 
+	AND	( ( IN_END_DATE = '0001-01-01' ) OR 
+			( IN_END_DATE <> '0001-01-01' AND PLA_END_DATE >= IN_END_DATE ) ) 
+	AND ( IN_MESSAGE = '' OR ( IN_MESSAGE <> '' AND UPPER ( PLA_MESSAGE ) LIKE ( '%' || IN_MESSAGE || '%' ) ) ) 
+	AND ( TRIM ( IN_FACILITY ) = '' OR ( TRIM ( IN_FACILITY ) <> '' AND PLA_FACILITY = IN_FACILITY ) ) 
+	AND ( TRIM ( IN_CUST_TYPE ) = '' OR ( TRIM ( IN_CUST_TYPE ) <> '' AND PLA_CUST_TYPE = IN_CUST_TYPE ) ) 
+	ORDER BY PLA_START_DATE , PLA_END_DATE 
+	; 
+	 
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET AT_END = 1 ; 
+	 
+	 --================================================================ 
+	SET IN_MESSAGE = UPPER ( IN_MESSAGE ) ;  -- convert to upper for case-insensitive search 
+	 -- Open result set cursor being returned. 
+	OPEN C1 ; 
+END  ; 
+  
+GRANT ALTER , EXECUTE   
+ON SPECIFIC PROCEDURE SP_GET_ANNOUNCEMENTS_SEARCH 
+TO JVALANCE ; 
+  
+;

@@ -1,0 +1,260 @@
+            <div class="csr col-md-12 col-sm-12 col-xs-12">
+             	<div class="csr-heading text-center">PolarLink Customer Details</div>
+				<div class="clearfix"></div>
+				<h1 class="csr-top-link font20">
+					<?php $valGroup = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_GRP'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_GRP'] ) : '');
+					$valName = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_NAME'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_NAME'] ) : '');
+					?>
+					Customer Group: <?php
+					 if(!empty($valGroup)){
+							 echo $valGroup.' - '; 
+					} 
+					echo $valName; ?>
+					<a href="<?php echo $this->url('user/csrCustomerList'); ?>"><i class="fa fa-angle-left"></i>&nbsp;Back to List of Customers</a>
+				</h1>
+				<div class="clearfix"></div>
+							
+                <div class="item-search-tabs click-btn-position margin-top20">
+                    <ul data-tabs="tabs" class="nav nav-tabs" id="tabs">
+                        <li class="active"><a data-toggle="tab" href="#customer-details">Customer Details</a></li>
+                        <li><a data-toggle="tab" href="#customer-defaults">Customer Defaults</a></li>
+<!--                         <li><a data-toggle="tab" href="#users">Users</a></li> -->
+                    </ul>
+                    <div class="tab-content" id="my-tab-content">
+                        <div id="customer-details" class="tab-pane active">
+							<div class="ordering-option padding8 margin-top30">
+<!-- 								<h2 class="heading">Polar Link Customer:</h2> -->
+								<div class="col-md-12 user_customer_view">
+									<div class="col-md-6 left-top-block-feild">
+										<fieldset class="col-md-12">
+										<label for="inputEmail">Customer Group :</label> 
+										<span class="user_customer_text"><?php 
+													echo $valGroup;
+												?>
+										</span>
+										
+										</fieldset>
+										
+										<fieldset class="col-md-12">
+											<label for="inputEmail">Name for PolarLink :</label> 
+											<span class="user_customer_text"><?php  
+													echo $valName;
+												
+											 ?>
+											</span>
+										</fieldset>
+										<fieldset class="col-md-12">
+											<label>PolarLink Status :</label>
+											<?php 
+												$valStatus = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_STATUS'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_STATUS'] ) : '');
+												if($valStatus == 'E'){
+													echo '<span class="user_customer_text">Enabled</span>';
+												} else {
+													echo '<span class="user_customer_text">Disabled</span>';
+												}
+											 ?>
+										</fieldset>
+										
+										<fieldset class="bottom-block-with-email col-md-12"><label class="" for="inputPassword">Email Address : <div class="label-small-text">to receive order notifications</div>
+										<div style="color: #ff0000">Polar Use Only</div>
+										</label>
+										<span class="user_customer_error-message">
+										<?php  
+												$valEmail = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_EMAILS'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_EMAILS'] ) : '');
+												echo $valEmail;
+										
+										?>
+										</span>
+									</fieldset>
+										
+									
+										
+										
+									</div>
+									<div class="col-md-6">
+<?php 
+// $PLC_CRT_DATE = $PLC_CHG_DATE = $PLC_1ST_USE_DATE = $PLC_LAST_USE_DATE = '0001-01-01';
+
+ 	$PLC_CRT_DATE =  (!empty($plinkCsrCustomerDetail['output']['PLC_CRT_TIME'])?$this->date_helper($plinkCsrCustomerDetail['output']['PLC_CRT_TIME'], 'Y-m-d'):'0001-01-01');
+
+ 	$PLC_CHG_DATE = (!empty($plinkCsrCustomerDetail['output']['PLC_CHG_TIME'])?$this->date_helper($plinkCsrCustomerDetail['output']['PLC_CHG_TIME'], 'Y-m-d'):'0001-01-01');
+ 	$PLC_1ST_USE_DATE = (!empty($plinkCsrCustomerDetail['output']['PLC_1ST_USE'])?$this->date_helper($plinkCsrCustomerDetail['output']['PLC_1ST_USE'], 'Y-m-d'):'0001-01-01');
+	$PLC_LAST_USE_DATE = (!empty($plinkCsrCustomerDetail['output']['PLC_LAST_USE'])?$this->date_helper($plinkCsrCustomerDetail['output']['PLC_LAST_USE'], 'Y-m-d'):'0001-01-01');
+
+if($PLC_CRT_DATE == '0001-01-01') {
+	$plinkCsrCustomerDetail['output']['PLC_CRT_TIME'] = '';
+}
+if($PLC_CHG_DATE == '0001-01-01') {
+	$plinkCsrCustomerDetail['output']['PLC_CHG_TIME'] = '';
+}
+if($PLC_1ST_USE_DATE == '0001-01-01') {
+	$plinkCsrCustomerDetail['output']['PLC_1ST_USE'] = '';
+}
+if($PLC_LAST_USE_DATE == '0001-01-01') {
+	$plinkCsrCustomerDetail['output']['PLC_LAST_USE'] = '';
+}
+
+
+
+if(!empty($plinkCsrCustomerDetail['output']['PLC_CRT_TIME']) || !empty($plinkCsrCustomerDetail['output']['PLC_CHG_TIME']) || !empty($plinkCsrCustomerDetail['output']['PLC_1ST_USE']) || !empty($plinkCsrCustomerDetail['output']['PLC_LAST_USE'])){ ?>
+									<div class="type-message right-top-block">
+										
+											<div class="user_activity">
+												<div class="heading-activity">Customer Activity</div>
+												<div class="clearfix"></div>
+												<fieldset class="col-md-12">
+													<label for="inputEmail">Added:</label> 
+													<span class="user_activity_text"><?php if($plinkCsrCustomerDetail['output']['PLC_CRT_TIME']){ ?><?php  echo $this->date_helper($plinkCsrCustomerDetail['output']['PLC_CRT_TIME'], "M j, Y @ g:i a"); ?> <?php if(!empty(trim($plinkCsrCustomerDetail['output']['PLC_CRT_USER']))){ ?> by <?php echo $plinkCsrCustomerDetail['output']['PLC_CRT_USER']; } ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+												<fieldset class="col-md-12">
+													<label for="inputEmail">Changed:</label> 
+													<span class="user_activity_text"><?php if($plinkCsrCustomerDetail['output']['PLC_CHG_TIME']){ ?><?php  echo $this->date_helper($plinkCsrCustomerDetail['output']['PLC_CHG_TIME'], "M j, Y @ g:i a"); ?> <?php if(!empty(trim($plinkCsrCustomerDetail['output']['PLC_CHG_USER']))){ ?> by <?php echo $plinkCsrCustomerDetail['output']['PLC_CHG_USER']; } ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+												<fieldset class="col-md-12">
+													<label for="inputEmail">First Login:</label> 
+													<span class="user_activity_text"><?php if($plinkCsrCustomerDetail['output']['PLC_1ST_USE']){ ?><?php  echo $this->date_helper($plinkCsrCustomerDetail['output']['PLC_1ST_USE'],"M j, Y @ g:i a"); ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+												<fieldset class="col-md-12">
+													<label for="inputEmail">Last Login:</label> 
+													<span class="user_activity_text"><?php if($plinkCsrCustomerDetail['output']['PLC_LAST_USE']){ ?><?php  echo $this->date_helper($plinkCsrCustomerDetail['output']['PLC_LAST_USE'],"M j, Y @ g:i a"); ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+											</div>
+											
+										</div>
+										<?php } ?>
+									</div>
+									
+								</div>
+								<div class="clearfix"></div>
+							</div>
+                        </div>
+                        <div id="customer-defaults" class="tab-pane">
+                        <div class="clearfix"></div>
+                        <div class="margin-top10 margin-bottom20"><em>The information below will be the default selection for placing orders as this customer group, unless overriden by a user's defaults.</em></div>
+                        <div class="clearfix"></div>
+							<div class="ordering-option padding8 margin-top30 customer-defaults login-form information-form information-form-label-bold">
+<!-- 								<h2 class="heading">Select Customer Defaults</h2> -->
+								<div class="margin-top30">
+								<?php /*<fieldset class="col-md-12">
+								<?php 
+									$valPlcDefaultUom = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_DFT_UOM'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_DFT_UOM'] ) : '');
+								?>
+												<label for="PLC_DFT_UOM">Default Unit of Measure:</label>
+												<?php 
+													echo '<span class="normal-text customer-defaults-normal-text">';
+														
+													if($valPlcDefaultUom == 'EA'){
+														echo 'Each';
+													}
+													else if($valPlcDefaultUom == 'CS'){
+														echo 'Cases';
+													}
+													else if($valPlcDefaultUom == 'PL'){
+														echo 'Pallets';
+													}else {
+														echo 'No Default Unit of Measure Selected';
+													}
+													echo '</span>';
+												
+												?>
+											
+		                        </fieldset>
+		                        */ ?>
+		                        <fieldset class="col-md-12">
+		                        <?php
+                        			$valPlcDefaultShipMethod = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_DFT_SHIP_METHOD'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_DFT_SHIP_METHOD'] ) : '');
+								?>
+												<label for="PLC_DFT_UOM">Default Shipping Method:</label>
+												<?php 
+													echo '<span class="normal-text customer-defaults-normal-text">';
+																if($valPlcDefaultShipMethod == 'P'){
+																		echo 'Pick-Up';
+																	}
+																	else if($valPlcDefaultShipMethod == 'D'){
+																		echo 'Delivery - no Backhaul';
+																	}
+																	else if($valPlcDefaultShipMethod == 'B'){
+																		echo 'Delivery with Backhaul';
+																	}else {
+																		echo 'No Default Shipping Method Selected';
+																	}
+																	echo '</span>';
+													?>
+								
+		                        </fieldset>
+		                        
+		                        <fieldset class="col-md-12">
+										<label for="inputEmail">Default Ship-To:</label>
+										<span class="normal-text width25per padding-none">
+										<div class="customer-defaults-normal-text" id="defaultShipToCustNoShipNo">
+										<?php 
+										$trimmedDefaultCustNo = trim($plinkCsrCustomerDetail['output']['PLC_CUSTNO']);
+										$trimmedDefaultShipTo = trim($plinkCsrCustomerDetail['output']['PLC_DFT_SHIPTO']);
+										
+										$showDefaultAddress = false;
+										if(!empty($trimmedDefaultShipTo) && !empty($trimmedDefaultCustNo)) { 
+
+echo '<span class="normal-text customer-defaults-normal-text">'.$trimmedDefaultCustNo.' / '.$trimmedDefaultShipTo.'</span>';
+											$showDefaultAddress = true;
+										} else {
+echo 'No Default Ship-To Selected';
+}
+ ?>
+										</div>
+										</span>
+										<div class="col-md-6 col-sm-6 col-xs-12 width45per">
+										<div id="CustomerDefaultAddressFull">
+										<?php if($showDefaultAddress){ ?>
+												<div class="customer_default_text height_inherit padt5">
+											<?php 	
+											
+										if(!empty($customerShipTos['output'])){ 
+										foreach($customerShipTos['output'] as $shipTo1){
+													if(($trimmedDefaultShipTo == trim($shipTo1['ST_NUM'])) && ($trimmedDefaultCustNo == trim($shipTo1['ST_CUST']))){
+														//		echo (trim($shipTo1['ST_NUM']).', '.trim($shipTo1['ST_NAME']));
+															echo trim($shipTo1['ST_NAME']).'<br />';
+															echo (!empty(trim($shipTo1['ST_ADR1']))?trim($shipTo1['ST_ADR1']).'<br />':'');
+															echo (!empty(trim($shipTo1['ST_ADR2']))?trim($shipTo1['ST_ADR2']).'<br />':'');
+															echo trim($shipTo1['ST_ADR3']).', '.trim($shipTo1['ST_STATE']).' - '.trim($shipTo1['ST_ZIP']);
+													}
+											}
+										}
+										?>
+												</div>
+												<?php } ?>
+												</div>
+											</div>
+											<div class="clearfix"></div>
+									</fieldset>
+									<div class="clearfix"></div>
+									<div class="buttons margin-top20 margin-bottom20">
+									
+<!-- 					                	<button type="button" class="btn margin-bottom0">Save Customer Defaults</button> -->
+<!-- 					                   <button type="button" class="btn margin-bottom0">Cancel Changes</button> -->
+					                </div>
+
+<!-- 		                        </form> -->
+								
+								
+								
+								
+								
+								
+								
+					
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+                </div>
+               
+             </div>

@@ -1,0 +1,54 @@
+body {
+	font-family: arial;
+	color: navy;
+	background-color: #ccc;
+}
+
+input[type=button] {
+	margin: 5px 10px
+}
+
+h2 {
+	border: 3px ridge silver;
+	background-color: #EEF;
+	font-family: times;
+	width: 50%;
+	color: darkred;
+	font-size: 2em;
+	margin: 4px;
+	padding: 3px
+}
+
+#header {
+	margin: 0 auto;
+	width: 90%;
+}
+
+table.lists caption {
+	background-color: beige;
+	border: 1px solid navy;
+}
+
+table.lists {
+	background-color: white;
+	border: 1px solid navy;
+	width: 90%;
+	padding: 5px;
+	padding-bottom: 25px
+}
+
+table.lists th {
+	background-color: navy;
+	color: white;
+	padding: .3em
+}
+
+table.lists td {
+	border-bottom: 2px solid silver;
+	vertical-align: top;
+	font-family: verdana;
+	font-size: .85em;
+	padding: 2px .3em
+}
+
+@CHARSET "ISO-8859-1";

@@ -1,0 +1,116 @@
+<form action="<?php echo $this->url('user/itemSearchAjax', array('controller' => 'user', 'action' => 'item-search-ajax')); ?>" name="itemSearchAjaxForm" id="item-search-form-ajax">
+
+<?php if(!empty(trim($searchFilters['brand'])) || !empty(trim($searchFilters['size']))){ ?>
+<ul class="total-amount">
+                                <li>
+                                <?php if(!empty(trim($searchFilters['brand']))){ ?>
+                                    <div class="selected-ship">Brand: <span><?php echo trim($searchFilters['brandName']); ?></span></div>
+                                    <input type="hidden" name="brand" value="<?php echo trim($searchFilters['brand']); ?>" />
+                                    <input type="hidden" name="brandName" value="<?php echo trim($searchFilters['brandName']); ?>" />
+                                    <?php } ?>
+                                    <?php if(!empty(trim($searchFilters['size']))){ ?>
+                                    <div class="selected-ship">Size: <span><?php echo trim($searchFilters['sizeName']); ?></span></div>
+                                    <input type="hidden" name="size" value="<?php echo trim($searchFilters['size']); ?>" />
+                                    <input type="hidden" name="sizeName" value="<?php echo trim($searchFilters['sizeName']); ?>" />
+                                    <?php } ?>
+                                </li>
+                            </ul>
+                            <?php } ?>
+                            <?php // if(!empty(trim($searchFilters['filter']))){ ?>
+                            <div class="filterby-product-description">
+                            	<label>Filter by product/description:</label>
+                                <input name="filter" type="text" id="itemFilterAjax" value="<?php echo trim($searchFilters['filter']); ?>" />
+                                <input type="submit" name="save" value="Search" style="margin-bottom:0px;" class='btn margin-right' onclick="return checkBlankAjax();" />
+                                <a href="javascript:void(0)" onclick="clearFilterItemAjax_chk();">Clear Recent Filter</a>
+                            </div>
+                            </form>
+                            <?php // } ?>
+                    		<div class="clearfix"></div>
+                            <div class="order-heading margin-none">Items matching selection</div>
+                            <form id="updateOrderForm" name="update-order" action="<?php echo $this->url('user/updateOrder'); ?>" method="Post" onsubmit="return processUpdateOrderForm(this);">
+                            <div class="table-responsive">
+                            <section class="table-section">
+  							<div class="table-scroll">
+                                <table class="table table-striped ship-order border-none margin-bottom8">
+                                    <thead class="scrollable-header-dynamic">
+                                        <tr class="th-background-none">
+                                            <th>Product<div>Product</div></th>
+                                            <th>Description<div>Description</div></th>
+                                            <th>Qty<div>Qty</div></th>
+<!--                                             <th>RMV<div>RMV</div></th> -->
+                                            <th>UOM<div>UOM</div></th>
+                                           <!--  <th>Price<div>Price</div></th>
+                                            <th>Ext. Price<div>Ext. Price</div></th>  -->
+                                            <th>Pallets<div>Pallets</div></th>
+                                            <th>Cases<div>Cases</div></th>
+                                            <th>Units<div>Units</div></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    
+                                    <?php 
+                                    $showButtons = false;
+                                    
+                                    if(!empty($getItemsFiltered['output'])){
+                                    $showButtons = true;
+                                    	foreach($getItemsFiltered['output'] as $itemFilter){ 
+$quantityOrdered = trim($itemFilter['ITM_QTY_ORD'])?trim($itemFilter['ITM_QTY_ORD']):''; 
+$itemNumber = trim($itemFilter['ITM_NUMBER'])?trim($itemFilter['ITM_NUMBER']):'';
+$uom_value = trim($itemFilter['ITM_UOM']) ? trim($itemFilter['ITM_UOM']) :'';
+
+ ?>
+<tr id="<?php echo $itemNumber; ?>" <?php if($quantityOrdered > 0 ){ echo 'class="bolderTr"';} ?> >
+<td><?php echo $itemNumber; ?>
+<input id="status_<?php echo $itemNumber; ?>" name="status['<?php echo $itemNumber; ?>']" type='hidden' value="0" onchange="changeSaveStatus()" />
+<input id="uom_<?php echo$itemNumber; ?>" name="uom['<?php echo $itemNumber; ?>']" type='hidden' value="<?php echo trim($itemFilter['ITM_UOM']); ?>" />
+<input id="item_number_<?php echo $itemNumber; ?>" name="item_number['<?php echo $itemNumber; ?>']" type='hidden' value="<?php echo $itemNumber; ?>" />
+</td>
+<td><?php echo $itemFilter['ITM_DESC']; ?></td>
+<td><input id="quantity_<?php echo $itemNumber; ?>" name="quantity['<?php echo $itemNumber; ?>']" type='text' value="<?php if($quantityOrdered > 0){echo number_format($quantityOrdered, '0');} ?>" onchange="changeSaveStatus(this)" /></td>
+<!--  <td><?php echo '-'; ?></td> -->
+<td value_of_uom="<?php echo $uom_value; ?>"><?php echo $uom_value; ?></td>
+<?php /* <td class="text-right"><?php echo number_format($itemFilter['ITM_PRICE'], 2, '.', ','); ?></td>
+<td class="text-right" copy_to="ext_price"><?php  if($quantityOrdered > 0){ echo (number_format(($quantityOrdered*$itemFilter['ITM_PRICE']), 2, '.', ',')); } else {echo '-';} ?></td> */?>
+<td class="text-right" copy_to="pallet_qty"><?php if($quantityOrdered > 0){ $trimPalletQty = trim(number_format($itemFilter['ITM_PALLET_QTY_ORD'], '2')); if($trimPalletQty < 1){echo substr($trimPalletQty, '1', strlen($trimPalletQty)); } else {echo $trimPalletQty; }} else {echo '-';} ?></td>
+<td class="text-right" copy_to="case_qty"><?php if($quantityOrdered > 0){echo trim(number_format($itemFilter['ITM_CASE_QTY_ORD'], '0'));} else {echo '-';} ?></td>
+<td class="text-right" copy_to="unit_qty"><?php if($quantityOrdered > 0){echo trim(number_format($itemFilter['ITM_UNIT_QTY_ORD'], '0'));} else {echo '-';} ?>
+</td>
+</tr>
+										<?php }
+                                    } else { ?>
+<tr>
+<td colspan="9"> No Products found. Please search again. </td>
+</tr>
+<?php }
+?>    
+                                    </tbody>
+                                </table>
+                                </div>
+                                </section>
+                    		</div>
+                    		
+                            <div class="buttons" id="ajaxButtonItemSearch">
+                            <?php if($showButtons) { ?>
+                                <button type="submit" class="btn">Update Order</button>
+                                <?php } ?>
+                                <button type="button" class="btn" onclick="return showNewSearch_chk();">New Search</button>
+                            </div>
+                            </form>
+<div class="clearfix"></div>
+
+
+
+<script>
+$(document).ready(function(){
+
+	$("#updateOrderForm").find("input[type=text]").unbind("keypress").bind("keypress",function(event){
+        console.log(event.which);
+    if(event.which != 8 && isNaN(String.fromCharCode(event.which))){
+        event.preventDefault();
+        alert('Please enter integer value only!');
+    }});
+	
+	
+});
+
+</script>

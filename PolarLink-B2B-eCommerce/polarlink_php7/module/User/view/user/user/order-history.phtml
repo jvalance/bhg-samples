@@ -1,0 +1,227 @@
+             <div class="col-md-12 col-sm-12 col-xs-12">
+             	<div class="ordering-option padding8 margin-bottom20">
+					<h2 class="heading">Search Order History</h2>
+					<em class="pull-left margin-top35 col-md-12">From and To Date are optional entries, to filter your order history. You can enter either From or To date, or both, to limit results. Leave them blank to see all orders entered in the past 3 months</em>
+					<div class="clearfix"></div>
+					  <?php
+																$form->setAttribute ( 'action', $this->url ( null, array (
+																		'controller' => 'user',
+																		'action' => 'order-header' 
+																) ) );
+																$form->setAttribute ( 'id', 'order-history-search-form' );
+																$form->setAttribute ( 'class', 'col-md-11 login-form information-form order-history-search-form search-order margin-top20 margin-bottom0' );
+																$form->setAttribute ( 'onsubmit', 'return checkOrderHistorySearch();' );
+																$form->prepare ();
+																echo $this->form ()->openTag ( $form );
+																?>
+<!-- 					<form class="col-md-11 login-form information-form order-history-search-form search-order margin-top20 margin-bottom0"> -->
+
+<fieldset class="col-md-4">
+    <div>
+	    <?php echo $this->formRow($form->get('FILTER_USER_ID')); ?>
+    </div>
+							
+						</fieldset>
+						
+						<fieldset class="col-md-4">
+							<label for="inputPassword">From Date:</label>
+													
+							
+							<span class="input-append date calendar-icon">
+							
+                            <?php 
+                            $fromDateVal = $form->get('FROM_DATE')->getValue ();
+                            
+                            echo $this->formRow($form->get('FROM_DATE')); 
+								if(!empty($fromDateVal)){
+                            ?>
+                            <span class="cross-icon-from-date"><i onclick="clearVal('fromDate')" class="fa fa-times"></i></span>
+                            <?php } ?>
+                            
+<!-- 								<input type="text" autofocus="" required="" placeholder="" class="form-control pull-left" id="inputEmail" /> -->
+								
+							</span>
+							
+						</fieldset>
+						
+						<fieldset class="col-md-4">
+							<label for="inputPassword">To Date:</label>
+							<span class="input-append date calendar-icon">
+							
+                            <?php 
+                            $toDateVal = $form->get('TO_DATE')->getValue ();
+                            echo $this->formRow($form->get('TO_DATE')); 
+                            if(!empty($toDateVal)){
+                            	?>
+                            	<span class="cross-icon-from-date"><i  onclick="clearVal('toDate')" class="fa fa-times"></i></span>
+                            	<?php } ?>
+<!-- 								<input type="text" autofocus="" required="" placeholder="" class="form-control pull-left" id="inputEmail" /> -->
+					
+				
+							</span>
+<!-- 							<span class="calendar-icon"> -->
+<!-- 							<input type="text" required="" placeholder="" class="form-control pull-left" id="inputText" /> -->
+							
+<!-- 							</span> -->
+						</fieldset>
+						
+						<fieldset class="col-md-12">
+						<div>
+						<ul>
+						<li>You can search your PolarLink orders that were submitted up to 3 months ago.</li>
+						<li>Orders cancelled via PolarLink are not shown.</li>
+						<li>The order history only shows information and items as entered in PolarLink. </li>
+						<li>You will not see actual Polar Beverage order information as the order was fulfilled.</li>
+						</ul>
+						</div>
+						</fieldset>
+						
+						
+						
+						<div style="float: right; padding-top: 2%;bottom: 5%; right: 15%; position: relative;">
+    						<fieldset class="col-md-12">
+    							<div class="buttons margin-none">
+    							 <?php echo $this->formButton($form->get('Submit')); ?>
+    <!-- 	                			<button class="btn margin-bottom0" type="submit">Search <i class="fa fa-search"></i></button> -->
+    	                		</div>
+    	                		<div>
+        	                		<a id="container-download-order-history-button" target="_blank" class="btn">
+        							 	<div>Download&nbsp;&nbsp;<i class="fa fa-download"></i></div>
+        							 </a>
+        						</div>
+    						</fieldset>
+    					</div>
+						<div class="buttons margin-top20">
+                	
+                </div>
+                <?php	echo $this->form ()->closeTag ();		?>
+<!-- 					</form> -->
+					<div class="clearfix"></div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="table-responsive">
+				<section id="order-history-list" class="table-section table-section-tow table-section-two">
+  							<div class="table-scroll">
+					<table class="table-striped ship-order">
+						<thead>
+							<tr>
+								<th>View<div class="order-histroy-table-header">View</div></th>
+								<th>Order#<div class="order-histroy-table-header">Order#</div></th>
+								<th>PO#<div class="order-histroy-table-header">PO#</div></th>
+								<th>Date <br/>Submitted Submitted<div class="order-histroy-table-header-two">Date <br/> Submitted</div></th>
+								<th>Customer / Ship To<div class="order-histroy-table-header">Customer / Ship To</div></th>
+								<!--  <th>Method<div>Method</div></th>  -->
+								<th>Entered By<div class="order-histroy-table-header">Entered By</div></th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php 
+						
+						//echo '<pre>';print_r($getOrderHistorySearch['output']); die;
+						
+						if(!empty($getOrderHistorySearch['output'])){ 
+								foreach($getOrderHistorySearch['output'] as $orderHistorySearchItem){ ?>
+							<tr>
+								<td><button class="btn margin-bottom0 btn-view" type="button" onclick="location.href = '<?php echo $this->url('user/orderHistoryView',array('orderNum' => trim($orderHistorySearchItem['OH_PLINK_ORDERNO']), 'orderNumToDisplay' => trim($orderHistorySearchItem['LX_ORDER_NUM']))); ?>';"><i class="fa fa-search-plus"></i> View</button></td>
+								<td><?php echo trim($orderHistorySearchItem['LX_ORDER_NUM']); ?></td>
+								
+								 <td> <?php echo (!empty(trim($orderHistorySearchItem['OH_PO1']))?trim($orderHistorySearchItem['OH_PO1']):'-'); ?></td>
+								
+								<td><?php echo date("M j, Y" , strtotime($orderHistorySearchItem['OH_DATE_SUBMITTED'])); ?></td>
+								<td><?php echo trim($orderHistorySearchItem['OH_CUSTNO']); ?> / <?php echo trim($orderHistorySearchItem['OH_SHP2_NUM']); ?><br>
+								<?php echo (!empty(trim($orderHistorySearchItem['OH_SHP2_NAME']))?trim($orderHistorySearchItem['OH_SHP2_NAME']).'<br />':''); ?>
+                            <?php echo (!empty(trim($orderHistorySearchItem['OH_SHP2_ATTN']))?'Attn: '.trim($orderHistorySearchItem['OH_SHP2_ATTN']).'<br />':''); ?>
+                            <?php echo (!empty(trim($orderHistorySearchItem['OH_SHP2_ADDR1']))?trim($orderHistorySearchItem['OH_SHP2_ADDR1']).'<br />':''); ?>
+                            <?php echo (!empty(trim($orderHistorySearchItem['OH_SHP2_ADDR2']))?trim($orderHistorySearchItem['OH_SHP2_ADDR2']).'<br />':''); ?>
+                            <?php echo (!empty(trim($orderHistorySearchItem['OH_SHP2_ADDR3']))?trim($orderHistorySearchItem['OH_SHP2_ADDR3']).', ':'').(!empty(trim($orderHistorySearchItem['OH_SHP2_STATE']))?trim($orderHistorySearchItem['OH_SHP2_STATE']).' ':'').(!empty(trim($orderHistorySearchItem['OH_SHP2_ZIP']))?trim($orderHistorySearchItem['OH_SHP2_ZIP']).' ':''); ?>
+								</td>
+								<!-- <td><?php //echo trim($orderHistorySearchItem['OH_SHIP_METHOD_TEXT']); ?></td> -->
+								<td><?php echo trim($orderHistorySearchItem['OH_ENTRY_USER']); ?></td>
+							</tr>
+							<?php 
+             					} 
+             				} else { ?>
+							<tr>
+								<td colspan="6" align="center">No orders Found.</td>
+							</tr>
+							<?php }
+             				?>
+						</tbody>
+					</table>
+					</div>
+                	</section>
+				</div>
+             </div>
+             
+<link href="<?php echo $this->basepath('/css/jquery-ui.css'); ?>" media="screen" rel="stylesheet" type="text/css">
+<script	src="<?php echo $this->basepath('/js/jquery-ui.js'); ?>"></script>
+<style>
+
+    #container-download-order-history-button {
+    	position: absolute;
+        min-width: 60px;
+    	height: 38px;
+    }
+    
+    select[name="FILTER_USER_ID"] {
+    	width: 100% !important;
+    }
+    
+    .order-history-search-form .calendar-icon input[type="text"] {
+    	
+    	width: inherit !important;
+    }
+    
+ul, ol, li {
+    list-style: initial !important;
+}
+
+             
+</style>
+
+<script type="text/javascript">
+// When the document is ready
+	$(function() {
+	    $( "#fromDate" ).datepicker({
+	        showOn: "button",
+	        buttonImage: "<?php echo $this->basePath('img/calendar_icon.png'); ?>",
+	        buttonImageOnly: true,
+	        buttonText: "Select date",
+	        defaultDate: "+1w",
+	        changeMonth: false,
+	        numberOfMonths: 1,
+	        onClose: function( selectedDate ) {
+	          $( "#toDate" ).datepicker( "option", "minDate", selectedDate );
+	        }
+	      });
+	      $( "#toDate" ).datepicker({
+    	  	showOn: "button",
+	        buttonImage: "<?php echo $this->basePath('img/calendar_icon.png'); ?>",
+        	buttonImageOnly: true,
+        	buttonText: "Select date",
+		    defaultDate: "+1w",
+	        changeMonth: false,
+	        numberOfMonths: 1,
+	        onClose: function( selectedDate ) {
+	          $( "#fromDate" ).datepicker( "option", "maxDate", selectedDate );
+	        }
+	      });
+
+	      $('.ui-datepicker-trigger').addClass('addon-calendar');
+
+	      /**
+	       *  Submit form values to Export CSV handler
+	      **/
+	      $('#container-download-order-history-button').click(function(e){
+
+	    	  var serialized = $('form#order-history-search-form').serialize();
+
+	    	  this.href = 
+
+		    	  ['export-order-history', '?', encodeURI(serialized)].join('');
+
+	    	  return true;
+
+		  });
+	});
+</script>

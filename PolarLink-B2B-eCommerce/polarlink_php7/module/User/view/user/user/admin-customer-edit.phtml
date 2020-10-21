@@ -1,0 +1,593 @@
+            <div class="csr col-md-12 col-sm-12 col-xs-12">
+             	<div class="csr-heading text-center">PolarLink Customer Details</div>
+				<div class="clearfix"></div>
+				<h1 class="csr-top-link font20">
+				<?php $valGroup = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_GRP'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_GRP'] ) : '');
+					$valName = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_NAME'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_NAME'] ) : '');
+					?>
+					Customer Group: <?php
+					 if(!empty($valGroup)){
+							 echo $valGroup.' - '; 
+					} 
+					echo $valName; ?>
+					<a href="<?php echo $this->url('user'); ?>"><i class="fa fa-angle-left"></i>&nbsp;Back to Home Page</a>
+				</h1>
+				<div class="clearfix"></div>
+	<p class="block-bottom-text  margin-top0">Fields marked with <sup class="colorred sup-top-bottom">*</sup> are required.</p>
+	<div class="clearfix"></div>
+						
+                <div class="item-search-tabs click-btn-position margin-top20">
+                    <ul data-tabs="tabs" class="nav nav-tabs" id="tabs">
+                        <li class="active"><a data-toggle="tab" href="javascript:void(0)">Customer Details</a></li>
+<!--                         <li><a data-toggle="tab" href="#customer-defaults">Customer Defaults</a></li> -->
+<!--                         <li><a data-toggle="tab" href="#users">Users</a></li> -->
+                    </ul>
+                    <div class="tab-content" id="my-tab-content">
+                        <div id="customer-details" class="tab-pane active">
+                        <?php $form->setAttribute('action', $this->url('user/adminCustomerEdit', array('controller' => 'user', 'action' => 'csr-customer-detail', 'id' => $customerId)));
+$form->setAttribute('id', 'customer-edit-form');
+$form->setAttribute('class', 'announcement-search-form margin-top10 margin-bottom8');
+
+ // $form->setAttribute('onsubmit', 'return LoadAjaxDataTabs("", "1")');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+ ?>
+							<div class="ordering-option padding8 margin-top30">
+<!-- 								<h2 class="heading">Polar Link Customer:</h2> -->
+								<?php if(!empty($errorMessage)){ ?>
+<div class="alert alert-danger fade in margin-top20 margin-bottom0">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				    <?php echo $errorMessage; ?>
+		</div>	
+		
+<?php } ?>
+								<div class="col-md-12 form-signin login-form information-form text-center-responsive">
+								<p id="error_msg_if_any_found" style="padding-left:50px; color:red"></p>
+									<div class="col-md-6 left-top-block-feild">
+										<fieldset class="col-md-12">
+										<label for="inputEmail">Customer Group :</label> 
+										<span class="user_edit_text"><?php 
+													$valGroup = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_GRP'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_GRP'] ) : '');
+													echo $this->formRow( $form->get('csr_cust_group')->setValue($valGroup));				
+													
+													echo $valGroup;
+												?>
+										</span>
+										</fieldset>
+										
+										<fieldset class="col-md-12">
+											<label for="inputEmail">Name for PolarLink :</label> 
+											<span class="hidden">
+											<?php  
+												$valName = $form->getInputFilter ()->getValue ( 'csr_user_name' ); // die;
+												if (empty ( $valName ) && !empty($plinkCsrCustomerDetail ['output']) && !$request->isPost ()) {
+													$valName = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_NAME'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_CUST_NAME'] ) : '');
+												}
+												$ele = $form->get ( 'csr_user_name' );
+												$ele->setValue($valName);
+												echo $this->formRow ( $ele );
+											 ?>
+											 </span>
+											<span class="user_edit_text">
+												<?php echo $valName; ?>
+											</span>
+										</fieldset>
+										<fieldset class="col-md-12">
+											<label>PolarLink Status :</label>
+											<span class="hidden">
+											<?php 
+											$valStatus = $form->getInputFilter ()->getValue ( 'csr_status' ); // die;
+											if (empty ( $valStatus ) && !empty($plinkCsrCustomerDetail ['output'])  && !$request->isPost ()) {
+												$valStatus = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_STATUS'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_STATUS'] ) : '');
+											}
+											$ele = $form->get ( 'csr_status' );
+											$ele->setValue($valStatus);
+											echo $this->formRow ( $ele );
+											?>
+											 </span>
+											<span class="user_edit_text">
+												<?php echo ($valStatus == 'E')?'Enabled':'Disabled'; ?>
+											</span>
+										</fieldset>
+									</div>
+									<div class="col-md-6">
+<?php 
+// $PLC_CRT_DATE = $PLC_CHG_DATE = $PLC_1ST_USE_DATE = $PLC_LAST_USE_DATE = '0001-01-01';
+
+ 	$PLC_CRT_DATE =  (!empty($plinkCsrCustomerDetail['output']['PLC_CRT_TIME'])?$this->date_helper($plinkCsrCustomerDetail['output']['PLC_CRT_TIME'], 'Y-m-d'):'0001-01-01');
+
+ 	$PLC_CHG_DATE = (!empty($plinkCsrCustomerDetail['output']['PLC_CHG_TIME'])?$this->date_helper($plinkCsrCustomerDetail['output']['PLC_CHG_TIME'], 'Y-m-d'):'0001-01-01');
+ 	$PLC_1ST_USE_DATE = (!empty($plinkCsrCustomerDetail['output']['PLC_1ST_USE'])?$this->date_helper($plinkCsrCustomerDetail['output']['PLC_1ST_USE'], 'Y-m-d'):'0001-01-01');
+	$PLC_LAST_USE_DATE = (!empty($plinkCsrCustomerDetail['output']['PLC_LAST_USE'])?$this->date_helper($plinkCsrCustomerDetail['output']['PLC_LAST_USE'], 'Y-m-d'):'0001-01-01');
+
+if($PLC_CRT_DATE == '0001-01-01') {
+	$plinkCsrCustomerDetail['output']['PLC_CRT_TIME'] = '';
+}
+if($PLC_CHG_DATE == '0001-01-01') {
+	$plinkCsrCustomerDetail['output']['PLC_CHG_TIME'] = '';
+}
+if($PLC_1ST_USE_DATE == '0001-01-01') {
+	$plinkCsrCustomerDetail['output']['PLC_1ST_USE'] = '';
+}
+if($PLC_LAST_USE_DATE == '0001-01-01') {
+	$plinkCsrCustomerDetail['output']['PLC_LAST_USE'] = '';
+}
+
+
+
+if(!empty($plinkCsrCustomerDetail['output']['PLC_CRT_TIME']) || !empty($plinkCsrCustomerDetail['output']['PLC_CHG_TIME']) || !empty($plinkCsrCustomerDetail['output']['PLC_1ST_USE']) || !empty($plinkCsrCustomerDetail['output']['PLC_LAST_USE'])){ ?>
+									<div class="type-message right-top-block">
+										
+											<div class="UsersDefaults col-md-12 form-signin login-form information-form text-center-responsive">
+												<div class="heading-activity">Customer Activity</div>
+												<div class="clearfix"></div>
+												<fieldset class="col-md-12">
+													<label for="inputEmail">Added:</label> 
+													<span class="normal-text"><?php if($plinkCsrCustomerDetail['output']['PLC_CRT_TIME']){ ?><?php  echo $this->date_helper($plinkCsrCustomerDetail['output']['PLC_CRT_TIME'], "M j, Y @ g:i a"); ?> <?php if(!empty(trim($plinkCsrCustomerDetail['output']['PLC_CRT_USER']))){ ?> by <?php echo $plinkCsrCustomerDetail['output']['PLC_CRT_USER']; } ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+												<fieldset class="col-md-12">
+													<label for="inputEmail">Changed:</label> 
+													<span class="normal-text"><?php if($plinkCsrCustomerDetail['output']['PLC_CHG_TIME']){ ?><?php  echo $this->date_helper($plinkCsrCustomerDetail['output']['PLC_CHG_TIME'], "M j, Y @ g:i a"); ?> <?php if(!empty(trim($plinkCsrCustomerDetail['output']['PLC_CHG_USER']))){ ?> by <?php echo $plinkCsrCustomerDetail['output']['PLC_CHG_USER']; } ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+												<fieldset class="col-md-12">
+													<label for="inputEmail">First Login:</label> 
+													<span class="normal-text"><?php if($plinkCsrCustomerDetail['output']['PLC_1ST_USE']){ ?><?php  echo $this->date_helper($plinkCsrCustomerDetail['output']['PLC_1ST_USE'],"M j, Y @ g:i a"); ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+												
+												<fieldset class="col-md-12">
+													<label for="inputEmail">Last Login:</label> 
+													<span class="normal-text"><?php if($plinkCsrCustomerDetail['output']['PLC_LAST_USE']){ ?><?php  echo $this->date_helper($plinkCsrCustomerDetail['output']['PLC_LAST_USE'],"M j, Y @ g:i a"); ?><?php } else {echo '-'; } ?></span>
+												</fieldset>
+												
+											</div>
+											
+										</div>
+										<?php } ?>
+									</div>
+									
+									<div class="col-md-6 left-top-block-feild">
+										<?php /* <fieldset class="col-md-12">
+												<?php $valPlcDefaultUom = $form->getInputFilter ()->getValue ( 'PLC_DFT_UOM' ); 
+												if(empty($valPlcDefaultUom)  && !$request->isPost ())
+												{
+													$valPlcDefaultUom = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_DFT_UOM'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_DFT_UOM'] ) : '');
+													
+												} ?>
+												<label for="PLC_DFT_UOM">Default UOM <sup class="colorred sup-top-bottom">*</sup>:</label>
+												<?php echo $this->formRow($form->get('PLC_DFT_UOM')->setAttribute('value', $valPlcDefaultUom)); ?>	
+										</fieldset> */ ?>
+										<fieldset class="col-md-12">
+											<?php $valPlcDefaultShipMethod = $form->getInputFilter ()->getValue ( 'PLC_DFT_SHIP_METHOD' ); 
+												if(empty($valPlcDefaultShipMethod)  && !$request->isPost ())
+												{
+													$valPlcDefaultShipMethod = (! empty ( trim ( $plinkCsrCustomerDetail ['output'] ['PLC_DFT_SHIP_METHOD'] ) ) ? trim ( $plinkCsrCustomerDetail ['output'] ['PLC_DFT_SHIP_METHOD'] ) : '');
+													
+												} 
+												?>
+												<label for="PLC_DFT_UOM">Default Ship Method :</label>
+												<?php echo $this->formRow($form->get('PLC_DFT_SHIP_METHOD')->setAttribute('value', $valPlcDefaultShipMethod));?>
+										</fieldset>
+									</div>
+									
+									
+										<div class="col-md-6">&nbsp;</div>
+										
+										<div class="col-md-12">
+										<div class="row">
+										<div class="col-md-6 left-top-block-feild">
+										
+										<fieldset class="col-md-12">
+										<label for="inputEmail">Default Ship-To <sup class="colorred sup-top-bottom">*</sup>:</label>
+										<span class="normal-text padding-none arae-error-message">
+										<div class="customer-defaults-normal-text" id="defaultShipToCustNoShipNo">
+										<?php 
+										$trimmedDefaultCustNo = trim($plinkCsrCustomerDetail['output']['PLC_CUSTNO']);
+										$trimmedDefaultShipTo = trim($plinkCsrCustomerDetail['output']['PLC_DFT_SHIPTO']);
+										
+										$showDefaultAddress = false;
+										if(!empty($trimmedDefaultShipTo) && !empty($trimmedDefaultCustNo)) { 
+											echo $trimmedDefaultCustNo.' / '.$trimmedDefaultShipTo;
+											$showDefaultAddress = true;
+										} else {
+											echo '<p style="color:gray">'.'None Selected'.'</p>';
+										}
+ 										?>
+										</div>
+										
+										<div class="buttons margin-top20 margin-bottom20">
+										<?php									
+											echo $this->formRow($customerDefaultsForm->get('PLC_DFT_SHIPTO')->setAttribute('value', $plinkCsrCustomerDetail['output']['PLC_DFT_SHIPTO']));
+											echo $this->formRow($customerDefaultsForm->get('PLC_CUSTNO')->setAttribute('value', $plinkCsrCustomerDetail['output']['PLC_CUSTNO']));
+											echo $this->formRow($customerDefaultsForm->get('csr_customer_defaults'));										
+										?>
+									</div>
+										<a href="javascript:void(0)" id="change-text-icon" class="change-text~ btn" data-toggle="modal" data-target="#myModalShipTo">Select Ship-To</a>
+										</span>
+										
+											<div class="clearfix"></div>
+									</fieldset>
+									
+									
+									</div>
+									<div class="col-md-6 col-sm-6 col-xs-12 content_sectiontablet">
+										<div id="CustomerDefaultAddressFull">
+										<?php if($showDefaultAddress){ ?>
+												<div class="customer_default_text height_inherit">
+											<?php 	
+											
+										if(!empty($customerShipTos['output'])){ 
+										foreach($customerShipTos['output'] as $shipTo1){
+													if(($trimmedDefaultShipTo == trim($shipTo1['ST_NUM'])) && ($trimmedDefaultCustNo == trim($shipTo1['ST_CUST']))){
+																	echo (trim($shipTo1['ST_NUM']).', '.trim($shipTo1['ST_NAME'])).'<br/>';
+																	echo (trim($shipTo1['ST_ADR1'])).'<br/>';
+																	echo (trim($shipTo1['ST_ADR3']).', '.trim($shipTo1['ST_STATE']).' - '.trim($shipTo1['ST_ZIP']));
+													}
+											}
+										}
+										?>
+												</div>
+												<?php } ?>
+												</div>
+											</div>
+											
+									</div></div>
+								</div>
+								<div class="buttons">
+				                <?php
+				                echo $this->formRow ($form->get ( 'csr_customer_field'));
+				                
+				                echo $this->formButton($form->get('save'));
+				                echo $this->formButton($form->get('Cancel')->setAttribute('onclick', 'return checkCancelCustomerAdminForm()'));
+				                ?>
+				
+				                </div>
+			 					<?php
+									echo $this->form()->closeTag();
+								?>
+								<div class="clearfix"></div>
+							</div>
+                       
+							<div class="clearfix"></div>
+							<div class="modal modal-shipTo" id="myModalShipTo" role="dialog">
+							<div class="modal-dialog">
+							<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Select Default Ship-To</h4>
+      </div>
+      <div class="modal-body">
+								
+									<div class="padding8">
+										<div class="search-box searchBoxForShipTo margin-top10">
+											
+												<?php $shippingSearchForm->setAttribute('action', $this->url('user/csrCustomerDetail', array('controller' => 'user', 'action' => 'csr-customer-detail', 'id' => $customerId)));
+								$shippingSearchForm->setAttribute('id', 'customer-search-shipping-form');
+								// $shippingSearchForm->setAttribute('class', 'col-md-12 form-signin login-form information-form margin-top0');
+								
+								$shippingSearchForm->setAttribute('onsubmit', 'return AjaxSearchShipTos()');								
+								$shippingSearchForm->prepare();
+								echo $this->form()->openTag($shippingSearchForm);
+							
+                     
+                     			echo $this->formRow($shippingSearchForm->get('SEARCHPARAMETER')); 
+                     			echo $this->formRow($shippingSearchForm->get('SUBMIT'));                     
+                     			echo $this->formRow($shippingSearchForm->get('searchshipping'));
+                     			echo $this->form()->closeTag();
+                     			?>
+<!-- 												<input type="text" class="form-control pull-left" placeholder="search..." value="" />           -->
+<!-- 												<button id="searchShipTo" class="customer-search"><i class="fa fa-search"></i></button> -->
+<!-- 												<input type="hidden" name="searchshipping" value="search" /> -->
+											                  
+										</div>
+<!-- 										<a class="clear-customer margin-top10" href="javascript:void(0)">Clear Filter</a> -->
+										<div class="clearfix"></div>
+										<div class="table-responsive selected-table dataForShipTos margin-bottom0">
+											<section class="table-section">
+												<div class="table-scroll">
+													<table class="table-striped ship-order">
+														<thead>
+															<tr>
+																<th>Cust.#CuCuCu<div>Cust.#</div></th>
+																<th>Shp# ShShS<div>Shp#</div></th>
+																<th>Ship To Name <div>Ship To Name</div></th>
+																<th>Address <div>Address</div></th>
+																<th>City <div>City</div></th>
+																<th>State Sta<div>State</div></th>
+																<th>Zip <div>Zip</div></th>
+															</tr>
+														</thead>
+														<tbody  id="popUpDataShippingForm">
+															<?php  if(!empty($customerShipTos['output'])){ 
+																$showButtonsDefaultShipTo = true;
+	                            	foreach($customerShipTos['output'] as $shipTo){
+										$class = '';
+										if(!empty($trimmedDefaultShipTo) && !empty($trimmedDefaultCustNo)) { 
+													if(($trimmedDefaultShipTo == trim($shipTo['ST_NUM'])) && ($trimmedDefaultCustNo == trim($shipTo['ST_CUST']))){
+																	$class = ' active';
+													}
+										}
+										
+										$combinedId = trim($shipTo['ST_NUM']).'_'.trim($shipTo['ST_CUST']);
+	                            	?>
+	                            	<tr class="shipToDefaultSelectable<?php echo $class; ?>" id="<?php echo 'stnum_'.$combinedId; ?>">
+	                                    <td id="<?php echo 'customerName_'.$combinedId; ?>"><?php echo $shipTo['ST_CUST']; ?></td>
+	                                    <td><?php echo $shipTo['ST_NUM']; ?></td>
+	                                    <td id="<?php echo 'name_'.$combinedId; ?>"><?php echo $shipTo['ST_NAME']; ?></td>
+	                                    <td id="<?php echo 'address_'.$combinedId; ?>"><?php
+										$trimmedShipTo = trim($shipTo['ST_ADR2']);
+	                                    echo $shipTo['ST_ADR1'].(!empty($trimmedShipTo)? ' - '.$trimmedShipTo:''); ?></td>
+	                                    <td id="<?php echo 'city_'.$combinedId; ?>"><?php echo $shipTo['ST_ADR3']; ?></td>
+	                                    <td id="<?php echo 'state_'.$combinedId; ?>"><?php echo $shipTo['ST_STATE']; ?></td>
+	                                    <td id="<?php echo 'zip_'.$combinedId; ?>"><?php echo $shipTo['ST_ZIP']; ?><span id="<?php echo 'defaultShippingMethod_'.$combinedId; ?>" style="display: none;"><?php echo trim($shipTo['SHIP_METHOD']); ?></span></td>
+	                                </tr>
+	                            <?php 
+	                            }
+                            } else { 
+									$showButtonsDefaultShipTo = false;
+							?>
+		                            <tr>
+		                            	<td colspan="7">No Ship-To exists</td>
+		                            </tr>
+                            <?php } ?>
+														</tbody>
+													</table>
+												</div>
+											</section>
+										</div>
+										<?php if($showButtonsDefaultShipTo){ ?>
+										<div class="margin-top20">
+	                    <button onclick="return changeDefaultShipTo()" type="button" class="btn">Select Ship-To</button>
+	                    <button onclick="$('#myModalShipTo').modal('toggle');" type="button" class="btn">Cancel Ship-To Selection</button>
+	                    </div>
+	                    <?php } ?>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								</div>
+							</div>
+							 </div>
+                        </div>
+					</div>
+                </div>
+               
+             </div>
+             <?php if($setDirtyFlag){ ?>
+             <script type="text/javascript">
+             changeDirtyFlag(true);
+             </script>
+             	
+             <?php } ?>
+             <script type="text/javascript">
+             $(document).ready(function(){
+            	 $('.shipToDefaultSelectable').click(
+                    	  function() {
+            					
+            					$('.shipToDefaultSelectable').removeClass('active');
+            					$(this).addClass('active');
+            					
+            				});
+            	 $(".nav-tabs a[data-toggle=tab]").on("click", function(e) {
+            		 if(_isDirty){
+ 				        e.preventDefault();
+ 				       if(confirm("There are unsaved changes on this page. Do you still want to continue?")){
+ 				    	  changeDirtyFlag(false);
+ 				    	 activeTab = $(this).attr('href');
+ 				    	LoadAjaxDataTabs(activeTab, '0');
+						return true;
+						
+ 				       } else{
+ 				    	  return false;
+ 				       }
+            				
+            				
+            			} else {
+            				activeTab = $(this).attr('href');
+            				LoadAjaxDataTabs(activeTab, '0');
+    							return true;					        		    
+	            			}
+            		 
+            		              		});
+
+            		var activeTab = $("ul#tabs li.active a").attr('href');
+            		
+            		// alert(activeTab);
+
+
+            		$('#customer-edit-form').on('submit',function(){
+            			
+            			var error = false;
+            			$('#csr_user_name').removeClass('input-error');
+            			$('#cust_user_err').remove();
+            			$('#cust_err').remove();
+            			$('#cust_err_email').remove();
+            			$('#shipToPlcCustNo').removeClass('input-error');
+            			
+            			if($.trim($('#csr_user_name').val())==""){
+            				var msg = 'Name for Polarlink is required';
+            				$('#csr_user_name').addClass('input-error');
+            		    	$('#csr_user_name').after('<ul id="cust_user_err"><li>'+msg+'</li></ul>');
+            				error = true;
+            			}
+            			
+
+            			if($.trim($('#shipToPlcCustNo').val())=="" || $.trim($('#shipToPlcCustNo').val()) == "0"){
+            				//alert('Username is required');
+            				var msg1 = 'Default ship-to is required';
+            				$('#shipToPlcCustNo').addClass('input-error');
+            		    	$('#shipToPlcCustNo').after('<ul id="cust_err"><li>'+msg1+'</li></ul>');
+            				error = true;
+            			}
+
+            			
+            		/*	if($.trim($('#PLC_DFT_UOM').val())==""){
+            				//alert('Username is required');
+            				var msg1 = 'Default Unit of Measure';
+            				$('#PLC_DFT_UOM').addClass('input-error');
+            		    	$('#PLC_DFT_UOM').after('<ul id="cust_dft_uom"><li>'+msg1+'</li></ul>');
+            				error = true;
+            			}*/
+            			if($.trim($('#csr_email_address').val() != ''))
+            			{
+                			
+
+            				var str = $.trim($('#csr_email_address').val());
+            					var emails = str.split(',');
+            					var invalidEmails = [];
+            					for (i = 0; i < emails.length; i++) { 
+            					    if(!validateEmail(emails[i].trim())) {
+            					      invalidEmails.push(emails[i].trim());
+            					    }
+            					}
+            					if(invalidEmails !=''){
+            						var msg1 = 'Invalid Emails <strong>'+invalidEmails+'</strong> Please correct them';
+            						$('#csr_email_address').addClass('input-error');
+            				    	$('#csr_email_address').after('<ul id="cust_err_email"><li>'+msg1+'</li></ul>');
+            						error = true;
+
+            						}
+
+            				}
+            			
+            			if(error){
+            				$('#error_msg_if_any_found').text('Changes not saved! Correct errors displayed below and try again');
+            			return false;
+            		     }else{
+            			return true;
+            			     }
+            			
+
+            			}); 
+            		
+                 });
+
+             function changeDefaultShipTo(){
+            	 var idShipTo = false;
+            	 var combinedId = '';
+            	 if($('.ship-order').find('.active').length > 0){
+            		 idShipTo = $('.ship-order').find('.active').attr('id');
+            	 }
+            	 if(idShipTo == false){
+					alert('Please Select a Ship To Address');
+					return false;
+            	 }
+            	 
+ 					idShipToArray = idShipTo.split('_');
+ 					combinedId = idShipToArray['1'] + '_' + idShipToArray['2'];
+ 					$('#CustomerDefaultAddressFull').html(
+ 		 					'<div class="customer_default_text height_inherit">'
+ 							+ $('#name_' + combinedId).html() + '<br />'
+							+ $('#address_' + combinedId).html() + '<br />'
+							+ $('#city_' + combinedId).html() + ', '
+							+ $('#state_' + combinedId).html() + ' - '
+							+ $('#zip_' + combinedId).html()
+							+ '</div>'
+ 		 			);
+ 					$('#shipToPlcCustNo').val(idShipToArray['2']);
+ 					$('#shipToPlcDefault').val(idShipToArray['1']);
+ 					$('#defaultShipToCustNoShipNo').html(idShipToArray['2'] + ' / ' + idShipToArray['1']);
+ 					$('#myModalShipTo').modal('toggle');
+ 					changeDirtyFlag(true);
+return false;
+
+             }
+
+             
+
+             function AjaxSearchShipTos(){
+            	 var searchShippingText = $('#searchShippingText').val().trim();
+            	 $('#loading-image').show();
+            		// sending the ajax request
+            	    $.ajax({
+            	        url: '/user/ajax-search-ship-to',
+            	        type: "POST",
+            	        data:  {'search': searchShippingText},
+            	     //   dataType: "html",
+            	        async: false,
+            	        success: function(result) {
+            	        	 $('#popUpDataShippingForm').html(result);
+            	        	 return false;
+            	            // do nothing here
+            	     
+            	        },
+            	        failure: function(errMsg) {
+            	            alert(errMsg);
+            	            return false;
+            	        },
+            	        complete: function (){
+            	        	$('#loading-image').hide();
+            	        	return false;
+            	        }
+            	    });
+            	    return false;
+             }
+
+
+             function LoadAjaxDataTabs(tabIndex, formPost){
+                if(tabIndex == '' || tabIndex == undefined){
+            		var activeTab =  $("ul#tabs li.active a").attr('href');
+				} else {
+					activeTab = tabIndex;
+				}
+            	 
+            	 if(activeTab == '#customer-details'){
+					formId = 'customer-edit-form';
+            	 } else if(activeTab == '#customer-defaults'){
+					formId = 'customer-defaults-form';
+            	 } else if(activeTab == '#users'){
+					formId = '';
+            	 }
+            	 $('#loading-image').show();
+            		// sending the ajax request
+            		if(formPost == '1' && formId != ''){
+                		
+						var dataToSend = {'customerId': '<?php echo $customerId; ?>', 'activeTab': activeTab, 'formData': $('#'+formId).serialize()};
+            		} else {
+            			var dataToSend = {'customerId': '<?php echo $customerId; ?>', 'activeTab': activeTab};
+            		}
+            		
+            	    $.ajax({
+            	        url: '/user/admin-customer-load-data',
+            	        type: "POST",
+            	        data:  dataToSend,
+            	     //   dataType: "html",
+            	        async: false,
+            	        success: function(result) {
+                	        if(activeTab == '#customer-details'){
+									$('#customer-details').html(result);
+                	        }else if(activeTab == '#customer-defaults'){
+									$('#customer-defaults').html(result);
+                	        }
+//                 	        else if(activeTab == '#users'){
+// 									$('#users').html(result);
+//                 	        }
+            	        	 
+            	        	 return false;
+            	            // do nothing here
+            	     
+            	        },
+            	        failure: function(errMsg) {
+            	            alert(errMsg);
+            	            return false;
+            	        },
+            	        complete: function (){
+            	        	$('#loading-image').hide();
+            	        	return false;
+            	        }
+            	    }); 
+            	    return false;
+             }
+
+             function validateEmail(email) {
+          	    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+          	    return re.test(email);
+          	}
+
+             </script>
+             <style>
+.margin-bottom20 ul li{ width:100% !important}</style>

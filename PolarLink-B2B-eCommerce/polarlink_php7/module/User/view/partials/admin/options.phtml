@@ -1,0 +1,62 @@
+<div class="ordering-option margin-top50">
+	<h2 class="heading">Polar CSR Admin Options</h2>
+	<br/>
+	<div class="header-group">
+    	<ul id="menu-admin-options">
+    
+    		<li><a href="<?php echo $this->url('user/csrCustomerList');  ?>">
+    				<div class="fonts-icons">
+    					<span class="fa-stack fa-lg fonts-awesome menu-ordering-option"> <i
+    						class="fa fa-user-plus edit-customer"></i>
+    					</span>
+    				</div>
+    		</a>
+    		<br/>
+    		<span>Edit Customers</span></li>
+    		<li><a href="<?php echo $this->url('user/csrUserList');  ?>">
+    				<div class="fonts-icons">
+    					<span class="fa-stack fa-lg fonts-awesome menu-ordering-option"> <i
+    						class="fa fa-users edit-customer"></i>
+    					</span>
+    				</div>
+    		</a>
+    		<br/>
+    		 <span>Edit Users</span></li>
+    		<li><a href="<?php echo $this->url('user/csrAnnouncementSearch');  ?>">
+    				<div class="fonts-icons">
+    					<span class="fa-stack fa-lg fonts-awesome menu-ordering-option"> <i
+    						class="fa fa-bullhorn edit-announcements"></i>
+    					</span>
+    				</div>
+    		</a>
+    		<br/>
+    		<span>Edit Announcements</span></li>
+    	</ul>
+    	</div>
+	<div class="clearfix"></div>
+	<br/>
+</div>
+
+<style>
+    
+    ul#menu-admin-options {
+    	margin: 0 auto; 
+    	width:850px;
+    }
+    
+    ul#menu-admin-options li {
+    	display: block-inline;
+    	text-align: center;
+    	width: 33%;
+    	float: left;
+    }
+    
+    ul#menu-admin-options li div span.menu-ordering-option{
+        margin-top: 15px;
+        width: 70px;
+        float: left;
+        text-align: center;
+        vertical-align: center;
+    	padding:0px !important;
+    }
+</style>

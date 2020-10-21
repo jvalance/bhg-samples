@@ -1,0 +1,143 @@
+<?php
+
+    /**
+     * CSR user available options (5):
+     * 1. Select Customer
+     * 2. Resume Order
+     * 3. Place New Order
+     * 4. Order History
+     * 5. Item Inquiry
+     * 
+     * Normal/Admin user available options (4)
+     * 1. Resume Order
+     * 2. Place New Order
+     * 3. Order History
+     * 4. Item Inquiry
+     * 
+     * @var Ambiguous $maxOptions
+     * @var Ambigous $identity
+     */
+
+    $isCSR = $identity['PLU_POLAR_CSR'] === 'Y';
+    
+    $maxOptions = $isCSR ? 5 : 4;
+    
+    $maxOptions = (empty($partialEditCurrentOrder)) ?
+        
+        $maxOptions -1 : $maxOptions;
+    
+    $customWidth = 100 / $maxOptions;
+    
+    
+    $itemInquiry = [
+        'DEFAULT_SHIPTO' => null
+    ];
+    
+    /**
+     * Item Inquiry should require a ship-to be selected before showing any items. 
+     * You can load the user's default ship-to, and if that is not set, 
+     * then use the customer's default ship-to 
+     * (default ship-to is required on the customer entry, 
+     * so there should always be a ship-to at the customer level). 
+    
+    if(!$isCSR):
+    
+        if(!empty($identity['PLC_DFT_SHIPTO'])):
+            
+            $itemInquiry['DEFAULT_SHIPTO'] = $identity['PLC_DFT_SHIPTO'];
+    
+        endif;
+        
+        if(!empty($identity['PLU_DFT_SHIPTO'])):
+            
+            $itemInquiry['DEFAULT_SHIPTO'] = $identity['PLU_DFT_SHIPTO'];
+        
+        endif;
+        
+    endif;        
+    
+    print_r('<pre>');
+    print_r('SHIP-TO');
+    print_r($itemInquiry);
+    print_r($identity);
+    print_r('</pre>');
+    */
+       
+?>
+
+<?php if($identity['PLU_POLAR_CSR'] === 'Y'): ?>
+    <div class="header-group">
+    <h1 class="text-center">
+    	<?php echo "Selected Customer: <span class='colorred'>".$identity['CUST_NAME'].'</span>'; ?>
+    </h1>
+    </div>
+<?php endif;?>
+
+<div class="header-group">
+	<br/>
+	<ul id="menu-ordering">
+	
+	<?php if($identity['PLU_POLAR_CSR'] === 'Y'): ?>
+    	<li style="float:left; width: <?php echo $customWidth?>%">
+    							<a href="<?php echo $this->url('user/csrSelectCustomer');  ?>">
+    		<div class="fonts-icons">
+    			<span class="fonts-awesome  menu-ordering-option ">
+    				<i class="fa fa-building-o place-holder"></i>
+    			</span>
+    		</div>
+    	<br/>
+    	<span class="menu-ordering-text">Select Customer</span>
+    	</a>
+    	</li>
+   	<?php endif; ?>
+
+	<?php if(!empty($partialEditCurrentOrder)):?>
+		<li style="float:left; width: <?php echo $customWidth?>%"> 
+    		<a href="<?php printf("/user/current-order/%s", $partialEditCurrentOrder) ?>">
+    		<div class="fonts-icons"> 
+    			<span class="fonts-awesome menu-ordering-option"> 
+    				<i class="fa fa-shopping-cart place-holder"></i> 
+    				</span>  
+    				</div> 
+    				
+    				<br/>
+    					<span class="menu-ordering-text">Edit Current<br/>Order (<?php echo $partialEditCurrentOrder ?>)</span>
+    				</a>
+    				</li>
+    <?php endif; ?>
+		<li style="float:left; width: <?php echo $customWidth?>%">
+		<a href="<?php echo $this->url('user/placeOrder') ?>">
+			<div class="fonts-icons">
+				<span class="fonts-awesome menu-ordering-option">
+					<i class="fa fa-cart-plus place-holder"></i>
+				</span>
+			</div> 
+		<br/>
+		<span class="menu-ordering-text">Place NEW Order</span>
+		</a>
+	</li>
+	<li style="float:left; width: <?php echo $customWidth?>%">
+		<a href="<?php echo $this->url('user/orderHistory');  ?>">
+			<div class="fonts-icons">
+				<span class="fonts-awesome menu-ordering-option">
+					<i class="fa  fa-history place-holder order-hostory "></i>
+					</span>
+			</div>
+		<br/>
+		<span lass="menu-ordering-text">Order History</span>
+		</a>
+	</li>
+	<li style="float:left; width: <?php echo $customWidth?>%">
+		<a href="<?php echo $this->url('item/inquiry');  ?>">
+			<div class="fonts-icons">
+				<span class="fonts-awesome menu-ordering-option">
+					<i class="fa place-holder fa-search item-inquiry "></i>
+					</span>
+			</div>
+		<br/>
+		<span lass="menu-ordering-text">Item Inquiry</span>
+		</a>
+	</li>
+</ul>
+</div>
+<div class="clearfix"></div>

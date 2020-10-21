@@ -1,0 +1,82 @@
+ <div class="row inner-page-top-address margin-top-order">
+	 <?php  echo $this->partial('/partials/order-header-info.phtml', array('getOrderHeader' => $getOrderHeader)); ?>
+</div>
+<h1 class="margin-bottom25">Upload an Attachment for current order</h1>
+<div class=" uploadmodelbox">
+	<h4 class="modal-title" id="myModalLabel">Click the <b>Browse</b> button to locate the file you want to upload...</h4>
+ 	<?php	$form->setAttribute('action', $this->url('user/OrderAttachment', array('controller' => 'user', 'action' => 'order-attachment')));
+		$form->setAttribute('id', 'order-attachment');
+		$form->prepare();
+		echo $this->form()->openTag($form);
+	?>
+     		 <span class="info-button">				               
+				<div class="fileUpload btn btn-primary inner-page-outera"> <span>Browse for File...</span>
+				    <?php  echo $this->formrow($form->get('PLAT_UPL_FILENAME')); ?>
+				   
+				    
+				</div>
+				 <input type="hidden" name="ff" id="ff" value="0">
+			 </span>		            
+				<p>File Selected to upload: <span id="file_name"></span></p>
+				<p>File size: <span id="fileSize"> </span></p>
+				<p>Enter any description or notes you want to store with this attachment:</p>
+				<div class="form-group form-groupbox">
+					<div class="row">
+						<label class="col-sm-3 control-label upload-attach">Description/Comments:</label>
+						<div class="col-sm-9">                     		  
+							<?php  echo $this->formrow($form->get('PLAT_DESCRIPTION')); ?>
+						</div> 
+					</div>
+				</div>
+				<div class="attach-bottom">
+				       <?php  echo $this->formRow($form->get('save')); ?>
+				        <a  href="<?php echo $this->url('user/reviewOrder', array('controller' => 'user', 'action' => 'review-order' , 'tab'=>'Attachments'))?>" class="btn btn-primary buttons_attachment" >Cancel </a>       
+				</div>
+</div>
+<div style="clear:both;"></div>
+
+<script>
+	$('.upload').bind('change', function() {
+		$('.fileUpload').find('ul').remove();
+		$('#file_name,#fileSize').empty();  
+	  //this.files[0].size gets the size of your file.
+		 var validExtensions = JSON.parse('<?php echo json_encode($allowed_file_attachments);?>');
+		 var validFileSize = '<?php echo $allowed_order_attachmets_max_size ?>'; 
+		 var filename =  document.getElementById('order_file').files[0].name;
+		 var file_size =  this.files[0].size;
+		 var file_size_mb = $.number(file_size/1048576,2);
+		 var file_ext = filename.split('.').pop();
+
+		if($.inArray(file_ext.toLowerCase(),validExtensions)=='-1'){
+		$('.fileUpload').append('<ul><li>The file  "<strong>'+filename+'</strong>"  has a file type that is not allowed for upload</li></ul>');
+		$('#order_file').addClass('input-error');
+		//$('#order_file').val('');
+		$('#ff').val('1');
+		return false;
+  		 } else {
+	   	$('#ff').val('0');
+	  	 }
+		
+		if(parseFloat(file_size_mb) > parseFloat(validFileSize)){
+			$('.fileUpload').append('<ul><li>Size of file  "<strong>'+filename+'</strong>"  exceeds '+validFileSize+'MB. Maximum allowed size of attachment file is '+validFileSize+' MB</li></ul>');
+			$('#order_file').addClass('input-error');
+			$('#ff').val('1');
+			return false;
+	   } else {
+		   $('#ff').val('0');
+		   }
+	 
+		  $('#file_name').html(filename);
+		  $('#fileSize').html($.number(file_size)+' bytes'); 
+		});
+	
+	$('#order-attachment').submit(function(){
+		var flag_Submit = $('#ff').val();
+		if(flag_Submit == 1){
+			return false;
+			}
+		
+	 $('[type="submit"]').prop('disabled',true);
+	}); 
+
+</script>

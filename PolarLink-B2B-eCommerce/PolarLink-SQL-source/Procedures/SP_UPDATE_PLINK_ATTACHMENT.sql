@@ -1,0 +1,55 @@
+SET PATH *LIBL ;
+
+CREATE OR REPLACE PROCEDURE SP_UPDATE_PLINK_ATTACHMENT ( 
+	IN IN_PLAT_ORDER_NO DECIMAL(8, 0) , 
+	IN IN_PLAT_ATTACH_NO INTEGER , 
+	IN IN_PLAT_DESCRIPTION VARCHAR(450) , 
+	IN IN_USER CHAR(15) , 
+	OUT OUT_MESSAGE VARCHAR(100) ) 
+	LANGUAGE SQL 
+	SPECIFIC SP_UPDATE_PLINK_ATTACHMENT 
+	NOT DETERMINISTIC 
+	MODIFIES SQL DATA 
+	CALLED ON NULL INPUT 
+	SET OPTION  ALWBLK = *ALLREAD , 
+	ALWCPYDTA = *OPTIMIZE , 
+	COMMIT = *NONE , 
+	DECRESULT = (31, 31, 00) , 
+	DFTRDBCOL = *NONE , 
+	DYNDFTCOL = *NO , 
+	DYNUSRPRF = *USER , 
+	SRTSEQ = *HEX   
+	BEGIN 
+/*================================================================================ 
+Created June 2016 by John Valance 
+Delete an attachment record in the PLink_Attachment table. 
+=================================================================================*/ 
+	SET OUT_MESSAGE = '' ; 
+  
+  
+	IF NOT EXISTS ( 
+		SELECT * FROM PLINK_ATTACHMENT 
+		WHERE PLAT_ORDER_NO = IN_PLAT_ORDER_NO 
+		AND PLAT_ATTACH_NO = IN_PLAT_ATTACH_NO 
+	) THEN 
+		SET OUT_MESSAGE = 
+			'Record not updated: Attachment #' 
+			|| TRIM ( CHAR ( IN_PLAT_ATTACH_NO ) ) 
+			|| ' not found for order # ' || CHAR ( IN_PLAT_ORDER_NO ) || '.' ; 
+		RETURN ; 
+	END IF ; 
+  
+	UPDATE PLINK_ATTACHMENT SET 
+		PLAT_DESCRIPTION = IN_PLAT_DESCRIPTION , 
+		PLAT_CHG_TIME = CURRENT TIMESTAMP , 
+		PLAT_CHG_USER = IN_USER 
+	WHERE PLAT_ORDER_NO = IN_PLAT_ORDER_NO 
+	AND PLAT_ATTACH_NO = IN_PLAT_ATTACH_NO ; 
+  
+END  ; 
+  
+GRANT ALTER , EXECUTE   
+ON SPECIFIC PROCEDURE SP_UPDATE_PLINK_ATTACHMENT 
+TO JVALANCE ; 
+  
+;

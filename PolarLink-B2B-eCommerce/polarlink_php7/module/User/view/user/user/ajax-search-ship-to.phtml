@@ -1,0 +1,42 @@
+															<?php  if(!empty($customerShipTos['output'])){ 
+																$showButtonsDefaultShipTo = true;
+	                            	foreach($customerShipTos['output'] as $shipTo){
+										$class = '';
+										if(!empty($trimmedDefaultShipTo) && !empty($trimmedDefaultCustNo)) { 
+													if(($trimmedDefaultShipTo == trim($shipTo['ST_NUM'])) && ($trimmedDefaultCustNo == trim($shipTo['ST_CUST']))){
+																	$class = ' active';
+													}
+										}
+										
+										$combinedId = trim($shipTo['ST_NUM']).'_'.trim($shipTo['ST_CUST']);
+	                            	?>
+	                            	<tr class="shipToDefaultSelectable<?php echo $class; ?>" id="<?php echo 'stnum_'.$combinedId; ?>">
+	                                    <td id="<?php echo 'customerName_'.$combinedId; ?>"><?php echo $shipTo['ST_CUST']; ?></td>
+	                                    <td><?php echo $shipTo['ST_NUM']; ?></td>
+	                                    <td id="<?php echo 'name_'.$combinedId; ?>"><?php echo $shipTo['ST_NAME']; ?></td>
+	                                    <td id="<?php echo 'address_'.$combinedId; ?>"><?php
+										$trimmedShipTo = trim($shipTo['ST_ADR2']);
+	                                    echo $shipTo['ST_ADR1'].(!empty($trimmedShipTo)? ' - '.$trimmedShipTo:''); ?></td>
+	                                    <td id="<?php echo 'city_'.$combinedId; ?>"><?php echo $shipTo['ST_ADR3']; ?></td>
+	                                    <td id="<?php echo 'state_'.$combinedId; ?>"><?php echo $shipTo['ST_STATE']; ?></td>
+	                                    <td id="<?php echo 'zip_'.$combinedId; ?>"><?php echo $shipTo['ST_ZIP']; ?><span id="<?php echo 'defaultShippingMethod_'.$combinedId; ?>" style="display: none;"><?php echo trim($shipTo['SHIP_METHOD']); ?></span></td>
+	                                </tr>
+	                            <?php 
+	                            }
+                            } else { 
+									$showButtonsDefaultShipTo = false;
+							?>
+		                            <tr>
+		                            	<td colspan="7">No Ship-To exists</td>
+		                            </tr>
+                            <?php } ?>
+                            <script type="text/javascript">
+                            $(document).ready(function(){
+                            	$('.shipToDefaultSelectable').click(
+                                    	 function() {
+                     					$('.shipToDefaultSelectable').removeClass('active');
+                     					$(this).addClass('active');
+                     					
+                            	});
+                            });
+                            </script>

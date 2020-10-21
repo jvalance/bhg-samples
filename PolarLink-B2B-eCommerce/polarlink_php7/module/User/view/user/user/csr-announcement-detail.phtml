@@ -1,0 +1,228 @@
+<?php if(!empty($flashMessages)){ ?>
+<div class="alert alert-success fade in modal-content custom-success-content">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	<?php foreach($flashMessages as $flashMessage){ ?>
+			    <?php echo $flashMessage; } ?>
+		</div>	
+		
+<?php } ?>
+
+<div class="csr col-md-12 col-sm-12 col-xs-12">
+	<?php $form->setAttribute('action', $this->url('user/csrAnnouncementDetail', array('controller' => 'user', 'action' => 'csr-announcement-detail', 'type' => $type, 'id' => $announcementId)));
+$form->setAttribute('id', 'announcement-form');
+$form->setAttribute('class', 'announcement-search-form margin-none');
+
+ $form->setAttribute('onsubmit', 'return validateCsrAnnouncementForm()');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+ ?>
+	<div class="csr-heading text-center">Announcement Details</div>
+	<div class="clearfix"></div>
+	<h1 class="csr-top-link"><?php echo ucfirst($type); ?> an Announcement <a href="javascript:void(0)" onclick="return listingPages('csr-announcement-search')"><i class="fa fa-angle-left"></i>&nbsp;Back to List of Announcements</a></h1>
+	<div class="clearfix"></div>
+	<?php if($type != 'view'){ ?>
+	<p class="block-bottom-text  margin-top0">Fields marked with <sup class="colorred sup-top-bottom">*</sup> are required.</p>
+	<div class="clearfix"></div>
+	<?php } ?>
+	<div class="current-0rder-background ordering-option padding8<?php if($type == 'view'){ echo ' information-form-label-bold'; } ?> ">
+                	<h2 class="heading">Announcement Display Limited To:</h2>
+                    <div class="clearfix">&nbsp;</div>
+<!-- 						<form class="announcement-search-form"> -->
+							<div class="col-md-12">
+								<div class="col-md-6 col-sm-6 col-xs-12">
+									<fieldset>
+										<label>Facility:</label>
+										<?php
+
+										$valFacility = $form->getInputFilter ()->getValue ( 'FACILITY' ); // die;
+										if (empty ( $valFacility ) && !empty($plinkAnnouncementDetail ['output'])) {
+											$valFacility = (! empty ( trim ( $plinkAnnouncementDetail ['output'] ['PLA_FACILITY'] ) ) ? trim ( $plinkAnnouncementDetail ['output'] ['PLA_FACILITY'] ) : '');
+										}
+										
+										$ele = $form->get ( 'FACILITY' );
+									//	$ele->setAttribute('options', $facilities);
+										$ele->setValue($valFacility);
+										if($type == 'view'){
+											echo '<span class="normal-text-announcement">'; if(!empty($valFacility) && isset($facilities[$valFacility])){ echo $facilities[$valFacility]; } else { echo '-'; } echo '</span>';
+										} else {
+											echo $this->formRow ( $ele );
+										}
+										
+// 										echo $this->formRow($form->get('CUSTOMER_GROUP'));  
+										?>
+<!-- 										<input type="text" value="" /> -->
+									</fieldset>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="col-md-6 col-sm-6 col-xs-12">
+									<fieldset>
+										<label>Cust. Type:</label>
+										
+										<?php
+										$valCustType = $form->getInputFilter ()->getValue ( 'CUST_TYPE' ); // die;
+										if (empty ( $valFacility ) && !empty($plinkAnnouncementDetail ['output'])) {
+											$valCustType = (! empty ( trim ( $plinkAnnouncementDetail ['output'] ['PLA_CUST_TYPE'] ) ) ? trim ( $plinkAnnouncementDetail ['output'] ['PLA_CUST_TYPE'] ) : '');
+										}
+										$ele = $form->get ( 'CUST_TYPE' );
+									//	$ele->setAttribute('options', $customerTypes);
+										$ele->setValue($valCustType);
+										if($type == 'view'){
+											echo '<span class="normal-text-announcement">'; if(!empty($valCustType) && isset($customerTypes[$valCustType])){ echo $customerTypes[$valCustType]; } else { echo '-'; } echo '</span>';
+										} else {
+										echo $this->formRow ( $ele );
+										}
+// 										 echo $this->formRow($form->get('CUST_TYPE'));  
+										 
+										 ?>
+<!-- 										<select> -->
+<!-- 											<option>Wholesale</option> -->
+<!-- 										</select> -->
+									</fieldset>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+<!-- 						</form> -->
+                    <div class="clearfix"></div>
+                </div>
+				
+	<div class="current-0rder-background ordering-option padding8 margin-top50<?php if($type == 'view'){ echo ' information-form-label-bold'; } ?>">
+		<h2 class="heading">Announcement</h2>
+		<div class="clearfix">&nbsp;</div>
+<!-- 			<form class="announcement-search-form"> -->
+				<div class="col-md-12">
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<fieldset>
+							<label class="width40per">Start Date<?php if($type != 'view'){ ?><sup class="colorred sup-top-bottom">*</sup><?php } ?> :</label>
+							<span class="calendar-field">
+								<?php 
+								$valStartDate = $form->getInputFilter ()->getValue ( 'START_DATE' ); // die;
+								if (empty ( $valStartDate ) && !empty($plinkAnnouncementDetail ['output'])) {
+									if(! empty ( trim ( $plinkAnnouncementDetail ['output'] ['PLA_START_DATE'] ) ) ){
+
+ $valStartDateArray = explode ('-' , $plinkAnnouncementDetail ['output'] ['PLA_START_DATE'] ) ;
+ $valStartDate = $valStartDateArray['1'].'/'.$valStartDateArray['2'].'/'.$valStartDateArray['0'];
+								}
+								}
+								$ele = $form->get ( 'START_DATE' );
+								$ele->setValue($valStartDate);
+								if($type == 'view'){
+									echo '<span class="normal-text-announcement">'; if(!empty($valStartDate)){ echo $valStartDate; } else { echo '-'; } echo '</span>';
+								} else {
+ 									echo $this->formRow ( $ele );
+ 								}
+// 								echo $this->formRow($form->get('START_DATE')); 
+ ?>
+							</span>
+						</fieldset>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<fieldset>
+							<label class="width40per">End Date<?php if($type != 'view'){ ?><sup class="colorred sup-top-bottom">*</sup><?php } ?> :</label>
+							<span class="calendar-field">
+								<?php
+								$valEndDate = $form->getInputFilter ()->getValue ( 'END_DATE' ); // die;
+								if (empty ( $valEndDate ) && !empty($plinkAnnouncementDetail ['output'])) {
+									if(! empty ( trim ( $plinkAnnouncementDetail ['output'] ['PLA_END_DATE'] ) )) {
+								
+										$valEndDateArray = explode ('-' , $plinkAnnouncementDetail ['output'] ['PLA_END_DATE'] ) ;
+										$valEndDate = $valEndDateArray['1'].'/'.$valEndDateArray['2'].'/'.$valEndDateArray['0'];
+									}
+									}
+								
+									$ele = $form->get ( 'END_DATE' );
+									$ele->setValue($valEndDate);
+									if($type == 'view'){
+										echo '<span class="normal-text-announcement">'; if(!empty($valEndDate)){ echo $valEndDate; } else { echo '-'; } echo '</span>';
+									} else {
+										echo $this->formRow($ele);
+									}  
+								
+								?>
+							</span>
+						</fieldset>
+					</div>
+				</div>				
+				<div class="col-md-12">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<fieldset>
+							<label class="width19per">Message To display<?php if($type != 'view'){ ?><sup class="colorred sup-top-bottom">*</sup><?php } ?> :</label>
+							<?php
+							
+							$valMessage = $form->getInputFilter ()->getValue ( 'MESSAGE' ); // die;
+							if (empty ( $valMessage ) && !empty($plinkAnnouncementDetail ['output'])) {
+								$valMessage = (! empty ( trim ( $plinkAnnouncementDetail ['output'] ['PLA_MESSAGE'] ) ) ? trim ( $plinkAnnouncementDetail ['output'] ['PLA_MESSAGE'] ) : '');
+							}
+							
+							$ele = $form->get ( 'MESSAGE' );
+							$ele->setValue($valMessage);
+							if($type == 'view'){
+								echo '<span class="normal-text-announcement">'; if(!empty($valMessage)){ echo $valMessage; } else { echo '-'; } echo '</span>';
+							} else {
+								echo $this->formRow ( $ele );
+							}
+							
+							
+							
+							// echo $this->formRow($form->get('MESSAGE'));  
+							?>
+						</fieldset>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+<!-- 			</form> -->
+		<div class="clearfix"></div>
+	</div>
+	<?php if($type != 'view'){ ?>
+		<div class="full margin-top20">
+			<span class="selectedShipToButtons">
+			
+			<?php echo $this->formButton($form->get('Submit')->setAttribute('onclick', 'return changeDirtyFlag(false)')); ?>
+			
+<!-- 				<button type="submit" class="btn margin-right">Save Announcement</button> -->
+			</span>
+			<span class="selectedShipToButtons">
+			<?php
+			echo $this->formButton($form->get('Cancel')->setAttribute('onclick', 'return checkDirty()'));
+			// echo $this->formButton($form->get('Cancel')->setAttribute('onclick', 'window.location="'. $this->url("user/csrAnnouncementSearch").'"')); ?>
+<!-- 				<button type="button" class="btn margin-right">Cancel</button> -->
+			</span>
+		</div>
+		<?php } ?>
+			 <?php
+
+echo $this->form()->closeTag();
+
+
+?>
+</div>
+    <?php if($type != 'view'){ ?>
+          <link href="<?php echo $this->basepath('/css/jquery-ui.css'); ?>" media="screen" rel="stylesheet" type="text/css">
+<script	src="<?php echo $this->basepath('/js/jquery-ui.js'); ?>"></script>   
+<script type="text/javascript">
+// When the document is ready
+	$(function() {
+	    $( "#start_date" ).datepicker({
+	    	showOn: "button", 
+    	    buttonText: "<span class='font-size28 add-on icons'><i class='fa fa-calendar'></i></span>",
+	        defaultDate: "+1w",
+	        changeMonth: false,
+	        numberOfMonths: 1,
+	        onClose: function( selectedDate ) {
+	          $( "#end_date" ).datepicker( "option", "minDate", selectedDate );
+	        }
+	      });
+	      $( "#end_date" ).datepicker({
+    	  	showOn: "button", 
+    	    buttonText: "<span class='font-size28 add-on icons'><i class='fa fa-calendar'></i></span>",
+		    defaultDate: "+1w",
+	        changeMonth: false,
+	        numberOfMonths: 1,
+	        onClose: function( selectedDate ) {
+	          $( "#start_date" ).datepicker( "option", "maxDate", selectedDate );
+	        }
+	      });
+	});
+</script>
+<?php } ?>

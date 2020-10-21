@@ -1,0 +1,22 @@
+ <?php if (!empty($currentAnnouncement['output'])){ ?>
+                                <div class="margin-top20 margin-bottom20">
+                	<h2 class="heading-please-note colorred">Please note:</h2>
+                	<section class="margin-bottom0 margin-top20">
+  							<div class="table-scroll please-note">
+                    <table class="table-announcements ship-order">
+                        <tbody>
+                        <?php foreach($currentAnnouncement['output'] as $announcement){
+                           	?>
+                           <tr>
+	                           <td class="colorred"><i class="fa fa-arrow-right colorblue"></i>&nbsp;&nbsp;&nbsp;<?php echo $announcement['PLA_MESSAGE']; ?></td>
+                           </tr>
+                           <?php
+                           		}  ?>
+                                                   </tbody>
+                    </table>
+                	</div>
+                	</section>
+                	</div>
+                	<div class="clearfix"></div>
+                	
+							<?php } ?>

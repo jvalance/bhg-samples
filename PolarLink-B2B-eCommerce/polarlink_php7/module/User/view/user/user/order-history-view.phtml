@@ -1,0 +1,370 @@
+             <div class="col-md-12 col-sm-12 col-xs-12">
+             	<h1 class="margin-bottom25">Order History Details for Order<?php if(!empty($orderNumToDisplay)){ echo '# '.$orderNumToDisplay;} ?></h1>
+				<p class="order_history_PO">PO#  <span class="normal-text"><?php echo (!empty(trim($getOrderHeader['output']['OH_PO1']))?trim($getOrderHeader['output']['OH_PO1']):'-')?></span></p>
+				<ul class="review-text-list">
+					<li>Select a tab, below, to review this order's history.</li>
+				</ul>
+				<?php if(!empty($getOrderHeader['output']) && trim($getOrderHeader['output']['SUBS_REQUIRED']) == 'Y'){
+
+					$showSubstitutesTab = true;
+				} else {
+					$showSubstitutesTab = false;
+				}
+				?>
+                <div class="item-search-tabs margin-top20">
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li class="active"><a href="#Summary" data-toggle="tab">Summary</a></li>
+                        <li><a href="#Shipping" data-toggle="tab">Shipping</a></li>
+                        <li><a href="#Items" data-toggle="tab">Items</a></li>
+                        <?php if($showSubstitutesTab){ ?><li><a href="#Substitutes" data-toggle="tab">
+                        Substitutes
+<!--                         <span>Substitutes<sup>**</sup></span> -->
+                        </a></li><?php } ?>
+                         <li><a href="#Attachments" data-toggle="tab">Attachments</a></li>
+                    </ul>
+                    <div id="my-tab-content" class="tab-content">
+                        <div id="Summary" class="tab-pane active">
+                            <div class="ordering-option padding8">
+							<h2 class="heading">Order Totals</h2>
+							<div class="total-amount tab-order-total margin-top35">
+								<ul class="border-color item-search-table">
+									<div class="total-heading">Amount<div class="clearfix"></div><span class="total-desc">(excluding deposits)</span></div>
+									<li class="flright">$<?php echo number_format(trim($getOrderTotals['amount']), '2', '.', ','); ?></li>
+								</ul>
+								<ul class="border-color item-search-table">
+									<div class="total-heading align-center">Quantities<!-- <div class="clearfix"></div><span class="total-desc">&nbsp;</span> --></div>
+									<li><span>Cases:</span> <?php echo number_format(trim($getOrderTotals['caseQty']), '0', '.', ','); ?></li>
+									<li><span>Pallets:</span> <?php echo number_format(trim($getOrderTotals['palletQty']), '2', '.', ','); ?></li>
+								</ul>
+								<ul class="border-color item-search">
+									<div class="total-heading align-center">Weights<div class="clearfix"></div><span class="total-desc">&nbsp;</span></div>
+									<li><span>Products:</span> <?php echo  number_format(trim( $getOrderTotals['prodWeight']), '0', '.', ','); ?> lbs</li>
+									<li><span>Pallets:</span> <?php echo number_format(trim($getOrderTotals['palletWeight']), '0', '.', ','); ?> lbs</li>
+									<li><span>Total:</span> <?php echo number_format(trim($getOrderTotals['totalWeight']), '0', '.', ','); ?> lbs</li>
+								</ul>
+								<div class="clearfix"></div>
+								<p class="table-notes fontOrange margin-top20">
+					Total Order Amount is subject to price verification
+					</p>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+                        </div>
+                        <div id="Shipping" class="tab-pane">
+                        	<div class="ordering-option padding8">
+								<h2 class="heading">Shipping Information</h2>
+								<div class="col-md-10 form-signin login-form information-form margin-bottom20 text-center-responsive">
+									<fieldset class="col-md-12">
+										<label for="inputEmail">Cust# / Ship To:</label>
+										<span class="normal-text"><?php echo (!empty(trim($getOrderHeader['output']['OH_CUSTNO']))?trim($getOrderHeader['output']['OH_CUSTNO']):'-').' / '.(!empty(trim($getOrderHeader['output']['OH_SHP2_NUM']))?trim($getOrderHeader['output']['OH_SHP2_NUM']):'-'); ?></span>
+									</fieldset>
+									<fieldset class="col-md-12">
+										<label for="inputEmail">Shipping Address:</label>
+										<span class="normal-textarea">
+										<?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_NAME']))?trim($getOrderHeader['output']['OH_SHP2_NAME']).'<br />':''); ?>
+                            <?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ATTN']))?'Attn: '.trim($getOrderHeader['output']['OH_SHP2_ATTN']).'<br />':''); ?>
+                            <?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ADDR1']))?trim($getOrderHeader['output']['OH_SHP2_ADDR1']).'<br />':''); ?>
+                            <?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ADDR2']))?trim($getOrderHeader['output']['OH_SHP2_ADDR2']).'<br />':''); ?>
+                            <?php echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ADDR3']))?trim($getOrderHeader['output']['OH_SHP2_ADDR3']).', ':'').(!empty(trim($getOrderHeader['output']['OH_SHP2_STATE']))?trim($getOrderHeader['output']['OH_SHP2_STATE']).' ':'').(!empty(trim($getOrderHeader['output']['OH_SHP2_ZIP']))?trim($getOrderHeader['output']['OH_SHP2_ZIP']).' ':''); ?></span>
+									</fieldset>
+									<fieldset class="col-md-12">
+										<label for="inputEmail">Shipping Method:</label>
+										<span class="normal-text"><?php echo (!empty(trim($getOrderHeader['output']['OH_SHIP_METHOD_TEXT']))?trim($getOrderHeader['output']['OH_SHIP_METHOD_TEXT']):''); ?></span>
+									</fieldset>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+
+                <?php
+																$form->setAttribute ( 'action', $this->url ( null, array (
+																		'controller' => 'user',
+																		'action' => 'order-header'
+																) ) );
+																$form->setAttribute ( 'id', 'order-review-header-form' );
+																$form->setAttribute ( 'class', 'col-md-12 form-signin login-form information-form margin-top20' );
+
+																$form->prepare ();
+																echo $this->form ()->openTag ( $form );
+																?>
+							<div class="ordering-option padding8 margin-top60">
+                	<h2 class="heading">Additional Order Information</h2>
+<!--                     <form class="col-md-10 form-signin login-form information-form"> -->
+                	<div class="margin-top60">
+                    	<fieldset class="col-md-12">
+                            <label for="inputEmail">Primary PO#:</label>
+                             <?php
+								$valOhPo1 = $form->getInputFilter ()->getValue ( 'OH_PO1' ); // die;
+								if (empty ( $valOhPo1 )) {
+									$valOhPo1 = (! empty ( trim ( $getOrderHeader ['output'] ['OH_PO1'] ) ) ? trim ( $getOrderHeader ['output'] ['OH_PO1'] ) : '');
+								}
+								$ele = $form->get ( 'OH_PO1' );
+								$ele->setValue($valOhPo1)->setAttribute('readonly', 'readonly');
+								echo $this->formRow ( $ele );
+								?>
+<!--                             <input type="text" autofocus="" required="" placeholder="" class="form-control pull-left" id="inputEmail" /> -->
+                        </fieldset>
+                        <fieldset class="col-md-12">
+                            <label for="inputPassword">Alternate PO# 1:</label>
+                            <?php
+                            	$valOhPo2 = $form->getInputFilter ()->getValue ( 'OH_PO2' ); // die;
+                            				if (empty ( $valOhPo2 )) {
+																													$valOhPo2 = (! empty ( trim ( $getOrderHeader ['output'] ['OH_PO2'] ) ) ? trim ( $getOrderHeader ['output'] ['OH_PO2'] ) : '');
+																												}
+																												echo $this->formRow ( $form->get ( 'OH_PO2' )->setValue ( $valOhPo2 )->setAttribute('readonly', 'readonly') );
+																												?>
+<!--                             <input type="text" required="" placeholder="" class="form-control pull-left" id="inputText" /> -->
+                        </fieldset>
+                        <fieldset class="col-md-12">
+                            <label for="inputPassword">Alternate PO# 2:</label>
+                             <?php
+
+																												$valOhPo3 = $form->getInputFilter ()->getValue ( 'OH_PO3' ); // die;
+																												if (empty ( $valOhPo3 )) {
+																													$valOhPo3 = (! empty ( trim ( $getOrderHeader ['output'] ['OH_PO3'] ) ) ? trim ( $getOrderHeader ['output'] ['OH_PO3'] ) : '');
+																												}
+																												echo $this->formRow ( $form->get ( 'OH_PO3' )->setValue ( $valOhPo3 )->setAttribute('readonly', 'readonly') );
+																												?>
+<!--                             <input type="text" required="" placeholder="" class="form-control pull-left" id="inputText" /> -->
+                        </fieldset>
+                        <fieldset class="col-md-12">
+                            <label for="inputPassword"><?php if(trim($getOrderHeader['output']['OH_SHIP_METHOD_CODE']) != 'P'){ echo 'Delivery'; } else { echo 'Pickup'; } ?> Date:</label>
+                             <?php
+                            $delivDateVal = $form->getInputFilter ()->getValue ( 'OH_REQ_DELIV_DATE' ); // die;
+                            if (empty ( $delivDateVal )) {
+                            	$delivDateVal = (! empty ( trim ( $getOrderHeader ['output'] ['OH_REQ_DELIV_DATE'] ) ) ? trim ( $getOrderHeader ['output'] ['OH_REQ_DELIV_DATE'] ) : '');
+                            	if(!empty($delivDateVal)){
+										 $delivDateTotalDigits = strlen($delivDateVal);
+										if($delivDateTotalDigits == '8'){
+													$delivDateYear = substr($delivDateVal, '0', '4');
+													$delivDateMonth = substr($delivDateVal, '4', '2');
+													$delivDateDay = substr($delivDateVal, '6', '2');
+													$delivDateVal = $delivDateMonth.'/'.$delivDateDay.'/'.$delivDateYear;
+										} else {
+													$delivDateVal = '';
+										}
+								}
+                            }
+
+                            echo $this->formRow($form->get('OH_REQ_DELIV_DATE')->setValue ( $delivDateVal )->setAttribute('readonly', 'readonly')); ?>
+<!--                             <input type="text" required="" placeholder="" class="form-control pull-left" id="inputText" /> -->
+                            <!--<span class="icons"><a href=""><img src="img/calendar_icon.png" alt="" /></a></span>-->
+                        </fieldset>
+                        <?php if(trim($getOrderHeader['output']['OH_SHIP_METHOD_CODE']) != 'P'){ ?>
+                        <fieldset class="col-md-12">
+                            <label for="inputPassword">Requested Delivery Time:</label>
+
+                            <?php
+                            $delivTimeVal = $getOrderHeader['output']['OH_REQ_DELIV_TIME'];
+                            echo $this->formRow($form->get('OH_REQ_DELIV_TIME')->setValue( $delivTimeVal )); ?>
+<!--                             <input type="text" required="" placeholder="" class="form-control pull-left" id="inputText" /> -->
+                            <!--<span class="icons"><a href=""><img src="img/watch_icon.png" alt="" /></a></span>-->
+                        </fieldset>
+                        <?php } ?>
+                        <fieldset class="col-md-12">
+                            <label for="inputPassword">Notes/Comments:</label>
+                            <?php
+
+			$notesVal = $form->getInputFilter ()->getValue ( 'OH_NOTES' ); // die;
+			if (empty ( $notesVal )) {
+				$notesVal = (! empty ( trim ( $getOrderNotes ['notes'] ) ) ? trim ( $getOrderNotes ['notes'] ) : '');
+			}
+                            echo $this->formRow($form->get('OH_NOTES')->setValue ( $notesVal )->setAttribute('readonly', 'readonly'));
+
+                           // echo $this->formCollection($form->get('categories'));
+
+                            ?>
+                        </fieldset>
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+							 <?php	echo $this->form ()->closeTag ();		?>
+							<div class="clearfix"></div>
+                        </div>
+                        <div id="Items" class="tab-pane">
+                        	<div class="order-heading margin-top20">Items Ordered
+                        	</div>
+							<div class="clearfix"></div>
+							<div class="table-responsive">
+								<table class="table table-striped ship-order margin-bottom8">
+									<thead>
+										<tr>
+											<th>Product</th>
+											<th>Description</th>
+											<th>Qty</th>
+<!-- 											<th>RMV</th> -->
+											<th>UOM</th>
+											<th>Price</th>
+											<th>Ext. Price</th>
+											<th>Pallets</th>
+											<th>Cases</th>
+											<th>Units</th>
+										</tr>
+									</thead>
+									<tbody>
+									<?php if(!empty($getOrderLineItems['output'])){
+                            	foreach($getOrderLineItems['output'] as $orderLine){
+									$itemNumber = trim($orderLine['OL_ITEM_NUM']);
+							?>
+									<tr class="<?php echo $itemNumber; ?>">
+                                    <td><?php echo $itemNumber; ?></td>
+                                    <td desc='desc'><?php echo $orderLine['OL_ITEM_DESC']; ?></td>
+                                    <td class="text-right"><?php echo number_format($orderLine['OL_QTY_ORD'], '0'); ?></td>
+                                    <!-- <td style="text-align: center;"><a href="javascript:void(0)" onclick="removeItemFromOrder(<?php echo $itemNumber; ?>)"><img width="16px" src="<?php echo $this->basepath('/img/close.png'); ?>" alt="RMV" /></a></td>  -->
+                                    <td uom='uom'><?php echo trim($orderLine['OL_SELL_UOM']); ?></td>
+                                    <td class="text-right"><?php echo number_format($orderLine['OL_NET_PRICE'],  2, '.', ','); ?></td>
+                                    <td class="text-right" copy_from="ext_price"><?php echo number_format($orderLine['OL_EXT_PRICE'],  2, '.', ','); ?></td>
+                                    <td class="text-right" copy_from="pallet_qty"><?php
+                                    $trimPalletQty = trim(number_format($orderLine['ITM_PALLET_QTY_ORD'], '2'));
+                                     if($trimPalletQty < 1){
+										echo substr($trimPalletQty, '1', strlen($trimPalletQty));
+									} else {
+										echo $trimPalletQty;
+									}
+                                    ?></td>
+                                    <td class="text-right" copy_from="case_qty"><?php echo number_format($orderLine['ITM_CASE_QTY_ORD'], 0); // $orderLine['ITM_CASE_QTY_ORD']; ?></td>
+                                    <td class="text-right" copy_from="unit_qty"><?php echo number_format($orderLine['ITM_UNIT_QTY_ORD'], 0); ?></td>
+                                </tr>
+								<?php }
+                            } else { ?>
+                            <tr>
+                            <td colspan="10">No Products in the current order</td>
+                            </tr>
+                            <?php } ?>
+									</tbody>
+								</table>
+							</div>
+                    		<div class="clearfix"></div>
+                        </div>
+                        <?php if($showSubstitutesTab){ ?>
+                        <div id="Substitutes" class="tab-pane">
+							<div class="order-heading margin-top10">Substitute Items on this Order
+							</div>
+							<div class="clearfix"></div>
+
+							 <?php
+                    echo $this->partial('/partials/substitutes-list.phtml', array(
+                    		'getListSubstitutes' => $getListSubstitutes,
+							'configSubstitutes' => $configSubstitutes,
+							'removeHide' => true,
+							'removeInformationText' => true
+                    ));
+                    ?>
+
+							<div class="clearfix"></div>
+                        </div>
+                    	<?php } ?>
+
+
+
+
+
+
+
+
+              <div id="Attachments" class="tab-pane">
+            
+              <div class="order-heading margin-top20"> File Attachments for this order
+
+        </div>
+        <div class="download-file"> Click on a file name to download the file.</div>
+   <div class="table-responsive selected-table dataForShipTos download-table">
+                    	<section class="table-section  table-section-tow table-section-two">
+  							<div class="table-scroll">
+        
+        
+        <table class="table-striped ship-order order-table-titles">
+            <thead>
+                <tr>
+                 <!--  <th width ="10%">&nbsp;</th> -->
+                    <th width="8%">Type <div>Type</div></th>
+                    <th width="59%">File Name<div>File  Name</div></th>
+                    <th width="11%">Size (bytes)<div class="table-titles">Size <br>(bytes)</div></th>
+                    <th width="11%">Date Added<div>Date <br>Added</div></th>
+                    <th  width="11%">Uploaded By<div>Uploaded <br>By</div></th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                <?php if(!empty($dataOrderAttachment)) { ?>
+                     <?php foreach($dataOrderAttachment as $order_attachement){?>
+		                <tr>
+		             <!--        <td>
+		                        <a title="Download File" href="<?php echo $this->url('user/orderAttachmentFileDownload').'?fileName='. $order_attachement['PLAT_IFS_FILENAME'].'&fileNameOri='.$order_attachement['PLAT_UPL_FILENAME'].'&orderNumber='.$orderNumToDisplay;?>"><i aria-hidden="true" class="fa fa-download icons"></i> </a>
+		                    </td> -->
+		                    <td>
+		                        <?php echo $order_attachement[ 'PLAT_FILE_EXT']; ?>
+		                    </td>
+		                    <td>
+		                      <a href="<?php echo $this->url('user/orderAttachmentFileDownload').'?fileName='. $order_attachement['PLAT_IFS_FILENAME'].'&fileNameOri='.$order_attachement['PLAT_UPL_FILENAME'].'&orderNumber='.$order_attachement['PLAT_ORDER_NO'];?>" id='tool-tipfile<?php echo $order_attachement['PLAT_ATTACH_NO']; ?>' data-id='<?php echo $order_attachement['PLAT_ATTACH_NO']; ?>' class="download-files-word" role="button" date-html=true data-placement="right"  data-toggle="popover" data-trigger="focus" title="File Comments: " data-content="<?php echo $order_attachement['PLAT_DESCRIPTION']; ?><p>Click on file name to download file</p>"><?php echo $order_attachement['PLAT_UPL_FILENAME']; ?> </a>
+		                    </td>
+		                    <td align="right">
+		                        <?php echo number_format($order_attachement[ 'PLAT_FILE_SIZE']); ?>
+		                    </td>
+		                    <td>
+		                        <?php $date=explode( '-',$order_attachement[ 'PLAT_CRT_TIME']); $monthName=date( "M", mktime(0, 0, 0, $date[ '1'], 10)); echo $monthName. ' '.$date[ '2']. ','.$date[ '0']; ?>
+		                    </td>
+		                    <td>
+		                        <?php echo $order_attachement[ 'PLAT_CRT_USER']; ?>
+		                    </td>
+		                </tr>
+
+                <?php } } else { ?>
+                <tr>
+                    <td colspan="6">No Order attachment found!</td>
+                </tr>
+              
+                <?php }?>
+                  <tr>
+                <td colspan="6" height="70px"></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div></section></div>
+</div>
+
+
+
+
+
+
+                </div>
+                <div class="buttons margin-top20">
+                	<button class="btn margin-bottom0" type="button" onclick="location.href = '<?php echo $this->url ( 'user/printPdf', array (
+																		'controller' => 'user',
+																		'action' => 'print-pdf',
+                			'id' => $currentOrdNum
+																) ); ?>';">Re-Print Order</button>
+                   <button class="btn margin-bottom0" type="button" onclick="location.href = '<?php echo $this->url('user/orderHistory'); ?>';">New Order Search</button>
+					 <!--<button class="btn" type="button">Print Order</button>
+					<button class="btn" type="button">Cancel Order</button>-->
+                </div>
+				<div class="buttons-text">
+<!--					<div class="row">
+						<div class="col-md-7 col-sm-7 col-xs-12 responsive-buttons-text">
+ 							<p class="btn-active-text"><em>Please correct errors before you can submit your order.</em></p>
+						</div>
+ 						<div class="col-md-5 col-sm-5 col-xs-12 text-right responsive-buttons-text">
+				<span><input type="checkbox" checked="checked" />&nbsp; &nbsp;<em>Save this order for late?</em></span>
+ 						</div>
+					</div> -->
+				</div>
+             </div>
+             
+             <script type="text/javascript">
+            
+            
+
+
+
+$( ".download-files-word" ).hover(function() {
+	var id = $(this).data('id');
+	$('#tool-tipfile'+id).popover({html:true});
+	
+	$('#tool-tipfile'+id).popover('toggle');
+	
+});
+</script>

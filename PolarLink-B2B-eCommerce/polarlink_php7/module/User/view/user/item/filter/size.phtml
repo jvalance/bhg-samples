@@ -1,0 +1,35 @@
+
+<?php
+if (! empty($itemsBySize['output'])) {
+    $i = 0;
+    
+    ?>
+<div class="panel panel-default main-data-size">
+
+	<div class="panel-body">
+		<div class="table-responsive">
+
+			<table class="table table-hover">
+				<tbody>
+					<?php foreach ($itemsBySize['output'] as $itemSizekey => $itemSizeToShow){					?>
+						<tr>
+    						<td class="sizeSelectableRow"
+    							id="<?php echo $itemSizeToShow['ITM_SIZE_CODE'];  ?>"
+    							rel="<?php echo trim($itemSizeToShow['SIZE_DESC']) ; ?>"><a
+    							href="javascript:void(0)"
+    							onclick="return sizeSelectableRow(this);"><?php echo $itemSizeToShow['SIZE_DESC'];  ?></a></td>
+						</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+<?php
+} else {
+    ?>
+<div class="informationTabsSearch CustomTextOnTabs padb5">No Items to
+	display</div>
+<?php } ?>
+
+</div>

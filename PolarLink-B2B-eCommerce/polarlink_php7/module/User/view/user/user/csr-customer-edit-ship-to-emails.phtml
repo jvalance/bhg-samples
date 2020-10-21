@@ -1,0 +1,343 @@
+<?php
+
+use User\Helper\Address;
+/**
+ * Customer Ship To Emails
+ * Jaziel Lopez, juan.jaziel@gmail.com
+ * 
+ * @var $formattedDefaultAddress string
+ */
+echo $this->partial('csr-customer-edit-ship-to-emails-modal');
+
+define('EDITABLE_SHIP_TO_OPTION', '<a href="#" class="customer-ship-to-editable">'
+    
+    . '<span><i class="fa fa-pencil"></i></span></a>');
+?>
+<div class="row">
+
+	<div class="col-md-12">
+		<ul>
+			<li style="list-style: square">
+				<h6>The email addresses entered below will each receive a
+					notification whenever an order is placed for the customer/ship-to
+					specified.</h6>
+			</li>
+			<li style="list-style: square">
+				<h6>Emails entered at the ship-to level will completely override any
+					email address entered at the customer group level.</h6>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div>
+
+	<div id="container-filter-search-ship-to" class="row">
+
+
+		<div class="col-xs-4 ">
+
+
+			<label for="customer-ship-to-emails-filter">Filter</label> <select
+				class="form-control" id="customer-ship-to-emails-filter" style="">
+
+				<option value="ship-to-list" selected>Show all</option>
+
+				<option value="ship-to-with-emails">Show Ship-to with Emails</option>
+
+				<option value="ship-to-without-emails">Show Ship-to without Emails</option>
+
+			</select>
+
+		</div>
+
+		<div class="col-xs-4 text-right">
+			<div>
+				<a id="reset-search-ship-to" class="clear-customer" href="#">Clear
+					Filter</a>
+			</div>
+		</div>
+
+
+
+
+		<div class="col-xs-4 text-right">
+
+			<label for="appendedInputButton">Search</label>
+			<div>
+				<input class="form-control search-box " id="appendedInputButton"
+					placeholder="SEARCH..." type="text" />
+
+				<button id="searchShipTo" class="btn btn-small" type="button">
+					<span><i class="fa fa-search"></i></span>
+				</button>
+
+			</div>
+
+
+		</div>
+		
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12 margin-top10">
+			<button id="configure-emails" class="btn" type="button" disabled
+				onclick="resetConfigureEmailModal();">Configure Emails</button>
+		</div>
+	</div>
+
+	<div class="row" style="margin: 0">
+		<div class="margin-top10">
+			<table id="customer-ship-to-emails"
+				class="table table-striped table-fixed-headers">
+				<thead>
+					<tr class="headers">
+						<th class="right"><div style="width: 60px">Cust.#</div></th>
+						<th class="right"><div style="width: 60px">Ship #</div></th>
+						<th class="ship-email-address"><div style="width: 200px">Address To Name</div></th>
+						<th class="ship-email-address"><div style="width: 200px">Ship-To Address</div></th>	
+						<th class="ship-email-list"><div style="width: 230px">Emails</div></th>
+						<th class="center"><div>&nbsp;</div></th>
+					</tr>
+				</thead>
+				<tbody id="popUpDataShippingForm">
+                		
+                		<?php
+                
+                foreach ($availableCustomerShipToAddress as $shipTo) :
+                    
+                    $shipToEmailClass = $shipTo['EMAILS'] ? 
+                    
+                    'ship-to-with-emails' : 'ship-to-without-emails';
+                    
+                    $class = '';
+                    
+                    $combinedId = trim($shipTo['ST_NUM']) . '_' . trim($shipTo['ST_CUST']);
+                    // $formatted = str_replace(PHP_EOL, '<br/>', Address::format($shipTo));
+                    
+                    printf('<tr class="shipToDefaultSelectable ship-to-list %s %s" id="stnum_%s" rel="%s" data="%s">', 
+                    $shipToEmailClass, 
+                    $class, 
+                    $combinedId, 
+                    $shipTo['ST_CUST'], 
+                    $shipTo['ST_NUM']);
+                    
+                    printf('<td class="searchable right" rel="%s" id="customerName_%s">%s</td>', 
+                        
+                        $combinedId, $combinedId, 
+                        
+                        '<div style="width:60px">'. $shipTo['ST_CUST'] . '</div>');
+                    
+                    printf('<td class="searchable right" rel="%s">%s</td>', 
+                        
+                        $combinedId, 
+                        
+                        '<div style="width:60px">'. $shipTo['ST_NUM'] . '</div>');
+                    
+                    printf('<td class="searchable ship-email-address" rel="%s" id="name_%s">%s</td>', 
+                        
+                        $combinedId, $combinedId, 
+                        
+                        '<div style="width: 200px">'. $shipTo['ST_NAME'] . '</div>');
+                    
+                    /**
+                     * unsetting few variables that are not required
+                     * as part of the formatted Address
+                     */
+                    unset($shipTo['ST_CUST'], $shipTo['ST_NUM'], $shipTo['ST_NAME']);
+                    
+                    printf('<td class="searchable ship-email-address" rel="%s" id="address_%s">%s</td>', 
+                        
+                        $combinedId, 
+                        
+                        $combinedId, 
+                        
+                        '<div style="width: 200px">'. str_replace(PHP_EOL, '<br/>', Address::format($shipTo)) . '</div>');
+                    
+                        $emails = $shipTo['EMAILS'] ? $shipTo['EMAILS'] : '-';
+                        
+                    
+                    printf('<td class="searchable ship-email-list"  rel="%s" id="emails_%s">%s</td>', 
+                        
+                        $combinedId, 
+                        
+                        $combinedId, 
+                        
+                        '<div style="width: 230px">'.$emails.'</div>');
+                    
+                    printf('<td class="searchable center" rel="%s" id="actions_%s">%s</td>', 
+                        
+                        $combinedId, $combinedId, 
+                        
+                        '<div style="width:60px">'. EDITABLE_SHIP_TO_OPTION. '</div>');
+                        
+                    printf('</tr>');
+                endforeach
+                ;
+                
+                ?>
+                		</tbody>
+			</table>
+		</div>
+		<div class="clearfix">&nbsp;</div>
+	</div>
+
+	<script type="text/javascript">
+
+	/**
+	*
+	* Prepare modal to display data and allow user's edit
+	*
+	**/
+	function resetConfigureEmailModal(){
+
+		document.getElementById('submitEmails').reset();
+
+		$('#configure-email-modal').modal('toggle');
+
+		$('#configure-email-modal div.processing').removeClass('hidden');
+
+		$('#configure-email-modal div.done').addClass('hidden');
+
+		$('#configure-emails').attr('disabled', 'disabled');
+
+		$('#PLC_SHIPTO').val(sess_customer_ship_to.shipTo);
+
+		$('#PLC_CUSTNO').val(sess_customer_ship_to.customerNumber);
+		
+		$('#do-submit-ship-to-email-address').removeAttr('disabled');
+
+		$('#customer-ship-to-mailing-list #error_div').html(null).hide();
+
+		$('#customer-ship-to-mailing-list #success_div').html(null).hide();
+		
+		$.get('/user/customer/shipToEmails', sess_customer_ship_to, function(payload){
+
+			$('#configure-email-modal div.done').removeClass('hidden');
+
+			$('#configure-email-modal div.processing').addClass('hidden');
+
+			$('#formattedAddress').html(payload.formattedAddress);
+
+			$('#submitEmails #csr_email_address').val(payload.emailList);
+
+			$('#submitEmails #csr_email_address').focus();
+
+			$('#configure-emails').removeAttr('disabled');
+						
+		}, 'json');
+	}
+
+	/**
+	*
+	* Submit email list to validate email format
+	*
+	**/
+	function validateNotificationEmailGroup(){
+
+		var dirtyEmailList  = $('#submitEmails #csr_email_address').val();
+		var emailList = $.trim(dirtyEmailList);
+		
+		$('#customer-ship-to-mailing-list #error_div').html(null).hide();
+		$('#customer-ship-to-mailing-list #success_div').html(null).hide();
+		
+		$('#do-submit-ship-to-email-address').attr('disabled', 'disabled');
+
+		$.post('/user/check-csr-review-order',
+				 
+				{ csr_email_address: emailList},
+
+				function(data){
+
+					if(!data.valid){
+
+						$('#customer-ship-to-mailing-list #error_div').html(data.Message).show();
+						$('#do-submit-ship-to-email-address').removeAttr('disabled');
+
+						return data.valid;
+					}
+
+					postValidatedEmails(emailList);
+					
+			}, 'json');
+	}
+
+	/**
+	* Post customer ship to emails
+	*
+	**/
+	function postValidatedEmails(emailList){
+
+		sess_customer_ship_to.emailList = emailList;
+
+		$.post('/user/customer/shipToEmails', sess_customer_ship_to, function(payload){
+
+			var hasShipToWithEmails = true;
+
+			$('#customer-ship-to-mailing-list #success_div').html('Customer notification list has been successfully saved!').show();
+
+			$('#submitEmails #csr_email_address').val(payload.emailList);
+
+			if(!payload.emailList.length){
+
+				payload.emailList = '-';
+
+				hasShipToWithEmails = false;
+			}
+
+			var row = $('#emails_' + sess_customer_ship_to.shipTo + '_' + 
+
+					sess_customer_ship_to.customerNumber);
+
+			var content = $(row).find('div');
+					
+			$(content).html(null).append(payload.emailList);
+
+			if(payload.emailList === '-') {
+
+				$(row).parent().removeClass('ship-to-with-emails');
+				$(row).parent().addClass('ship-to-without-emails');
+			} else {
+
+				$(row).parent().removeClass('ship-to-without-emails');
+				$(row).parent().addClass('ship-to-with-emails');
+			}
+
+			 
+			
+			$('#submitEmails #csr_email_address').focus();
+
+			$('#do-submit-ship-to-email-address').removeAttr('disabled');
+
+			applyFilters();
+			
+			return true;
+						
+		}, 'json')
+
+		.fail(function(xhr) {
+
+			console.error('[PolarLink Execution Error: %o]', xhr);
+
+			$('#customer-ship-to-mailing-list #error_div')
+			
+				.html('An error has occurred while attempting to ' + 
+
+						'save information:' + 
+
+						'<ul>' + 
+						
+						'<li>' + xhr.responseJSON.error + '</li>' +
+
+						'</ul>').show();
+
+			return false;
+		});
+	}
+
+		
+
+
+
+	</script>
+</div>

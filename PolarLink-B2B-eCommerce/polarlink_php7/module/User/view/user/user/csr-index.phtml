@@ -1,0 +1,115 @@
+<?php if(!empty($flashMessages)){ ?>
+<div class="alert alert-success fade in modal-content custom-success-content">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	<?php foreach($flashMessages as $flashMessage){ ?>
+			    <?php echo $flashMessage; } ?>
+		</div>	
+		
+<?php } ?>
+
+<div class="csr-home col-md-12 col-sm-12 col-xs-12">
+	<div class="csr-heading text-center">CSR Home Page</div>
+                <h1>Announcements</h1>
+				<div class="clearfix"></div>
+                <div class="table-responsive">
+                	<section class="table-section">
+  							<div class="table-scroll csr_home_table">
+                    <table id="polarlink-announcements" class="table-striped ship-order">
+                        <thead>
+                            <tr>
+                                <th>Date<div>Date</div></th>
+                                <th>Message<div>Message</div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           <?php if(!empty($currentAnnouncement['message'])){ ?>
+                           <tr>
+                           		<td colspan="2"><?php echo $currentAnnouncement['message']; ?></td>
+                           </tr>
+                           <?php } else if (empty($currentAnnouncement['output'])){ ?>
+                           <tr>
+                           		<td colspan="2">No current announcements.</td>
+                           </tr>
+                           <?php } else { 
+                           		foreach($currentAnnouncement['output'] as $announcement){
+                           	?>
+                           <tr>
+	                           <td><?php 
+	                           $unixtime = strtotime($announcement['PLA_END_DATE']);
+	                           echo $this->dateFormat(
+								    $unixtime,
+								    IntlDateFormatter::FULL, // date
+								    IntlDateFormatter::NONE, // time
+								    "en_US"
+								);  ?></td>
+	                           <td><?php echo $announcement['PLA_MESSAGE']; ?></td>
+                           </tr>
+                           <?php
+                           		} 
+							} ?>
+                        </tbody>
+                    </table>
+                	</div>
+                	</section>
+                </div>
+                
+                <div class="ordering-option">
+                	<h2 class="heading">Ordering Options:</h2>
+                	<br/>
+					<div>
+						<?php 
+					       
+					       $isCustomerSelected = 
+					       
+					           (empty($identity['CUST_NAME']))
+					           
+					           ||  
+					       
+					           (empty($identity['PLU_CUST_GROUP']));
+					       
+					       if($isCustomerSelected):
+					       
+					           /**
+					            * Display option to select a customer
+					            */
+					           echo $this->partial('partials/dashboard/customer/select.phtml' );
+					       
+					       else:
+					       
+					           /**
+					            * Display menu to resume an order (if any)
+					            */
+					           echo $this->partial('partials/dashboard/options.phtml', 
+					               
+					               [
+					                   'identity' => $identity, 
+					                   
+					                   'partialEditCurrentOrder' => $partialEditCurrentOrder
+					                   
+					               ]
+					           );
+					           
+					           echo $this->partial(
+					           
+					               'partials/dashboard/pending/orders.phtml',
+					           
+					               [
+					               
+					                   'identity' => $identity,
+					               
+					                   'pendingOrders' => $pendingOrders
+					               ]);
+					       endif;
+					?>
+					<div class="clearfix"></div>
+					
+					<?php 
+					   
+					   /**
+					    * Display admin options
+					    */
+					   echo $this->partial('partials/admin/options.phtml')
+					
+					?>
+             	</div>
+             </div>

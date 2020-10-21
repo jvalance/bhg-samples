@@ -1,0 +1,368 @@
+<div class="col-md-12 col-sm-12 col-xs-12">
+            	<em>Steps to complete your order:</em>
+            </div>
+            <div class="row">
+                <ul class="order-tabs">
+                    <?php
+                    
+                        $breadcrumbParams = array();
+                        
+                        $breadcrumbParams['resource'] = basename(__FILE__);
+                        
+                        $breadcrumbParams['orderingStep'] =
+                        (int)$getOrderHeader['output']['PLINK_ENTRY_STEP'];
+                         
+                        $breadcrumbParams['excludeSubstitutes'] =
+                            !(trim($getOrderHeader['output']['SUBS_REQUIRED']) === 'Y');
+                        
+                        echo $this->partial('partials/breadcrumbs/breadcrumbs.phtml',$breadcrumbParams);
+                    ?>
+                    
+                </ul>
+            </div>
+             <div class="col-md-12 col-sm-12 col-xs-12">                
+                <div class="ordering-option padding8">
+                	<h2 class="heading">Select Ship-To for this Order</h2>
+                	
+                    <div class="search-box searchBoxForShipTo" <?php if(empty($showTotalForm) && !empty($getOrderHeader['output']['OH_SHP2_NUM'])){
+                     	echo 'style = "display:none;"';
+                     } ?>>
+                    <?php $form->setAttribute('action', $this->url('user/orderShipping', array('controller' => 'user', 'action' => 'order-shipping')));
+$form->setAttribute('id', 'search-shipping-form');
+$form->setAttribute('onsubmit', 'return checkblank()');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+ ?>
+                     <?php 
+                     
+                     echo $this->formRow($form->get('SEARCHPARAMETER')); ?>
+                     <?php echo $this->formRow($form->get('SUBMIT')); 
+                     
+                     echo $this->formRow($form->get('searchshipping')); 
+                     ?>
+                <!--     <input type="text" name="searchShipToText" placeholder="search..." /> <button id="searchShipTo"><img src="<?php echo $this->basePath('img/search_btn.jpg'); ?>" alt="" /></button>  -->
+                           <?php
+
+echo $this->form()->closeTag();
+?>
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="table-responsive selected-table dataForShipTos" <?php if(empty($showTotalForm) && !empty($getOrderHeader['output']['OH_SHP2_NUM'])){
+												echo 'style = "display:none;"';
+									} else {
+echo 'style = "display:block;"';
+} ?>>
+                    	<section class="table-section">
+  							<div class="table-scroll">
+                        <table class="table-striped ship-order">
+                            <thead>
+                                <tr>
+                                    <th>Cust# Cust# C <div>Cust#</div></th>
+									<th>Shp# Shp# S <div>Shp#</div></th>
+									<th>Ship To Name <div>Ship To Name</div></th>
+									<th>Address <div>Address</div></th>
+									<th>City <div>City</div></th>
+									<th>State State St <div>State</div></th>
+									<th>ZIP <div>ZIP</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php  
+                            
+                            $defaultValues = array();
+                            // testing the values for the user defaults
+                            if(isset($currentUserDetail['output'])){
+								if(!empty($currentUserDetail['output']['PLU_DFT_SHIPTO']) && !empty($currentUserDetail['output']['PLU_CUSTNO'])){
+									$defaultValues['default_shipto'] = trim($currentUserDetail['output']['PLU_DFT_SHIPTO']);
+									$defaultValues['cust_no'] = trim($currentUserDetail['output']['PLU_CUSTNO']);
+								}
+								if(!empty($currentUserDetail['output']['PLU_DFT_SHIP_METHOD'])){
+									$defaultValues['default_ship_method'] = trim($currentUserDetail['output']['PLU_DFT_SHIP_METHOD']);
+								}
+							}
+							// echo '<pre>'; print_r($defaultValues); print_r($currentCustomerDetail);
+							// testing the values for the customer defaults as well as check if the default values are not set using the user defaults
+							
+							if(isset($currentCustomerDetail['output'])){
+								if(!empty($currentCustomerDetail['output']['PLC_DFT_SHIPTO']) && !empty($currentCustomerDetail['output']['PLC_CUSTNO']) && empty($defaultValues['default_shipto']) && empty($defaultValues['cust_no'])){
+									$defaultValues['default_shipto'] = trim($currentCustomerDetail['output']['PLC_DFT_SHIPTO']);
+									$defaultValues['cust_no'] = trim($currentCustomerDetail['output']['PLC_CUSTNO']);
+								}
+								if(!empty($currentCustomerDetail['output']['PLC_DFT_SHIP_METHOD']) && empty($defaultValues['default_ship_method'])){
+									$defaultValues['default_ship_method'] = trim($currentCustomerDetail['output']['PLC_DFT_SHIP_METHOD']);
+								}
+							}
+							
+                            // echo '<pre>'; print_r($defaultValues); die;
+                          
+                            	if(!empty($customerShipTos['output'])){ 
+	                            	foreach($customerShipTos['output'] as $shipTo){
+										$class = '';
+										// checking whether a previous order exists
+																				
+										  
+											if(!empty($getOrderHeader['output']['OH_SHP2_NUM'])){
+													if(($getOrderHeader['output']['OH_SHP2_NUM'] == $shipTo['ST_NUM']) && ($getOrderHeader['output']['OH_CUSTNO'] == $shipTo['ST_CUST'])){
+														if($showTotalForm){
+																	$class = ' active';
+														}
+																	// here we are assigning the matching record to an index so that we can show the details at the bottom
+																	$defaultValues['address_to_show'] = $shipTo;
+														}
+													}
+										// checking whether the default values for ship to and customer number exist whether from user or customer settings
+										else if($showTotalForm && !empty($defaultValues['default_shipto']) && !empty($defaultValues['cust_no'])){ 
+											if(($defaultValues['default_shipto'] == $shipTo['ST_NUM']) && ($defaultValues['cust_no'] == $shipTo['ST_CUST'])){
+												$class = ' active';
+												// here we are assigning the matching record to an index so that we can show the details at the bottom
+												$defaultValues['address_to_show'] = $shipTo;
+											
+											}
+										}
+										
+										
+										$combinedId = trim($shipTo['ST_NUM']).'_'.trim($shipTo['ST_CUST']);
+	                            	?>
+	                            	<tr class="shipToSelectable<?php echo $class; ?>" id="<?php echo 'stnum_'.$combinedId; ?>">
+	                                    <td id="<?php echo 'customerName_'.$combinedId; ?>"><?php echo $shipTo['ST_CUST']; ?></td>
+	                                    <td id="<?php echo 'shipToNumber_'.$combinedId; ?>"><?php echo $shipTo['ST_NUM']; ?></td>
+	                                    <td id="<?php echo 'name_'.$combinedId; ?>"><?php echo $shipTo['ST_NAME']; ?></td>
+	                                    <td id="<?php echo 'address_'.$combinedId; ?>"><?php
+										$trimmedShipTo = trim($shipTo['ST_ADR2']);
+	                                    echo $shipTo['ST_ADR1'].(!empty($trimmedShipTo)? ' - '.$trimmedShipTo:''); ?></td>
+	                                    <td id="<?php echo 'city_'.$combinedId; ?>"><?php echo $shipTo['ST_ADR3']; ?></td>
+	                                    <td id="<?php echo 'state_'.$combinedId; ?>"><?php echo $shipTo['ST_STATE']; ?></td>
+	                                    <td id="<?php echo 'zip_'.$combinedId; ?>"><?php echo $shipTo['ST_ZIP']; ?><span id="<?php echo 'defaultShippingMethod_'.$combinedId; ?>" style="display: none;"><?php echo trim($shipTo['SHIP_METHOD']); ?></span></td>
+	                                </tr>
+                            <?php 
+                            	}
+                            } else { ?>
+                            <tr>
+                            	<td colspan="7"> No Ship-To exists
+                            	</td>
+                            </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                    	</div>
+                    	</section>
+                    </div>
+                    <?php //print_r($defaultValues['address_to_show']);?>
+                    <div class="clearfix"></div>
+                    <div class="selected-ship selectedShipToText" <?php if(!empty($defaultValues['address_to_show'])){
+                    							if(empty($showTotalForm)){
+													echo 'style = "margin-top:50px;"';
+												}
+												?>
+												>
+												<fieldset class="col-md-12 padding-bottom">
+												<div class="row">
+												
+												<div class="col-sm-3">
+												<label for="inputEmail">Selected Ship-To:</label>
+												</div>
+												 <div class="col-sm-9">
+												      	<div class="row" id="selectedShipTo">
+														<?php 
+															echo '<div class="col-sm-3">';
+															echo $defaultValues['address_to_show']['ST_CUST']. ' / '.  $defaultValues['address_to_show']['ST_NUM'];
+															echo '</div><div class="col-sm-9">';
+															echo (!empty($defaultValues['address_to_show']['ST_NAME']))?$defaultValues['address_to_show']['ST_NAME'].'<br />':'';
+			                    							echo (!empty($defaultValues['address_to_show']['ST_ADR1']))?$defaultValues['address_to_show']['ST_ADR1']:'';
+			                    							echo (!empty($defaultValues['address_to_show']['ST_ADR2']))?$defaultValues['address_to_show']['ST_ADR2'].'<br />':'<br />';
+			                    							echo (!empty($defaultValues['address_to_show']['ST_ADR3']))?$defaultValues['address_to_show']['ST_ADR3'].', ':'';
+			                    							echo (!empty($defaultValues['address_to_show']['ST_STATE']))?$defaultValues['address_to_show']['ST_STATE'].' - ':'';
+			                    							echo (!empty($defaultValues['address_to_show']['ST_ZIP']))?$defaultValues['address_to_show']['ST_ZIP']:'';
+															echo '</div>'; 
+														?>
+														</div>
+												</div>
+
+												</div>
+												</fieldset>
+												
+												<?php /* echo 'Selected Ship-To: <span id="selectedShipTo">';
+												echo $defaultValues['address_to_show']['ST_CUST']. ' / '.  $defaultValues['address_to_show']['ST_NUM']. ' - ';
+												echo (!empty($defaultValues['address_to_show']['ST_NAME']))?$defaultValues['address_to_show']['ST_NAME'].'<br />':'';
+                    							echo (!empty($defaultValues['address_to_show']['ST_ADR1']))?$defaultValues['address_to_show']['ST_ADR1']:'';
+                    							echo (!empty($defaultValues['address_to_show']['ST_ADR2']))?$defaultValues['address_to_show']['ST_ADR2'].'<br />':'<br />';
+                    							echo (!empty($defaultValues['address_to_show']['ST_ADR3']))?$defaultValues['address_to_show']['ST_ADR3'].', ':'';
+                    							echo (!empty($defaultValues['address_to_show']['ST_STATE']))?$defaultValues['address_to_show']['ST_STATE'].' - ':'';
+                    							echo (!empty($defaultValues['address_to_show']['ST_ZIP']))?$defaultValues['address_to_show']['ST_ZIP']:'';
+
+												// print_r($defaultValues['address_to_show']);
+												echo '</span>';*/ 
+									} else { ?>
+									
+									<fieldset class="col-md-12 padding-bottom">
+												<div class="row">
+												
+												<div class="col-sm-3">
+												<label for="inputEmail" id="selectedShipTolab" style="display:none;">Selected Ship-To:</label>
+												</div>
+												 <div class="col-sm-9">
+												      	<div class="row" id="selectedShipTo">
+														<?php /*
+															echo '<div class="col-sm-3">';
+															echo $customerShipTos['output'][0]['ST_CUST']. ' / '.  $customerShipTos['output'][0]['ST_NUM'];
+															echo '</div><div class="col-sm-9">';
+															echo (!empty($customerShipTos['output'][0]['ST_NAME']))?$customerShipTos['output'][0]['ST_NAME'].'<br />':'';
+			                    							echo (!empty($customerShipTos['output'][0]['ST_ADR1']))?$customerShipTos['output'][0]['ST_ADR1']:'';
+			                    							echo (!empty($customerShipTos['output'][0]['ST_ADR2']))?$customerShipTos['output'][0]['ST_ADR2'].'<br />':'<br />';
+			                    							echo (!empty($customerShipTos['output'][0]['ST_ADR3']))?$customerShipTos['output'][0]['ST_ADR3'].', ':'';
+			                    							echo (!empty($customerShipTos['output'][0]['ST_STATE']))?$customerShipTos['output'][0]['ST_STATE'].' - ':'';
+			                    							echo (!empty($customerShipTos['output'][0]['ST_ZIP']))?$customerShipTos['output'][0]['ST_ZIP']:'';
+															echo '</div>'; 
+													*/	?>
+														</div>
+												</div>
+
+												</div>
+												</fieldset>
+									<?php }?>
+									</div>
+                    <div>
+	                   <span class="selectedShipToButtons" style="display: <?php if($showTotalForm && !empty($defaultValues['address_to_show'])){ echo 'inline'; } else { echo 'none';} ?>;">
+	                    <button type="submit" class="btn margin-right" onclick="saveShipTo();">Save Selection and Continue</button>
+	                    </span>
+	                    <span class="selectedShipToButtons" <?php if(empty($showTotalForm) && !empty($getOrderHeader['output']['OH_SHP2_NUM'])){
+												echo 'style = "display:none;"';
+									} ?>>
+	                    <button class="btn" type="button" onclick="checkCancel('shipping');">Cancel Order</button>
+	                    </span>
+	                    <span class="selectedDifferentShipToButtons" <?php if(empty($showTotalForm) && !empty($getOrderHeader['output']['OH_SHP2_NUM'])){
+												echo 'style = "display:block;"';
+									} else {
+echo 'style = "display:none;"';
+} ?>>
+<?php if($currentOrdNum > 0){ ?>
+<p><em>Ship-To cannot be changed on the active order. To ship to a different location, either submit or cancel this order and start a new one.</em></p>
+<?php } else { ?>
+	                    <button class="btn" type="button" onclick="differentShipTo();">Select a Different Ship-To</button>
+	                    <?php } ?>
+	                    </span>
+                    </div>
+                    
+                    <div class="clearfix"></div>
+                </div>
+                
+                <!-- Announcements here  -->
+                <div id="announcementsToDisplay">
+               <?php 
+                    echo $this->partial('/partials/announcements-list.phtml', array(
+                    		'currentAnnouncement' => $currentAnnouncement
+                    ));
+                    ?>
+                    </div>
+                <!-- Announcements end here -->
+                <div class="ordering-option padding8 shippingMethodOrderShipping" <?php if(empty($showTotalForm) && !empty($getOrderHeader['output']['OH_SHP2_NUM'])){
+												echo 'style = "display:block;"';
+									} else {
+echo 'style = "display:none;"';
+} ?>>
+                	<h2 class="heading">Shipping Method</h2>
+                		
+<?php $formShippingMethod->setAttribute('action', $this->url('user/orderShipping', array('controller' => 'user', 'action' => 'order-shipping')));
+$formShippingMethod->setAttribute('id', 'order-shipping-method');
+
+$formShippingMethod->prepare();
+echo $this->form()->openTag($formShippingMethod);
+ ?>
+                    <div class="shipping-method">
+                    	<em>Select one of the following:</em>
+                    
+ <?php 
+
+$element = $formShippingMethod->get( 'shippingMethod' );
+$options = $element->getOptions();
+$options = $options['value_options'];
+$elementVal = $element->getValue();
+// checking whether an order exists
+if(empty($elementVal) && empty($showTotalForm) && !empty($getOrderHeader['output'])){
+	$elementVal = trim($getOrderHeader['output']['OH_SHIP_METHOD_CODE']);
+}
+// otherwise taking the default values for ship method
+else if(empty($elementVal) && $showTotalForm && !empty($defaultValues['default_ship_method'])){
+	$elementVal = $defaultValues['default_ship_method'];
+}
+
+
+
+$ShipToVal= '';
+$customerNumberVal = '';
+
+// updated the code for making the defaults selectable
+// checking whether an order exists and taking the ship to value from that order
+if(empty($showTotalForm) && !empty($getOrderHeader['output']['OH_SHP2_NUM'])){
+	$ShipToVal = $getOrderHeader['output']['OH_SHP2_NUM'];
+}
+// otherwise taking the default values for ship to 
+else if($showTotalForm && !empty($defaultValues['default_shipto'])){
+	$ShipToVal = $defaultValues['default_shipto'];
+}
+
+
+// checking whether an order exists and taking the customer values from that order
+if(empty($showTotalForm) && !empty($getOrderHeader['output']['OH_CUSTNO'])){
+	$customerNumberVal = $getOrderHeader['output']['OH_CUSTNO'];
+}
+// otherwise taking the default values for customer number
+else if($showTotalForm && !empty($defaultValues['cust_no'])){
+	$customerNumberVal = $defaultValues['cust_no'];
+}
+
+// updated the code for making the defaults selectable ends here
+
+?>
+                    
+<div class="method-list" data-toggle="buttons">
+    <label class="btn btn-default<?php if ($elementVal == $options['Backhaul']['value'] || empty($elementVal)) echo ' active'; ?>">
+     <input id="backhaul" type="radio" <?php if ($elementVal == $options['Backhaul']['value'] || empty($elementVal)) echo 'checked="checked"'; ?> name="<?php echo $element->getName(); ?>" value="<?php echo $options['Backhaul']['value']; ?>" class="radioButtonShipMethod"><?php echo $options['Backhaul']['label']; ?>
+    </label>
+    <label class="btn btn-default<?php if ($elementVal == $options['NoBackhaul']['value']) echo ' active'; ?>">
+     <input id="nobackhaul" type="radio" <?php if ($elementVal == $options['NoBackhaul']['value']) echo 'checked="checked"' ?> name="<?php echo $element->getName(); ?>" value="<?php echo $options['NoBackhaul']['value']; ?>" class="radioButtonShipMethod"><?php echo $options['NoBackhaul']['label']; ?>
+    </label>
+    <label class="btn btn-default<?php if ($elementVal == $options['Pickup']['value']) echo ' active'; ?>">
+      <input id="pickup" type="radio" <?php if ($elementVal == $options['Pickup']['value']) echo 'checked="checked"' ?> name="<?php echo $element->getName(); ?>" value="<?php echo $options['Pickup']['value']; ?>" class="radioButtonShipMethod"><?php echo $options['Pickup']['label']; ?>
+    </label>
+  </div>
+                    </div>
+                    <?php if(!empty($_GET['redirect'])){?>
+                    <input type="hidden" name="redirect" value="Shipping"> <?php }?>
+                    <div class="clearfix"></div>
+                     <?php echo $this->formRow($formShippingMethod->get('save')); 
+                     echo $this->formRow($formShippingMethod->get('Cancel'));
+                     echo $this->formRow($formShippingMethod->get('shipto')->setValue ( $ShipToVal ));
+                     echo $this->formRow($formShippingMethod->get('customerNumber')->setValue ( $customerNumberVal ));
+                     ?>
+<!--                     <button class="btn margin-right" type="submit">Save and Continue</button> -->
+<!--                     <button class="btn" type="button">Cancel</button> -->
+                    
+                           <?php
+
+echo $this->form()->closeTag();
+?>
+                    
+                </div>
+                
+<!--                 <div class="buttons"> -->
+<!--                 	<button class="btn" type="submit">Continue</button> -->
+<!--                     <button class="btn" type="button">Cancel</button> -->
+<!--                 </div> -->
+             </div>
+             
+              <script>
+             $(document).ready(function() {
+				$(document).on('click', 'tr', function () {
+					$("#selectedShipTolab").css("display", "block");
+				});
+             });
+             $(document).keydown(function(e) {
+     		    // ESCAPE key pressed
+     		    if (e.keyCode == 27) {
+     		    	$('.bootbox-close-button').trigger('click');
+     		    }
+     		});
+             </script>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div id="plannedPager"
+		class="ui-state-default ui-jqgrid-pager ui-corner-bottom" dir="ltr"
+		style="width: 1820px; position: relative;">
+		<div id="pg_plannedPager" class="ui-pager-control" role="group">
+			<table cellspacing="0" cellpadding="0" border="0" class="ui-pg-table"
+				style="width: 100%; table-layout: fixed; height: 100%;" role="row">
+				<tbody>
+					<tr>
+						<td id="plannedPager_left" align="left"><table
+								cellspacing="0" cellpadding="0" border="0"
+								class="ui-pg-table navtable"
+								style="float: left; table-layout: auto;">
+								<tbody>
+									<tr>
+										<td class="ui-pg-button ui-corner-all" title="Find records"
+											id="search_plannedList"><div class="ui-pg-div">
+												<span class="ui-icon ui-icon-search"></span>
+											</div></td>
+										<td class="ui-pg-button ui-corner-all" title="Reload Grid"
+											id="refresh_plannedList"><div class="ui-pg-div">
+												<span class="ui-icon ui-icon-refresh"></span>
+											</div></td>
+									</tr>
+								</tbody>
+							</table></td>
+						<td id="plannedPager_center" align="center"
+							style="white-space: pre; width: 317px;"><table
+								cellspacing="0" cellpadding="0" border="0"
+								style="table-layout: auto;" class="ui-pg-table">
+								<tbody>
+									<tr>
+										<td id="first_plannedPager"
+											class="ui-pg-button ui-corner-all ui-state-disabled"><span
+											class="ui-icon ui-icon-seek-first"></span></td>
+										<td id="prev_plannedPager"
+											class="ui-pg-button ui-corner-all ui-state-disabled"><span
+											class="ui-icon ui-icon-seek-prev"></span></td>
+										<td class="ui-pg-button ui-state-disabled" style="width: 4px;"><span
+											class="ui-separator"></span></td>
+										<td dir="ltr">Page <input class="ui-pg-input" type="text"
+											size="2" maxlength="7" value="0" role="textbox"> of <span
+											id="sp_1_plannedPager">1</span></td>
+										<td class="ui-pg-button ui-state-disabled" style="width: 4px;"><span
+											class="ui-separator"></span></td>
+										<td id="next_plannedPager"
+											class="ui-pg-button ui-corner-all ui-state-disabled"><span
+											class="ui-icon ui-icon-seek-next"></span></td>
+										<td id="last_plannedPager"
+											class="ui-pg-button ui-corner-all ui-state-disabled"><span
+											class="ui-icon ui-icon-seek-end"></span></td>
+										<td dir="ltr"><select class="ui-pg-selbox" role="listbox"><option
+													role="option" value="250">250</option>
+												<option role="option" value="500" selected="selected">500</option>
+												<option role="option" value="1000">1000</option></select></td>
+									</tr>
+								</tbody>
+							</table></td>
+						<td id="plannedPager_right" align="right"><div dir="ltr"
+								style="text-align: right" class="ui-paging-info">View 1 -
+								9 of 9</div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>

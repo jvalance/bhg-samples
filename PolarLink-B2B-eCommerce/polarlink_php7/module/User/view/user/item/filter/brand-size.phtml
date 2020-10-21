@@ -1,0 +1,104 @@
+<?php
+/**
+ * @jlopez
+ * 
+ * partial filter: brand size
+ * 
+ * @var ambigous $itemsByBrandSize
+ */
+
+$getItemsByBrandSizeLoop = array();
+
+if (! empty($itemsByBrandSize['output'])) {
+    foreach ($itemsByBrandSize['output'] as $itemBrandSize) {
+        $getItemsByBrandSizeLoop[$itemBrandSize['ITM_BRAND_CODE']]['BRAND_DESC'] = $itemBrandSize['BRAND_DESC'];
+        $getItemsByBrandSizeLoop[$itemBrandSize['ITM_BRAND_CODE']]['ITEMS'][] = $itemBrandSize;
+    }
+}
+?>
+	<div id="accordion" class="panel-group main-data-brand-size"
+		role="tablist" aria-multiselectable="true">
+		<?php
+            if (! empty($getItemsByBrandSizeLoop)) :
+                $i = 0;
+                
+                foreach ($getItemsByBrandSizeLoop as $itemBrandSizekey => $itemBrandSizeToShow) :
+                    
+                    $brandDesc = $itemBrandSizeToShow['BRAND_DESC'];
+                    $i ++;
+                    
+                    ?>
+                		          
+                		          <div class="panel panel-default">
+            
+            			<a <?php if($i== 1){echo 'class="active"';} ?>
+            				href="#collapse<?php echo $i; ?>" data-toggle="collapse"
+            				data-parent="#accordion" aria-expanded="true"
+            				aria-controls="collapse<?php echo $i; ?>">
+                				
+                						<?php echo $itemBrandSizeToShow['BRAND_DESC']; ?>
+                					</a>
+            
+            			<div id="collapse<?php echo $i; ?>" role="tabpanel"
+            				aria-labelledby="heading<?php echo $i; ?>"
+            				<?php
+                    
+                    if ($i == 1) :
+                        echo 'aria-expanded = "true" class="panel-collapse collapse in"';
+                     else :
+                        echo 'class="panel-collapse collapse"';
+                    endif;
+                    ?>>
+            
+            				<div class="panel-body">
+            					<div class="table-responsive">
+            
+            						<table class="table table-hover">
+            							<tbody>
+                        							<?php
+                    
+                    if (! empty($itemBrandSizeToShow['ITEMS'])) :
+                        
+                        foreach ($itemBrandSizeToShow['ITEMS'] as $itemBrandSizeShow) :
+                            
+                            printf('<tr id="%s" rel="%s">', 
+            
+                            $itemBrandSizeShow['ITM_BRAND_CODE'], 
+            
+                            trim($itemBrandSizeShow['BRAND_DESC']));
+                            
+                            printf('<td class="brandSizeSelectableRow" id="%s" rel="%s">', 
+            
+                            $itemBrandSizeShow['ITM_SIZE_CODE'], 
+            
+                            trim($itemBrandSizeShow['SIZE_DESC']));
+                            
+                            printf('<a href="%s" onclick="%s">%s</a>', 
+            
+                            'javascript:void(0)', 
+            
+                            'return brandSizeSelectableRow(this);', 
+            
+                            $itemBrandSizeShow['SIZE_DESC']);
+                            
+                            printf('</td></tr>');
+                        endforeach
+                        ;
+                    
+                       endif;
+                    ?>
+            		</tbody>
+            						</table>
+            					</div>
+            				</div>
+            			</div>
+            		</div>
+                			<?php
+                endforeach
+                ;
+             else :
+                print '<div class="informationTabsSearch CustomTextOnTabs padb5">No Items to display</div>';
+            endif;
+?>
+		</div>
+	

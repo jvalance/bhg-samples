@@ -1,0 +1,88 @@
+SET PATH *LIBL ;
+
+CREATE OR REPLACE PROCEDURE SP_SUBMIT_SUBS ( 
+	IN IN_ORDERNUM DECIMAL(8, 0) , 
+	IN IN_USER VARCHAR(15) , 
+	IN LX_ORDERNO DECIMAL(8, 0) ) 
+	LANGUAGE SQL 
+	SPECIFIC SP_SUBMIT_SUBS 
+	NOT DETERMINISTIC 
+	MODIFIES SQL DATA 
+	CALLED ON NULL INPUT 
+	SET OPTION  ALWBLK = *ALLREAD , 
+	ALWCPYDTA = *OPTIMIZE , 
+	COMMIT = *NONE , 
+	DECRESULT = (31, 31, 00) , 
+	DFTRDBCOL = *NONE , 
+	DYNDFTCOL = *NO , 
+	DYNUSRPRF = *USER , 
+	SRTSEQ = *HEX   
+	BEGIN 
+	DECLARE WK_NEXT_ORDNO DEC ( 8 , 0 ) ; 
+	DECLARE WK_NUM_SUBS INTEGER ; 
+	DECLARE WK_NEXT_SNSEQ DEC ( 4 , 0 ) ; 
+	DECLARE WK_SNDESC CHAR ( 50 ) ; 
+  
+	DECLARE WKCURRDATE8 DEC ( 8 , 0 ) ; 
+	DECLARE WKCURRTIME6 DEC ( 6 , 0 ) ; 
+  
+	SET WKCURRDATE8 = FN_CURRDATE8 ( ) ; 
+	SET WKCURRTIME6 = FN_CURRTIME6 ( ) ; 
+  
+	 --====================================================================== 
+	 -- ESN - Add substitutes as notes in ESN 
+	 --====================================================================== 
+	 -- Only add subs to ESN if any substitutes found for this order 
+	IF EXISTS ( SELECT * FROM PLINK_SUBSTITUTES WHERE PLS_ORDER_NO = IN_ORDERNUM ) THEN 
+		 -- Get last seq# for this order 
+		SELECT IFNULL ( MAX ( SNSEQ ) , 0 ) INTO WK_NEXT_SNSEQ 
+		FROM ESN 
+		WHERE SNTYPE = 'O' AND SNCUST = LX_ORDERNO ; 
+  
+		 -- Add header line for substitutes 
+		SET WK_NEXT_SNSEQ = WK_NEXT_SNSEQ + 1 ; 
+		SET WK_SNDESC = '*****   S U B S T I T U T I O N S   *****' ; 
+		INSERT INTO ESN ( 
+			SNID ,		SNTYPE ,		SNCUST , 
+			SNSEQ ,		SNDESC , 
+			SNPRT ,		SNPIC ,		SNINV ,		SNSTMT , 
+			SNENDT ,		SNENTM ,		SNENUS 
+		) VALUES ( 
+			'SN' ,		'O' ,		LX_ORDERNO , 
+			WK_NEXT_SNSEQ ,	WK_SNDESC , 
+			'Y' ,		'Y' ,			'Y' ,	'N' , 
+			WKCURRDATE8 ,	WKCURRTIME6 ,	'POLARLINK' 
+		) ; 
+  
+		 -- retrieve subs and write to ESN 
+		FOR SUBS_ROW AS CSR_SUBS CURSOR FOR 
+			SELECT		PLS_ITEM_NO	AS SUB_ITEMNO , 
+						IDESC			AS SUB_ITEM_DESC 
+			FROM		PLINK_SUBSTITUTES 
+			LEFT JOIN	IIM ON PLS_ITEM_NO = IPROD 
+		WHERE		PLS_ORDER_NO = IN_ORDERNUM 
+	DO 
+			SET WK_NEXT_SNSEQ = WK_NEXT_SNSEQ + 1 ; 
+			SET WK_SNDESC = TRIM ( SUBS_ROW . SUB_ITEMNO ) || ': ' || TRIM ( SUBS_ROW . SUB_ITEM_DESC ) ; 
+			INSERT INTO ESN ( 
+				SNID ,		SNTYPE ,		SNCUST , 
+				SNSEQ ,		SNDESC , 
+				SNPRT ,		SNPIC ,		SNINV ,		SNSTMT , 
+				SNENDT ,		SNENTM ,		SNENUS 
+			) VALUES ( 
+				'SN' ,		'O' ,		LX_ORDERNO , 
+				WK_NEXT_SNSEQ ,	WK_SNDESC , 
+				'Y' ,		'Y' ,		'Y' ,		'N' , 
+				WKCURRDATE8 ,	WKCURRTIME6 ,	'POLARLINK' 
+			) ; 
+		END FOR ; 
+  
+	END IF ; 
+  
+END  ; 
+  
+GRANT ALTER , EXECUTE   
+ON SPECIFIC PROCEDURE SP_SUBMIT_SUBS 
+TO JVALANCE ; 
+  
+;

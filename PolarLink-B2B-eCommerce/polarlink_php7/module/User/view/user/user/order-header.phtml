@@ -1,0 +1,307 @@
+ <div class="row inner-page-top-address margin-top-order">
+	 <?php  echo $this->partial('/partials/order-header-info.phtml', array('getOrderHeader' => $getOrderHeader)); ?>
+</div>
+			<div class="row">
+        	<div class="col-md-12 col-sm-12 col-xs-12 steps-complete">
+            	<em>Steps to complete your order:</em>
+            </div> </div>
+<?php
+if(!empty($_GET)){  $redirect_param = $_GET['redirect']; }
+//print_r($this->getEvent()->getRouteMatch()->getParam('redirect'));
+
+?>
+<div class="row">
+	<ul class="order-tabs">
+	<?php
+	
+	   $breadcrumbParams = array();
+	
+	   $breadcrumbParams['resource'] = basename(__FILE__);
+	
+       $breadcrumbParams['orderingStep'] =
+	 	    (int)$getOrderHeader['output']['PLINK_ENTRY_STEP'];
+       
+       $breadcrumbParams['excludeSubstitutes'] =
+            !(trim($getOrderHeader['output']['SUBS_REQUIRED']) === 'Y');
+	       
+	
+	   echo $this->partial('partials/breadcrumbs/breadcrumbs.phtml',$breadcrumbParams);
+    ?>
+	</ul>
+</div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+	<?php /* <div class="ordering-option padding8">
+		<h2 class="heading">Shipping Information</h2>
+		<div
+			class="col-md-12 form-signin login-form information-form margin-bottom20 text-center-responsive">
+			<fieldset class="col-md-12 shipping-info">
+				<label for="inputEmail">Current Order#:</label> <span
+					class="normal-text"><?php echo (!empty($getOrderHeader['output']['OH_ORDERNO'])?$getOrderHeader['output']['OH_ORDERNO']:'-'); ?></span>
+			</fieldset>
+			<fieldset class="col-md-12 shipping-info">
+				<label for="inputEmail">Cust# / Ship To:</label> <span
+					class="normal-text"><?php echo (!empty(trim($getOrderHeader['output']['OH_CUSTNO']))?trim($getOrderHeader['output']['OH_CUSTNO']):'-').' / '.(!empty(trim($getOrderHeader['output']['OH_SHP2_NUM']))?trim($getOrderHeader['output']['OH_SHP2_NUM']):'-'); ?></span>
+			</fieldset>
+			<fieldset class="col-md-12 shipping-info">
+				<label for="inputEmail">Shipping Address:</label> <span
+					class="normal-textarea">
+                            <?php
+                            	echo (!empty(trim($getOrderHeader['output']['OH_SHP2_NAME']))?trim($getOrderHeader['output']['OH_SHP2_NAME']).'<br />':'');
+                            	echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ATTN']))?'Attn: '.trim($getOrderHeader['output']['OH_SHP2_ATTN']).'<br />':'');
+                            	echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ADDR1']))?trim($getOrderHeader['output']['OH_SHP2_ADDR1']).'<br />':'');
+                            	echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ADDR2']))?trim($getOrderHeader['output']['OH_SHP2_ADDR2']).'<br />':'');
+                            	echo (!empty(trim($getOrderHeader['output']['OH_SHP2_ADDR3']))?trim($getOrderHeader['output']['OH_SHP2_ADDR3']).', ':'').(!empty(trim($getOrderHeader['output']['OH_SHP2_STATE']))?trim($getOrderHeader['output']['OH_SHP2_STATE']).' ':'').(!empty(trim($getOrderHeader['output']['OH_SHP2_ZIP']))?trim($getOrderHeader['output']['OH_SHP2_ZIP']).' ':'');
+                            	?>
+                            </span>
+			</fieldset>
+			<fieldset class="col-md-12 shipping-info">
+				<label for="inputEmail">Shipping Method:</label> <span
+					class="normal-text"><?php echo (!empty(trim($getOrderHeader['output']['OH_SHIP_METHOD_TEXT']))?trim($getOrderHeader['output']['OH_SHIP_METHOD_TEXT']):''); ?></span>
+			</fieldset>
+		</div>
+		<div class="clearfix"></div>
+	</div> */ ?>
+                <?php
+
+                 			if(!empty($redirect_param) && isset($redirect_param)){
+
+								$form->setAttribute ( 'action', $this->url ('user/orderHeader').'?redirect='.$redirect_param );
+                 			} else {
+
+								$form->setAttribute ( 'action', $this->url ( null, array ('controller' => 'user','action' => 'order-header') ) );
+                 			}
+
+
+																$form->setAttribute ( 'id', 'order-header-form' );
+																$form->setAttribute ( 'class', 'col-md-12 form-signin login-form information-form information-form-two margin-bottom0' );
+																	$form->setAttribute ( 'onsubmit', 'return checkOrderHeaderForm();' );
+																$form->prepare ();
+																echo $this->form ()->openTag ( $form );
+																?>
+                <div class="ordering-option padding8 padding-bottom">
+		<h2 class="heading">Additional Order Information</h2>
+		<div class="required-entry">
+			<!--                     <form class="col-md-10 form-signin login-form information-form"> -->
+
+
+			<p class="req-entry"><span class="req-redcolor">*</span> = Required entry</p>
+
+
+			<fieldset class="col-md-12">
+				<label for="inputEmail">Primary PO#:</label>
+                            <?php
+								$valOhPo1 = $form->getInputFilter ()->getValue ( 'OH_PO1' ); // die;
+								if (empty ( $valOhPo1 )) {
+									$valOhPo1 = (! empty ( trim ( $getOrderHeader ['output'] ['OH_PO1'] ) ) ? trim ( $getOrderHeader ['output'] ['OH_PO1'] ) : '');
+								}
+								$ele = $form->get ( 'OH_PO1' );
+								$ele->setValue($valOhPo1);
+								$ele->setAttribute('onblur', 'return stringToUpper(this);');
+								echo $this->formRow ( $ele );
+								?>
+<!--                             <input type="text" autofocus="" required="" placeholder="" class="form-control pull-left" id="inputEmail" /> -->
+			</fieldset>
+			<fieldset class="col-md-12">
+				<label for="inputPassword">Alternate PO# 1:</label>
+                            <?php
+                            	$valOhPo2 = $form->getInputFilter ()->getValue ( 'OH_PO2' ); // die;
+                            				if (empty ( $valOhPo2 )) {
+																													$valOhPo2 = (! empty ( trim ( $getOrderHeader ['output'] ['OH_PO2'] ) ) ? trim ( $getOrderHeader ['output'] ['OH_PO2'] ) : '');
+																												}
+																												echo $this->formRow ( $form->get ( 'OH_PO2' )->setValue ( $valOhPo2 )->setAttribute('onblur', 'return stringToUpper(this);') );
+																												?>
+<!--                             <input type="text" required="" placeholder="" class="form-control pull-left" id="inputText" /> -->
+			</fieldset>
+			<fieldset class="col-md-12">
+				<label for="inputPassword">Alternate PO# 2:</label>
+                            <?php
+
+																												$valOhPo3 = $form->getInputFilter ()->getValue ( 'OH_PO3' ); // die;
+																												if (empty ( $valOhPo3 )) {
+																													$valOhPo3 = (! empty ( trim ( $getOrderHeader ['output'] ['OH_PO3'] ) ) ? trim ( $getOrderHeader ['output'] ['OH_PO3'] ) : '');
+																												}
+																												echo $this->formRow ( $form->get ( 'OH_PO3' )->setValue ( $valOhPo3 )->setAttribute('onblur', 'return stringToUpper(this);') );
+																												?>
+<!--                             <input type="text" required="" placeholder="" class="form-control pull-left" id="inputText" /> -->
+			</fieldset>
+
+			<fieldset class="col-md-12">
+				<label for="inputPassword" id="shipping_type"> <span class="redcolor-req"> * </span><?php if(trim($getOrderHeader['output']['OH_SHIP_METHOD_CODE']) != 'P'){ echo 'Delivery'; } else { echo 'Pickup'; } ?> Date:</label>
+				<div id="dp3" class="input-append date">
+                            <?php
+
+                            $delivDateVal = $form->getInputFilter ()->getValue ( 'OH_REQ_DELIV_DATE' ); // die;
+                            if (empty ( $delivDateVal )) {
+                            	$delivDateVal = (! empty ( trim ( $getOrderHeader ['output'] ['OH_REQ_DELIV_DATE'] ) ) ? trim ( $getOrderHeader ['output'] ['OH_REQ_DELIV_DATE'] ) : '');
+                            	if(!empty($delivDateVal)){
+										 $delivDateTotalDigits = strlen($delivDateVal);
+										if($delivDateTotalDigits == '8'){
+													$delivDateYear = substr($delivDateVal, '0', '4');
+													$delivDateMonth = substr($delivDateVal, '4', '2');
+													$delivDateDay = substr($delivDateVal, '6', '2');
+													$delivDateVal = $delivDateMonth.'/'.$delivDateDay.'/'.$delivDateYear;
+										} else {
+													$delivDateVal = '';
+										}
+								}
+                            }
+
+
+                    			echo $this->formRow($form->get('OH_REQ_DELIV_DATE')->setValue ( $delivDateVal )); ?>
+<!--                             <input type="text" required="" placeholder="" class="form-control pull-left" id="inputText" /> -->
+					<span class="add-on icons" style="font-size:28px;">
+					<i class="fa fa-calendar"></i>
+					</span>
+				</div>
+			</fieldset>
+			<?php if(trim($getOrderHeader['output']['OH_SHIP_METHOD_CODE']) != 'P'){ ?>
+			<fieldset class="col-md-12">
+				<label for="inputPassword">Delivery Time:</label>
+
+                            <?php
+                            $delivTimeVal = $form->getInputFilter ()->getValue ( 'OH_REQ_DELIV_TIME' ); // die;
+                            if (empty ( $delivTimeVal )) {
+                            	 $delivTimeVal = (! empty ( trim ( $getOrderHeader ['output'] ['OH_REQ_DELIV_TIME'] ) ) ? trim ( $getOrderHeader ['output'] ['OH_REQ_DELIV_TIME'] ) : '');
+                            	if(!empty($delivTimeVal)){
+                            		$delivTimeTotalDigits = strlen($delivTimeVal);
+                            		if($delivTimeTotalDigits == '5'){
+												$delivTimeHour = substr($delivTimeVal, '0', '1');
+												$delivTimeMinutes = substr($delivTimeVal, '1', '2');
+												$delivTimeAmPm = '';
+												if($delivTimeHour > 12){
+													$delivTimeAmPm = 'pm';
+													$delivTimeHour = $delivTimeHour-12;
+												} else {
+													if($delivTimeHour < 10){
+
+													}
+													$delivTimeAmPm = 'am';
+												}
+												$delivTimeVal = $delivTimeHour.':'.$delivTimeMinutes.$delivTimeAmPm;
+
+									} else if($delivTimeTotalDigits == '6'){
+                            			$delivTimeHour = substr($delivTimeVal, '0', '2');
+                            			$delivTimeMinutes = substr($delivTimeVal, '2', '2');
+                            			$delivTimeAmPm = '';
+                            			if($delivTimeHour > 12){
+														$delivTimeAmPm = 'pm';
+														$delivTimeHour = $delivTimeHour-12;
+										} else {
+												if($delivTimeHour < 10){
+
+												}
+														$delivTimeAmPm = 'am';
+										}
+                            			$delivTimeVal = $delivTimeHour.':'.$delivTimeMinutes.$delivTimeAmPm;
+                            		} else {
+                            			$delivTimeVal = '';
+                            		}
+                            	}
+                            }
+ 
+                            echo $this->formRow($form->get('OH_REQ_DELIV_TIME')->setValue( $delivTimeVal )); ?>
+<!--                             <input type="text" required="" placeholder="" class="form-control pull-left" id="inputText" /> -->
+
+				<span class="icons" style="font-size:28px;">
+					<i class="fa fa-clock-o"></i>
+				</span>
+
+			</fieldset>
+			<?php } ?>
+			<fieldset class="col-md-12">
+				<label for="inputPassword">Notes/Comments:</label>
+                            <?php
+
+			$notesVal = $form->getInputFilter ()->getValue ( 'OH_NOTES' ); // die;
+			if (empty ( $notesVal )) {
+				$notesVal = (! empty ( trim ( $getOrderNotes ['notes'] ) ) ? trim ( $getOrderNotes ['notes'] ) : '');
+			}
+                            echo $this->formRow($form->get('OH_NOTES')->setValue ( $notesVal ));
+
+                           // echo $this->formCollection($form->get('categories'));
+
+                            ?>
+<!--                             <textarea></textarea> -->
+			</fieldset>
+		</div>
+		<!--                     </form> -->
+		<div class="clearfix"></div>
+	</div>
+	<div class="buttons margin-top20">
+                <?php echo $this->formButton($form->get('Continue')); ?>
+                <?php echo $this->formButton($form->get('Cancel')); ?>
+<!--                 	<button class="btn" type="submit">Continue</button> -->
+		<!--                     <button class="btn" type="button">Cancel</button> -->
+	</div>
+	 <?php if(!empty($redirect_param) && isset($redirect_param)) { ?>
+	<input type="hidden" name="redirect" value="<?php echo $redirect_param; ?>">
+	 <?php } ?>
+                <?php	echo $this->form ()->closeTag ();		?>
+
+               <?php  /* if(!empty($redirect_param) && isset($redirect_param)) { ?>
+<button class="btn" type="button" onclick="location.href = '<?php echo $this->url('user/orderHeader').'?redirect=review-order'; ?>'">Continue Review Order</button>
+        <?php } */ ?>
+</div>
+<link
+	href="<?php echo $this->basepath('/css/jquery.timepicker.css'); ?>"
+	media="screen" rel="stylesheet" type="text/css">
+<link
+	href="<?php echo $this->basepath('/css/bootstrap-datepicker.css'); ?>"
+	media="screen" rel="stylesheet" type="text/css">
+<!--   <link href="<?php //echo $this->basepath('/css/datepicker.css'); ?>"
+	media="screen" rel="stylesheet" type="text/css"> -->
+
+<script src="<?php echo $this->basepath('/js/jquery.timepicker.js'); ?>"></script>
+<script
+	src="<?php echo $this->basepath('/js/bootstrap-datepicker.js'); ?>"></script>
+<script type="text/javascript">
+
+	var OH_PLINK_ORDER_NO = '<?php echo $getOrderHeader['output']['OH_ORDERNO']?>';
+	
+	// When the document is ready
+     $(function() {
+
+     	/**
+    	*  Persistent Order Id (Cookie, expires in 30 days)
+    	**/
+    	Cookies.set('OH_PLINK_ORDERNO', OH_PLINK_ORDER_NO, { expires: 30 });
+			             
+		$('[name="OH_REQ_DELIV_DATE"]').datepicker({
+			startDate:new Date(),
+			daysOfWeekDisabled: [0,6]
+			//Readonly: true
+		}).on('changeDate', function(ev){
+				format: "mm/dd/yyyy",
+			    $('[name="OH_REQ_DELIV_DATE"]').datepicker('hide');
+			});
+		$('#OhReqDelivTime').timepicker({ step: 15,timeFormat:'h:ia','noneOption': [
+		{ 'label': 'None','value': '' }	],'minTime': '00:15am', 'maxTime': '11:45pm',});
+
+		$('#setTimeButton').on('click', function (){
+		    $('#OhReqDelivTime').timepicker('show');
+
+		});
+
+
+		            });
+ </script>
+
+ <script>
+ $( "#OhPo1" ).change(function() {
+	 var po_text = $.trim(this.value);
+	 if(po_text != ''){
+		 $('#po_text').html(po_text.toUpperCase())
+		 } else {
+			 $('#po_text').html('&nbsp')
+			 }
+
+	    //console.log(dInput);
+	});
+
+ $(document).keydown(function(e) {
+	    // ESCAPE key pressed
+	    if (e.keyCode == 27) {
+	    	$('.bootbox-close-button').trigger('click');
+	    }
+	});
+ </script>

@@ -1,0 +1,222 @@
+<?php if(!empty($flashMessages)){ ?>
+<div class="alert alert-success fade in modal-content custom-success-content">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	<?php foreach($flashMessages as $flashMessage){ ?>
+			    <?php echo $flashMessage; } ?>
+		</div>
+
+<?php } ?>
+<div class="csr col-md-12 col-sm-12 col-xs-12">
+				<div class="csr-heading text-center">Work with PolarLink Customers</div>
+				<div class="clearfix"></div>
+                <div class="current-0rder-background ordering-option padding8 margin-top40">
+                	<h2 class="heading">Search PolarLink Customers</h2>
+                    <div class="customer_list_search_box searchBoxForShipTo">
+<!-- 						<form id="search-csr-customer-form" action="/user/csr-select-customer" name="user" method="post">                      -->
+                    <?php $form->setAttribute('action', $this->url('user/csrCustomerList', array('controller' => 'user', 'action' => 'csr-customer-list')));
+$form->setAttribute('id', 'csr-customer-search-form');
+// $form->setAttribute('class', 'announcement-search-form margin-top10 margin-bottom8');
+
+ // $form->setAttribute('onsubmit', 'return validateCsrAnnouncementSearchForm()');
+
+$form->prepare();
+echo $this->form()->openTag($form);
+ ?>
+ <label><span>Filter: </span><?php echo $this->formRow($form->get('SearchFilters'));  ?></label>
+ <?php echo $this->formRow($form->get('Status'));  ?>
+
+<!-- 							<input type="text" value="" placeholder="search..." maxlength="100" id="searchShippingText" class="form-control pull-left" name="SEARCHPARAMETER">       -->
+<!-- 							    <button class="customer-search" id="searchShipTo"><i class="fa fa-search"></i></button> -->
+<!-- 						</form>
+                     -->
+                     <a onclick="clearForm(document.getElementById('csr-customer-search-form'));" class="clear-customer" href="javascript:void(0)">Clear Filter</a>
+ <?php echo $this->formButton($form->get('Submit')); ?>
+							<?php
+
+echo $this->form()->closeTag();
+
+
+?>
+					</div>
+
+					<div class="clearfix"></div>
+					<p class="full filter-text">Select a Customer below, then click button to view, change or de-activate their PolarLink record.</p>
+					<?php
+					$showButtons = false;
+					 if(!empty($plinkCustomers['output'])){
+						$showButtons = true;
+					}
+					if($showButtons){
+					?>
+
+					<div class="full margin-top15">
+						<span class="selectedShipToButtons selectedShipToButtonsActions">
+							<button id='add' type="button" class="btn margin-right"><i class="fa fa-plus-circle"></i>&nbsp;Add</button>
+						</span>
+						<span class="selectedShipToButtons selectedShipToButtonsActions">
+							<button id='view' type="button" class="btn margin-right"><i class="fa fa-eye"></i>&nbsp;View</button>
+						</span>
+						<span class="selectedShipToButtons selectedShipToButtonsActions">
+							<button id='edit' type="button" class="btn margin-right"><i class="fa fa-pencil"></i>&nbsp;Edit</button>
+						</span>
+						<span class="selectedShipToButtons selectedShipToButtonsActions">
+							<button id='remove' type="button" class="btn"><i class="fa fa-times-circle"></i>&nbsp;Remove</button>
+						</span>
+					</div>
+					<?php } ?>
+                    <div class="clearfix"></div>
+                    <div class="table-responsive selected-table dataForShipTos">
+                    	<section class="table-section">
+  							<div class="table-scroll">
+                        <table class="table-striped ship-order">
+                            <thead>
+                                <tr>
+                                    <th width="13%">Cust. GroupCust.<div>Cust. Group</div></th>
+									<th width="40%">Customer Name <div>Customer Name</div></th>
+									<th width="12%">PLink Sts <div>PLink Sts</div></th>
+									<th width="25%">Last Login <div>Last Login</div></th>
+									<th width="10%">Users <div>Users</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php  if(!empty($plinkCustomers['output'])){
+                            	foreach($plinkCustomers['output'] as $customer){
+									$trimmedCustGroup = trim($customer['PLC_CUST_GRP']);
+									$trimmedStatus = trim($customer['PLC_STATUS']);
+									$trimmedUserCount = trim($customer['USERS_COUNT']);
+									$PLC_LAST_USE_DATE = $this->date_helper($customer['PLC_LAST_USE'], 'Y-m-d');
+									if($PLC_LAST_USE_DATE == '0001-01-01') {
+										$customer['PLC_LAST_USE'] = '';
+									}
+                            	?>
+								<tr class="CustomerSelectable" id="<?php echo $trimmedCustGroup; ?>">
+									<td plc_group="plc_group"><?php echo $trimmedCustGroup; ?></td>
+									<td cust_name="cust_name"><?php echo trim($customer['PLC_CUST_NAME']); ?></td>
+
+                                    <?php
+                                    $statusClass = $trimmedStatus == 'D' ? 'style="color:red; background:white"' : '' ;
+                                    ?>
+									<td <?= $statusClass ?>>
+									   <?php if($trimmedStatus == 'E'){ echo 'Enabled'; } else { echo 'Disabled'; }  ?>
+									</td>
+									<td>
+									<?php
+									if($customer['PLC_LAST_USE']){
+									echo $this->date_helper($customer['PLC_LAST_USE'], "M j, Y @ g:i a");
+									} ?>
+									</td>
+									<td  style="text-align:center"><?php if($trimmedUserCount){ echo $trimmedUserCount; } ?></td>
+								</tr>
+								<?php }  } else { ?>
+								<tr><td colspan="5"></td></tr>
+								<?php } ?>
+
+
+                            </tbody>
+                        </table>
+                    	</div>
+                    	</section>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+             </div>
+
+             <script type="text/javascript">
+             $(function(){
+             $('.CustomerSelectable').click(
+            			function() {
+            			//	_isDirty = true;
+            				$('.CustomerSelectable').removeClass('active');
+            				$(this).addClass('active');
+//              				$('.selectedShipToButtons').show();
+            			});
+ 			$('.selectedShipToButtonsActions button').click(
+					function() {
+						var attId = $(this).attr('id');
+						switch(attId) {
+				        // if the current selected tab is brand/size
+				        case 'add':
+				        	window.location = "/user/csr-customer-add";
+				        	return false;
+				            break;
+				        // if the current selected tab is brand
+				        case 'remove':
+				        	if($('.CustomerSelectable').hasClass('active')){
+							var PLCId = $('.CustomerSelectable.active').attr('id');
+							bootbox.confirm("Are you sure you want to delete this customer?", function( result){
+								if(result == true){
+								$('#loading-image').show();
+								// sending the ajax request
+							    $.ajax({
+							        url: "/user/csr-customer-delete/"+PLCId,
+							        type: "POST",
+							        data:  {},
+							        dataType: "json",
+							        async: false,
+							        success: function(result) {
+							        	if(result == 'success'){
+								        	$('#'+PLCId).remove();
+								        	bootbox.alert('Customer Removed Successfully');
+							        	} else {
+											alert(result);
+							        	}
+							        	 return false;
+							            // do nothing here
+
+							        },
+							        failure: function(errMsg) {
+							            alert(errMsg);
+							            return false;
+							        },
+							        complete: function (){
+							        	$('#loading-image').hide();
+							        }
+							    });
+								} else {
+										//return false;					
+									}
+
+								 });
+
+				        	}else {
+				        		bootbox.alert('Please select a customer to delete');
+
+							}
+
+							 return false;
+							break;
+						// if the current selected tab is size
+				        case 'edit':
+				        	if($('.CustomerSelectable').hasClass('active')){
+				        	var PLCId = $('.CustomerSelectable.active').attr('id');
+
+							 window.location = "/user/csr-customer-edit/"+PLCId;
+						}else {
+							bootbox.alert('Please select a customer to edit');
+
+						}
+							 return false;
+				            break;
+				        // if the current selected tab is item description
+				        case 'view':
+				        	if($('.CustomerSelectable').hasClass('active')){
+				        	var PLCId = $('.CustomerSelectable.active').attr('id');
+
+							 window.location = "/user/csr-customer-view/"+PLCId;
+				        	}else {
+								bootbox.alert('Please select a customer to view');
+
+							}
+							 return false;
+
+							 break;
+				        default:
+					        alert('There is some error. Please try after sometime');
+
+				            // do nothing here
+				    }
+
+
+					});
+             });
+             </script>

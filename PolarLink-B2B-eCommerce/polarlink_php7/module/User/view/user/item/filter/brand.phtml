@@ -1,0 +1,35 @@
+<?php
+if (! empty($itemsByBrand['output'])) :
+    $i = 0;
+    
+    print '<div class="panel panel-default main-data-brand">';
+    print '<div class="panel-body">';
+    print '<div class="table-responsive">';
+    print '<table class="table table-hover">';
+    print '<tbody>';
+    
+    foreach ($itemsByBrand['output'] as $itemBrandkey => $itemBrandToShow) :
+        
+        print '<tr>';
+        printf('<td class="brandSelectableRow" id="%s" rel="%s">', 
+
+        $itemBrandToShow['ITM_BRAND_CODE'], 
+
+        trim($itemBrandToShow['BRAND_DESC']));
+        
+        printf('<a href="javascript:void(0)" onclick="return brandSelectableRow(this);">%s</a>', $itemBrandToShow['BRAND_DESC']);
+        print '</td></tr>';
+    endforeach
+    ;
+    
+    print '</tbody>';
+    print '</table>';
+    print '</div>';
+    print '</div>';
+    print '</div>';
+ else :
+    
+    print '<div class="informationTabsSearch CustomTextOnTabs padb5">No Items to display</div>';
+
+
+endif;

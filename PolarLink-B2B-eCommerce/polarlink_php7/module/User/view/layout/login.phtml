@@ -1,0 +1,74 @@
+<?php 
+
+/**
+ * Bind Controller Variables
+ * 
+ * @var string $env
+ */
+
+echo $this->doctype(); 
+
+
+?>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('Polar Link Ordering System')->setSeparator(' - ')->setAutoEscape(false); ?>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+        
+
+        <!-- Le styles -->
+        <?php echo $this->headLink()
+                        ->prependStylesheet($this->basePath('css/responsive.css'))
+                        ->prependStylesheet($this->basePath('css/custom.css?v=' . time()))
+                        ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
+                        
+                         ?>
+
+        <!-- Scripts -->
+        <?php 
+         echo $this->headScript()
+            ->prependFile($this->basePath('js/js-cookie.js'))
+            ->prependFile($this->basePath('js/bootstrap.min.js'))
+            ->prependFile($this->basePath('js/jquery.min.js'))
+//        echo $this->headScript()
+//            ->prependFile($this->basePath('js/bootstrap.min.js'))
+//            ->prependFile($this->basePath('js/jquery.min.js'))
+//            ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
+//            ->prependFile($this->basePath('js/html5shiv.min.js'),   'text/javascript', array('conditional' => 'lt IE 9',))
+//        ;
+        ?>
+
+    </head>
+    <body>
+        
+     <div class="container">
+   <div class="col-lg-12"> 
+   		<div class="row header-group"> 
+        	<div class="logo"> <img src="<?php echo $this->basePath('img/logo.png'); ?>"> </div>
+                <div class="brand-name">  Polar Link Ordering System </div>
+              <div class="mail-id login_screen">
+              
+            <?php if( $env && !(strcasecmp($env, 'PROD') === 0)):?>
+            	<span class="environment"><?php echo $env; ?></span>
+            <?php endif; ?>	
+            </div>   
+        </div>
+      
+   </div>
+   
+   	<div class="col-xs-12 col-md-12 login-section"> 
+    	<div class="row"> 
+            <?php  echo $this->content; ?>
+        </div>
+    </div>
+    
+</div>   
+        
+        
+
+        <?php  echo $this->inlineScript() ?>
+    </body>
+</html>
